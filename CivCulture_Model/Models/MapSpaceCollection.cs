@@ -1,98 +1,85 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class MapSpaceCollection : GameComponent, IList<MapSpace>, INotifyCollectionChanged
+    public class MapSpaceCollection : GameComponent, IEnumerable<MapSpace>, INotifyCollectionChanged
     {
-        protected List<MapSpace> allSpaces;
+        #region Fields
+        private MapSpace[,] allSpaces;
+        #endregion
 
-        public MapSpaceCollection()
-        {
-            allSpaces = new List<MapSpace>();
-        }
-
-        public MapSpaceCollection(IEnumerable<MapSpace> spaces)
-        {
-            allSpaces = new List<MapSpace>(spaces);
-        }
-
-        #region IList<>
-        public MapSpace this[int index] 
-        {
-            get { return allSpaces[index]; }
-            set { allSpaces[index] = value; }
-        }
-
-        public int Count { get { return allSpaces.Count; } }
-
-        public bool IsReadOnly { get { return false; } }
-
+        #region Events
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+        #endregion
 
-        public void Add(MapSpace item)
+        #region Properties
+        public int Width { get; protected set; }
+
+        public int Height { get; protected set; }
+
+        public MapSpace this[int row, int col]
         {
-            allSpaces.Add(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<MapSpace>() { item }, null));
+            get => allSpaces[row, col];
+            set => allSpaces[row, col] = value;
+        }
+        #endregion
+
+        #region Constructors
+        public MapSpaceCollection(int width, int height)
+        {
+            if (width > 0)
+            {
+                Width = width;
+            }
+            else
+            {
+                throw new ArgumentException("MapSpaceCollection: width must be positive");
+            }
+            if (height > 0)
+            {
+                Height = height;
+            }
+            else
+            {
+                throw new ArgumentException("MapSpaceCollection: height must be positive");
+            }
+            allSpaces = new MapSpace[width, height];
         }
 
-        public void Clear()
+        public MapSpaceCollection(int width, int height, IEnumerable<MapSpace> spaces) : this(width, height)
         {
-            List<MapSpace> allRemovedItems = new List<MapSpace>(allSpaces);
-            allSpaces.Clear();
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, null, allRemovedItems));
-        }
+            int row = 0, col = 0;
 
-        public bool Contains(MapSpace item)
-        {
-            return allSpaces.Contains(item);
+            foreach (MapSpace nextSpace in spaces)
+            {
+                allSpaces[row, col] = nextSpace;
+                if (++col >= Width)
+                {
+                    col = 0;
+                    if (++row >= Height)
+                    {
+                        break;
+                    }
+                }
+            }
         }
+        #endregion
 
-        public void CopyTo(MapSpace[] array, int arrayIndex)
-        {
-            allSpaces.CopyTo(array, arrayIndex);
-        }
-
-        public IEnumerator<MapSpace> GetEnumerator()
-        {
-            return allSpaces.GetEnumerator();
-        }
-
-        public int IndexOf(MapSpace item)
-        {
-            return allSpaces.IndexOf(item);
-        }
-
-        public void Insert(int index, MapSpace item)
-        {
-            allSpaces.Insert(index, item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<MapSpace>() { item }, null, index));
-        }
-
-        public bool Remove(MapSpace item)
-        {
-            bool result = allSpaces.Remove(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, null, new List<MapSpace>() { item }));
-            return result;
-        }
-
-        public void RemoveAt(int index)
-        {
-            MapSpace removedItem = allSpaces[index];
-            allSpaces.RemoveAt(index);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, null, new List<MapSpace>() { removedItem }, index));
-        }
-
+        #region Methods
+        #region IEnumerable<>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return allSpaces.GetEnumerator();
         }
+
+        public IEnumerator<MapSpace> GetEnumerator()
+        {
+            return (IEnumerator<MapSpace>)allSpaces.GetEnumerator();
+        }
+        #endregion
         #endregion
     }
 }
