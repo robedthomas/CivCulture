@@ -20,6 +20,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
+        public int Width { get; protected set; }
+
+        public int Height { get; protected set; }
+
         public MapSpaceCollection Spaces
         {
             get
@@ -47,6 +51,12 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
+        public GameMap(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Spaces = new MapSpaceCollection(Width, Height);
+        }
         #endregion
 
         #region Methods

@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
+    <Folder Include="Controls\" />
+    <Folder Include="Utility\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CivCulture_Model\CivCulture_Model.csproj" />
   </ItemGroup>
 
 </Project>
