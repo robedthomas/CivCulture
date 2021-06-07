@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -33,12 +34,13 @@ namespace CivCulture_Model.Models
                     {
                         spaces.CollectionChanged -= Spaces_CollectionChanged;
                     }
-                    SpacesChanged?.Invoke(this, new ValueChangedEventArgs<MapSpaceCollection>(spaces, value));
+                    MapSpaceCollection oldValue = spaces;
                     spaces = value;
                     if (spaces != null)
                     {
                         spaces.CollectionChanged += Spaces_CollectionChanged;
                     }
+                    SpacesChanged?.Invoke(this, new ValueChangedEventArgs<MapSpaceCollection>(oldValue, spaces));
                 }
             }
         }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace CivCulture_Model.Models
+namespace CivCulture_Model.Models.Collections
 {
     public class MapSpaceCollection : GameComponent, IEnumerable<MapSpace>, INotifyCollectionChanged
     {

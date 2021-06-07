@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,9 +16,20 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
+        public string Name { get; private set; }
+
+        public FundamentalCollection FundementalValues { get; private set; } = new FundamentalCollection();
         #endregion
 
         #region Constructors
+        public Resource(string name, IEnumerable<Tuple<Fundamental, int>> fundamentalValues)
+        {
+            Name = name;
+            foreach (Tuple<Fundamental, int> pair in fundamentalValues)
+            {
+                FundementalValues.Add(pair);
+            }
+        }
         #endregion
 
         #region Methods
