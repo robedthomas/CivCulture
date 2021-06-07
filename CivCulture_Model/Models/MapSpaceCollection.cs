@@ -23,7 +23,12 @@ namespace CivCulture_Model.Models
         public MapSpace this[int row, int col]
         {
             get => allSpaces[row, col];
-            set => allSpaces[row, col] = value;
+            set
+            {
+                MapSpace oldValue = this[row, col];
+                allSpaces[row, col] = value;
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, this[row, col], oldValue));
+            }
         }
         #endregion
 
@@ -52,10 +57,9 @@ namespace CivCulture_Model.Models
         public MapSpaceCollection(int width, int height, IEnumerable<MapSpace> spaces) : this(width, height)
         {
             int row = 0, col = 0;
-
             foreach (MapSpace nextSpace in spaces)
             {
-                allSpaces[row, col] = nextSpace;
+                this[row, col] = nextSpace;
                 if (++col >= Width)
                 {
                     col = 0;
