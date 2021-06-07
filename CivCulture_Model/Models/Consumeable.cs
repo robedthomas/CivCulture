@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class Fundamental : Consumeable
+    public class Consumeable : GameComponent
     {
         #region Fields
         #endregion
@@ -15,14 +15,9 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
-        public string Name { get; protected set; }
         #endregion
 
         #region Constructors
-        public Fundamental(string name)
-        {
-            Name = name;
-        }
         #endregion
 
         #region Methods

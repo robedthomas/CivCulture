@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class Resource : GameComponent
+    public class Resource : Consumeable
     {
         #region Fields
         #endregion

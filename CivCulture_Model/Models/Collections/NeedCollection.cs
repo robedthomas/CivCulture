@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.Models
+namespace CivCulture_Model.Models.Collections
 {
-    public class Fundamental : Consumeable
+    public enum NeedType
+    {
+        Necessity,
+        Comfort,
+        Luxury
+    }
+
+    public class NeedCollection : ObservableCollection<Tuple<NeedType, Consumeable, int>>
     {
         #region Fields
         #endregion
@@ -15,14 +23,9 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
-        public string Name { get; protected set; }
         #endregion
 
         #region Constructors
-        public Fundamental(string name)
-        {
-            Name = name;
-        }
         #endregion
 
         #region Methods
