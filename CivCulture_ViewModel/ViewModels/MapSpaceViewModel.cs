@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace CivCulture.ViewModels
+namespace CivCulture_Model.ViewModels
 {
     public class MapSpaceViewModel : BaseViewModel
     {

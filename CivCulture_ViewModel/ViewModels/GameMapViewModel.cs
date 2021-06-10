@@ -5,26 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture.ViewModels
+namespace CivCulture_Model.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+    public class GameMapViewModel : BaseViewModel
     {
         #region Fields
-        private GameMapViewModel mapVM;
+        private MapSpaceViewModel spaceVM;
         #endregion
 
         #region Events
         #endregion
 
         #region Properties
-        public GameMapViewModel MapVM
+        public GameMap SourceMap { get; private set; }
+
+        public MapSpaceViewModel SpaceVM
         {
-            get => mapVM;
+            get => spaceVM;
             set
             {
-                if (mapVM != value)
+                if (spaceVM != value)
                 {
-                    mapVM = value;
+                    spaceVM = value;
                     OnPropertyChanged();
                 }
             }
@@ -32,19 +34,14 @@ namespace CivCulture.ViewModels
         #endregion
 
         #region Constructors
-        public MainViewModel()
+        public GameMapViewModel(GameMap sourceMap)
         {
-            MakeExampleMap();
+            SourceMap = sourceMap;
+            SpaceVM = new MapSpaceViewModel(SourceMap.Spaces[0, 0]); // @TODO: read in whole map
         }
         #endregion
 
         #region Methods
-        public void MakeExampleMap()
-        {
-            GameMap map = new GameMap(1, 1);
-            map.Spaces[0, 0] = new MapSpace(0, 0, new Terrain("Grassland"));
-            MapVM = new GameMapViewModel(map);
-        }
         #endregion
     }
 }

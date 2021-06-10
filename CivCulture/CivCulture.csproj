@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CivCulture_Model\CivCulture_Model.csproj" />
+    <ProjectReference Include="..\CivCulture_ViewModel\CivCulture_ViewModel.csproj" />
   </ItemGroup>
 
 </Project>
