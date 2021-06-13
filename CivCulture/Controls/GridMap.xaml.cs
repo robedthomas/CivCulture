@@ -22,7 +22,7 @@ namespace CivCulture.Controls
     /// <summary>
     /// Interaction logic for GridMap.xaml
     /// </summary>
-    public partial class GridMap : UserControl, INotifyPropertyChanged
+    public partial class GridMap : UserControl
     {
         #region Fields
         public static readonly DependencyProperty SpacesProperty = DependencyProperty.Register(
@@ -45,8 +45,6 @@ namespace CivCulture.Controls
             typeof(GridMap),
             new PropertyMetadata(1)
             );
-
-        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         #region Events
