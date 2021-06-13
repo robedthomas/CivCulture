@@ -34,9 +34,9 @@ namespace CivCulture
         #region Constructors
         public MainWindow()
         {
+            InitializeComponent();
             VM = new MainViewModel();
             DataContext = VM;
-            InitializeComponent();
         }
         #endregion
 

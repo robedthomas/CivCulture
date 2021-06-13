@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -81,9 +82,42 @@ namespace CivCulture_Model.Models.Collections
 
         public IEnumerator<MapSpace> GetEnumerator()
         {
-            return (IEnumerator<MapSpace>)allSpaces.GetEnumerator();
+            return new MapSpaceCollectionEnumerator(GenericUtilities.Flatten2DArray(allSpaces));
         }
         #endregion
+        #endregion
+    }
+
+    class MapSpaceCollectionEnumerator : IEnumerator<MapSpace>
+    {
+        private MapSpace[] spaces;
+        private int index = -1;
+
+        public MapSpaceCollectionEnumerator(MapSpace[] _spaces)
+        {
+            spaces = _spaces;
+        }
+
+        #region IEnumerator<>
+        public MapSpace Current => spaces[index];
+
+        object IEnumerator.Current => spaces[index];
+
+        public void Dispose()
+        {
+            spaces = null;
+            index = -1;
+        }
+
+        public bool MoveNext()
+        {
+            return ++index < spaces.Length;
+        }
+
+        public void Reset()
+        {
+            index = -1;
+        }
         #endregion
     }
 }

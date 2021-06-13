@@ -41,8 +41,11 @@ namespace CivCulture_Model.ViewModels
         #region Methods
         public void MakeExampleMap()
         {
-            GameMap map = new GameMap(1, 1);
+            GameMap map = new GameMap(2, 2);
             map.Spaces[0, 0] = new MapSpace(0, 0, new Terrain("Grassland"));
+            map.Spaces[0, 1] = new MapSpace(0, 1, new Terrain("Mountain"));
+            map.Spaces[1, 0] = new MapSpace(1, 0, new Terrain("Plains"));
+            map.Spaces[1, 1] = new MapSpace(1, 1, null);
             MapVM = new GameMapViewModel(map);
         }
         #endregion
