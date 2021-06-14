@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="40">
     <Grid>
-        <Border Background="{Binding BackgroundBrush}" BorderBrush="Black" BorderThickness="1">
+        <Border Background="{Binding BackgroundBrush}" BorderBrush="Black" BorderThickness="1" Width="40" Height="40">
             <TextBlock Text="{Binding PopCount}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Border>
     </Grid>
