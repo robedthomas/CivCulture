@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.ViewModels
+namespace CivCulture_ViewModel.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {

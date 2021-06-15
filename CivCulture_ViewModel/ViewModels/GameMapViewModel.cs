@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Models;
 using CivCulture_ViewModel.Utilities;
+using CivCulture_ViewModel.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@ namespace CivCulture_Model.ViewModels
         private int numRows, numColumns;
         private ObservableCollection<MapSpaceViewModel> spaceVms;
         private MapSpaceViewModel selectedSpace;
+        private MapSpaceDetailsViewModel selectedSpaceDetails;
         #endregion
 
         #region Events
@@ -89,6 +91,20 @@ namespace CivCulture_Model.ViewModels
                 if (selectedSpace != value)
                 {
                     selectedSpace = value;
+                    OnPropertyChanged();
+                    SelectedSpaceDetails = new MapSpaceDetailsViewModel(SelectedSpace.SourceSpace);
+                }
+            }
+        }
+
+        public MapSpaceDetailsViewModel SelectedSpaceDetails
+        {
+            get => selectedSpaceDetails;
+            set
+            {
+                if (selectedSpaceDetails != value)
+                {
+                    selectedSpaceDetails = value;
                     OnPropertyChanged();
                 }
             }
