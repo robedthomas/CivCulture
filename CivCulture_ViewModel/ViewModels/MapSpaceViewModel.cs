@@ -43,10 +43,22 @@ namespace CivCulture_Model.ViewModels
                         sourceSpace.TerrainChanged += Terrain_Changed;
                     }
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(Row));
+                    OnPropertyChanged(nameof(Column));
                     OnPropertyChanged(nameof(PopCount));
                     OnPropertyChanged(nameof(BackgroundBrush));
                 }
             }
+        }
+
+        public int Row
+        {
+            get => SourceSpace.Row;
+        }
+
+        public int Column
+        {
+            get => SourceSpace.Column;
         }
 
         public Brush BackgroundBrush

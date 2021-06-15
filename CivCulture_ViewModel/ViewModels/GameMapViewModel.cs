@@ -15,6 +15,7 @@ namespace CivCulture_Model.ViewModels
         private GameMap sourceMap;
         private int numRows, numColumns;
         private ObservableCollection<MapSpaceViewModel> spaceVms;
+        private MapSpaceViewModel selectedSpace;
         #endregion
 
         #region Events
@@ -78,6 +79,19 @@ namespace CivCulture_Model.ViewModels
         public ObservableCollection<ObservableCollection<MapSpaceViewModel>> CuratedSpaceViewModels
         {
             get => CurateSpaces();
+        }
+
+        public MapSpaceViewModel SelectedSpace
+        {
+            get => selectedSpace;
+            set
+            {
+                if (selectedSpace != value)
+                {
+                    selectedSpace = value;
+                    OnPropertyChanged();
+                }
+            }
         }
         #endregion
 

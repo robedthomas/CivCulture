@@ -27,9 +27,16 @@ namespace CivCulture.Controls
         #region Fields
         public static readonly DependencyProperty SpacesProperty = DependencyProperty.Register(
             "Spaces",
-            typeof(ObservableCollection<ObservableCollection<MapSpaceViewModel>>),
+            typeof(ObservableCollection<MapSpaceViewModel>),
             typeof(GridMap),
-            new PropertyMetadata(new ObservableCollection<ObservableCollection<MapSpaceViewModel>>())
+            new PropertyMetadata(new ObservableCollection<MapSpaceViewModel>())
+            );
+
+        public static readonly DependencyProperty SelectedSpaceProperty = DependencyProperty.Register(
+            "SelectedSpace",
+            typeof(MapSpaceViewModel),
+            typeof(GridMap),
+            new PropertyMetadata(null)
             );
 
         public static readonly DependencyProperty RowsProperty = DependencyProperty.Register(
@@ -51,12 +58,21 @@ namespace CivCulture.Controls
         #endregion
 
         #region Properties
-        public ObservableCollection<ObservableCollection<MapSpaceViewModel>> Spaces
+        public ObservableCollection<MapSpaceViewModel> Spaces
         {
-            get { return (ObservableCollection<ObservableCollection<MapSpaceViewModel>>)GetValue(SpacesProperty); }
+            get { return (ObservableCollection<MapSpaceViewModel>)GetValue(SpacesProperty); }
             set 
             {
                 SetValue(SpacesProperty, value);
+            }
+        }
+
+        public MapSpaceViewModel SelectedSpace
+        {
+            get => (MapSpaceViewModel)GetValue(SelectedSpaceProperty);
+            set
+            {
+                SetValue(SelectedSpaceProperty, value);
             }
         }
 

@@ -9,7 +9,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <c:GridMap Spaces="{Binding CuratedSpaceViewModels, UpdateSourceTrigger=PropertyChanged}" Rows="{Binding NumRows, Mode=OneWay}" Columns="{Binding NumColumns, Mode=OneWay}"/>
+            <c:GridMap Spaces="{Binding SpaceViewModels, UpdateSourceTrigger=PropertyChanged}"
+                       SelectedSpace="{Binding SelectedSpace}"
+                       Rows="{Binding NumRows, Mode=OneWay}"
+                       Columns="{Binding NumColumns, Mode=OneWay}">
+            </c:GridMap>
         </StackPanel>
     </Grid>
 </UserControl>
