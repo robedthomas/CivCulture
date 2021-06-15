@@ -1,4 +1,5 @@
-﻿using CivCulture_Model.ViewModels;
+﻿using CivCulture.Views;
+using CivCulture_Model.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,6 +26,7 @@ namespace CivCulture.Controls
     public partial class GridMap : UserControl
     {
         #region Fields
+        #region Dependency Properties
         public static readonly DependencyProperty SpacesProperty = DependencyProperty.Register(
             "Spaces",
             typeof(ObservableCollection<MapSpaceViewModel>),
@@ -52,6 +54,11 @@ namespace CivCulture.Controls
             typeof(GridMap),
             new PropertyMetadata(1)
             );
+        #endregion
+
+        private bool isMouseClickStarted = false;
+        private object mouseClickLock = new object();
+        private MapSpaceView lastSelectedSpaceView = null;
         #endregion
 
         #region Events
@@ -104,5 +111,37 @@ namespace CivCulture.Controls
 
         #region Methods
         #endregion
+
+        private void MapSpaceView_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            lock(mouseClickLock)
+            {
+                if (isMouseClickStarted)
+                {
+                    isMouseClickStarted = false;
+                    if (sender is MapSpaceView)
+                    {
+                        if (lastSelectedSpaceView != null)
+                        {
+                            lastSelectedSpaceView.Opacity = 1;
+                        }
+                        lastSelectedSpaceView = sender as MapSpaceView;
+                        SelectedSpace = lastSelectedSpaceView.DataContext as MapSpaceViewModel;
+                        lastSelectedSpaceView.Opacity = 0.5;
+                    }
+                }
+            }
+        }
+
+        private void MapSpaceView_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            lock (mouseClickLock)
+            {
+                if (!isMouseClickStarted)
+                {
+                    isMouseClickStarted = true;
+                }
+            }
+        }
     }
 }

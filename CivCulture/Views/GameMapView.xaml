@@ -10,7 +10,7 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <c:GridMap Spaces="{Binding SpaceViewModels, UpdateSourceTrigger=PropertyChanged}"
-                       SelectedSpace="{Binding SelectedSpace}"
+                       SelectedSpace="{Binding SelectedSpace, Mode=TwoWay}"
                        Rows="{Binding NumRows, Mode=OneWay}"
                        Columns="{Binding NumColumns, Mode=OneWay}">
             </c:GridMap>

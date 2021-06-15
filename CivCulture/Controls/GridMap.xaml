@@ -19,7 +19,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <v:MapSpaceView DataContext="{Binding}"/>
+                        <v:MapSpaceView DataContext="{Binding}" MouseDown="MapSpaceView_MouseDown" MouseUp="MapSpaceView_MouseUp"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemContainerStyle>
