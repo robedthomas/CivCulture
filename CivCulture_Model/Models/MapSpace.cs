@@ -23,6 +23,8 @@ namespace CivCulture_Model.Models
 
         public int Column { get; protected set; }
 
+        public string Name { get; set; }
+
         public Terrain Terrain
         {
             get => terrain;
