@@ -29,6 +29,7 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(SpaceRow));
                     OnPropertyChanged(nameof(SpaceColumn));
+                    OnPropertyChanged(nameof(TerrainName));
                     SpaceName = SourceSpace.Name;
                 }
             }
@@ -56,6 +57,11 @@ namespace CivCulture_ViewModel.ViewModels
         public int SpaceColumn
         {
             get => sourceSpace.Column;
+        }
+
+        public string TerrainName
+        {
+            get => sourceSpace.Terrain?.Name;
         }
         #endregion
 
