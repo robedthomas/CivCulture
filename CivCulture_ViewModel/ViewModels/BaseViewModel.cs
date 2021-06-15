@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_ViewModel.ViewModels
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
         #region Fields
         #endregion
@@ -26,6 +26,10 @@ namespace CivCulture_ViewModel.ViewModels
         public void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public virtual void Dispose()
+        {
         }
         #endregion
     }
