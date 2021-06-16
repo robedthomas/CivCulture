@@ -1,5 +1,6 @@
 ﻿using CivCulture.Views;
 using CivCulture_Model.ViewModels;
+using CivCulture_ViewModel.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -124,6 +125,12 @@ namespace CivCulture.Controls
                         if (lastSelectedSpaceView != null)
                         {
                             lastSelectedSpaceView.Opacity = 1;
+                            if (lastSelectedSpaceView == sender as MapSpaceView)
+                            {
+                                lastSelectedSpaceView = null;
+                                SelectedSpace = null;
+                                return;
+                            }
                         }
                         lastSelectedSpaceView = sender as MapSpaceView;
                         SelectedSpace = lastSelectedSpaceView.DataContext as MapSpaceViewModel;
