@@ -92,7 +92,10 @@ namespace CivCulture_Model.ViewModels
                 {
                     selectedSpace = value;
                     OnPropertyChanged();
-                    SelectedSpaceDetails = new MapSpaceDetailsViewModel(SelectedSpace.SourceSpace);
+                    if (SelectedSpace != null)
+                    {
+                        SelectedSpaceDetails = new MapSpaceDetailsViewModel(SelectedSpace.SourceSpace);
+                    }
                 }
             }
         }
