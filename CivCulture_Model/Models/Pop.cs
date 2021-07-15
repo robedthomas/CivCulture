@@ -14,16 +14,44 @@ namespace CivCulture_Model.Models
         #region Fields
         private Job job;
         private int money;
+        private ObservableCollection<Resource> ownedResources;
+        private NeedCollection needs;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<Job> JobChanged;
         public event ValueChangedEventHandler<int> MoneyChanged;
+        public event ValueChangedEventHandler<ObservableCollection<Resource>> OwnedResourcesChanged;
+        public event ValueChangedEventHandler<NeedCollection> NeedsChanged;
         #endregion
 
         #region Properties
-        public ObservableCollection<Resource> OwnedResources { get; protected set; } = new ObservableCollection<Resource>();
-        public NeedCollection Needs { get; protected set; } = new NeedCollection();
+        public ObservableCollection<Resource> OwnedResources
+        {
+            get => ownedResources;
+            protected set
+            {
+                if (ownedResources != value)
+                {
+                    ObservableCollection<Resource> oldResources = ownedResources;
+                    ownedResources = value;
+                    OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Resource>>(oldResources, ownedResources));
+                }
+            }
+        }
+        public NeedCollection Needs
+        {
+            get => needs;
+            protected set
+            {
+                if (needs != value)
+                {
+                    NeedCollection oldNeeds = needs;
+                    needs = value;
+                    NeedsChanged?.Invoke(this, new ValueChangedEventArgs<NeedCollection>(oldNeeds, needs));
+                }
+            }
+        }
 
         public Job Job
         {
@@ -55,6 +83,11 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
+        public Pop()
+        {
+            OwnedResources = new ObservableCollection<Resource>();
+            Needs = new NeedCollection();
+        }
         #endregion
 
         #region Methods

@@ -20,6 +20,10 @@ namespace CivCulture.Utilities
                 {
                     return element.FindResource("mapSpaceViewModelTemplate") as DataTemplate;
                 }
+                else if (item.GetType() == typeof(PopViewModel))
+                {
+                    return element.FindResource("popViewModelTemplate") as DataTemplate;
+                }
             }
             return null;
         }

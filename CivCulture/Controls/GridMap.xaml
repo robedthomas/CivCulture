@@ -10,8 +10,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <DataTemplate x:Key="mapSpaceViewModelTemplate">
+        <DataTemplate DataType="{x:Type vm:MapSpaceViewModel}" x:Key="mapSpaceViewModelTemplate">
             <v:MapSpaceView DataContext="{Binding}" MouseDown="MapSpaceView_MouseDown" MouseUp="MapSpaceView_MouseUp"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PopViewModel}" x:Key="popViewModelTemplate">
+            <v:PopView DataContext="{Binding}"/>
         </DataTemplate>
         <util:GridMapDataTemplateSelector x:Key="templateSelector"/>
     </UserControl.Resources>
