@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models.Collections
 {
-    public class FundamentalCollection : ObservableCollection<Tuple<Fundamental, int>>
+    public class FundamentalsCollection : ObservableCollection<Tuple<Fundamental, decimal>>
     {
         #region Fields
         #endregion

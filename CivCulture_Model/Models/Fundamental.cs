@@ -8,6 +8,21 @@ namespace CivCulture_Model.Models
 {
     public class Fundamental : Consumeable
     {
+        #region Static Members
+        public static Fundamental Food;
+        public static Fundamental Production;
+        public static Fundamental Money;
+        public static Fundamental Luxuries;
+
+        public static void InitializeFundamentals()
+        {
+            Food = new Fundamental("Food");
+            Production = new Fundamental("Production");
+            Money = new Fundamental("Money");
+            Luxuries = new Fundamental("Luxuries");
+        }
+        #endregion
+
         #region Fields
         #endregion
 
