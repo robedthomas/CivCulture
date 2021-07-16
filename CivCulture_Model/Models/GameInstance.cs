@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models.MetaComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +12,20 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         private GameMap map;
+        private MapGeneration mapGeneration;
+        private MapConfiguration mapConfig;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<GameMap> MapChanged;
+        public event ValueChangedEventHandler<MapGeneration> MapGenerationChanged;
+        public event ValueChangedEventHandler<MapConfiguration> MapConfigChanged;
         #endregion
 
         #region Properties
         public GameMap Map
         {
-            get
-            {
-                return map;
-            }
+            get => map;
             set
             {
                 if (map != value)
@@ -34,12 +36,44 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public MapGeneration MapGeneration
+        {
+            get => mapGeneration;
+            set
+            {
+                if (mapGeneration != value)
+                {
+                    MapGeneration oldValue = mapGeneration;
+                    mapGeneration = value;
+                    MapGenerationChanged?.Invoke(this, new ValueChangedEventArgs<MapGeneration>(oldValue, mapGeneration));
+                }
+            }
+        }
+
+        public MapConfiguration MapConfig
+        {
+            get => mapConfig;
+            set
+            {
+                if (mapConfig != value)
+                {
+                    MapConfiguration oldValue = mapConfig;
+                    mapConfig = value;
+                    MapConfigChanged?.Invoke(this, new ValueChangedEventArgs<MapConfiguration>(oldValue, mapConfig));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
+        public void GenerateMap()
+        {
+            Map = MapGeneration.GenerateMap(MapConfig);
+        }
         #endregion
     }
 }

@@ -1,4 +1,6 @@
 ﻿using CivCulture_Model.Models;
+using CivCulture_Model.Models.MetaComponents;
+using CivCulture_Model.Models.MetaComponents.MapGenerations;
 using CivCulture_ViewModel.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,8 @@ namespace CivCulture_Model.ViewModels
         #endregion
 
         #region Properties
+        public MainModel MainModel { get; set; }
+
         public GameMapViewModel MapVM
         {
             get => mapVM;
@@ -36,25 +40,14 @@ namespace CivCulture_Model.ViewModels
         #region Constructors
         public MainViewModel()
         {
-            MakeExampleMap();
+            MainModel = new MainModel();
+            MainModel.CurrentGame = MainModel.GenerateNewGame(new TestMapGeneration(), new MapConfiguration() { Height = 2, Width = 2 });
+            MainModel.CurrentGame.GenerateMap();
+            MapVM = new GameMapViewModel(MainModel.CurrentGame.Map);
         }
         #endregion
 
         #region Methods
-        public void MakeExampleMap()
-        {
-            GameMap map = new GameMap(2, 2);
-            map.Spaces[0, 0] = new MapSpace(0, 0, Terrain.Grassland);
-            map.Spaces[0, 1] = new MapSpace(0, 1, Terrain.Mountains);
-            map.Spaces[1, 0] = new MapSpace(1, 0, Terrain.Plains);
-            map.Spaces[1, 1] = new MapSpace(1, 1, null);
-
-            map.Spaces[0, 0].TerrainResources.Add(TerrainResource.Wilderness);
-            map.Spaces[0, 0].Pops.Add(new Pop() { Money = 100, Job = Job.Gatherer_Wilderness });
-            map.Spaces[0, 0].Pops[0].OwnedResources.Add(new Tuple<Resource, int>(Resource.Wheat, 15));
-            map.Spaces[0, 0].Pops[0].OwnedResources.Add(new Tuple<Resource, int>(Resource.Wood, 8));
-            MapVM = new GameMapViewModel(map);
-        }
         #endregion
     }
 }
