@@ -14,28 +14,28 @@ namespace CivCulture_Model.Models
         #region Fields
         private Job job;
         private int money;
-        private ObservableCollection<Resource> ownedResources;
+        private ObservableCollection<Tuple<Resource, int>> ownedResources;
         private NeedCollection needs;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<Job> JobChanged;
         public event ValueChangedEventHandler<int> MoneyChanged;
-        public event ValueChangedEventHandler<ObservableCollection<Resource>> OwnedResourcesChanged;
+        public event ValueChangedEventHandler<ObservableCollection<Tuple<Resource, int>>> OwnedResourcesChanged;
         public event ValueChangedEventHandler<NeedCollection> NeedsChanged;
         #endregion
 
         #region Properties
-        public ObservableCollection<Resource> OwnedResources
+        public ObservableCollection<Tuple<Resource, int>> OwnedResources
         {
             get => ownedResources;
             protected set
             {
                 if (ownedResources != value)
                 {
-                    ObservableCollection<Resource> oldResources = ownedResources;
+                    ObservableCollection<Tuple<Resource, int>> oldResources = ownedResources;
                     ownedResources = value;
-                    OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Resource>>(oldResources, ownedResources));
+                    OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Tuple<Resource, int>>>(oldResources, ownedResources));
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public Pop()
         {
-            OwnedResources = new ObservableCollection<Resource>();
+            OwnedResources = new ObservableCollection<Tuple<Resource, int>>();
             Needs = new NeedCollection();
         }
         #endregion

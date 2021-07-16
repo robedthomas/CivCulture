@@ -39,6 +39,7 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Money));
                     OnPropertyChanged(nameof(Job));
+                    OnPropertyChanged(nameof(JobName));
                     OnPropertyChanged(nameof(OwnedResources));
                     OnPropertyChanged(nameof(Needs));
                 }
@@ -55,7 +56,12 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourcePop.Job;
         }
 
-        public ObservableCollection<Resource> OwnedResources
+        public string JobName
+        {
+            get => SourcePop.Job.Name;
+        }
+
+        public ObservableCollection<Tuple<Resource, int>> OwnedResources
         {
             get => SourcePop.OwnedResources;
         }
@@ -96,7 +102,7 @@ namespace CivCulture_ViewModel.ViewModels
             OnPropertyChanged(nameof(Needs));
         }
 
-        private void SourcePop_OwnedResourcesChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<System.Collections.ObjectModel.ObservableCollection<Resource>> e)
+        private void SourcePop_OwnedResourcesChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<System.Collections.ObjectModel.ObservableCollection<Tuple<Resource, int>>> e)
         {
             OnPropertyChanged(nameof(OwnedResources));
         }
@@ -109,6 +115,7 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourcePop_JobChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Job> e)
         {
             OnPropertyChanged(nameof(Job));
+            OnPropertyChanged(nameof(JobName));
         }
         #endregion
     }
