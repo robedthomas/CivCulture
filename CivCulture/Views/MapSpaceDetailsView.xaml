@@ -65,11 +65,9 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <c:GridMap Spaces="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}"
-                                       SelectedSpace="{Binding SelectedPop, Mode=TwoWay}"
-                                       Rows="{Binding NumPopRows, Mode=OneWay}"
-                                       Columns="{Binding NumPopColumns, Mode=OneWay}">
-                            </c:GridMap>
+                            <DataGrid ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}">
+                                
+                            </DataGrid>
                         </Grid>
                     </GroupBox>
                 </Grid>
