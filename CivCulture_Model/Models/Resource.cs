@@ -8,11 +8,13 @@ namespace CivCulture_Model.Models
     {
         #region Static Members
         public static Resource Wheat;
+        public static Resource Wood;
 
         public static void InitializeResources()
         {
             Fundamental.InitializeFundamentals();
             Wheat = new Resource("Wheat", new Tuple<Fundamental, decimal>(Fundamental.Food, 2M));
+            Wood = new Resource("Wood", new Tuple<Fundamental, decimal>(Fundamental.Production, 1M));
         }
         #endregion
 
