@@ -8,5 +8,19 @@ namespace CivCulture_Model.Models
 {
     public abstract class GameComponent : BaseModel
     {
+        #region Fields
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Properties
+        #endregion
+
+        #region Constructors
+        #endregion
+
+        #region Methods
+        #endregion
     }
 }

@@ -16,7 +16,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
-        public ObservableCollection<Job> ChildJobs { get; protected set; } = new ObservableCollection<Job>();
+        public ObservableCollection<JobTemplate> ChildJobs { get; protected set; } = new ObservableCollection<JobTemplate>();
         #endregion
 
         #region Constructors

@@ -9,19 +9,22 @@ namespace CivCulture_Model.Models
     public class TerrainResource : JobSource
     {
         #region Static Members
+        public static bool Initialized = false;
+
         public static TerrainResource Wilderness;
         public static TerrainResource Wheat;
 
-        static TerrainResource()
+        public static void InitializeTerrainResources()
         {
-            Job.InitializeJobs();
+            JobTemplate.InitializeJobTemplates();
             Wilderness = new TerrainResource() { Name = "Wilderness" };
-            Wilderness.ChildJobs.Add(Job.Gatherer_Wilderness);
+            Wilderness.ChildJobs.Add(JobTemplate.Gatherer_Wilderness);
 
             Wheat = new TerrainResource() { Name = "Wheat" };
-            Wheat.ChildJobs.Add(Job.Gatherer_Wheat);
-            Wheat.ChildJobs.Add(Job.Farmer_Wheat);
-            Job.InitializeTerrainResourceBindings();
+            Wheat.ChildJobs.Add(JobTemplate.Gatherer_Wheat);
+            Wheat.ChildJobs.Add(JobTemplate.Farmer_Wheat);
+            JobTemplate.InitializeTerrainResourceBindings();
+            Initialized = true;
         }
         #endregion
 

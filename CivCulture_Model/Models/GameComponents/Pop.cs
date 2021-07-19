@@ -12,22 +12,36 @@ namespace CivCulture_Model.Models
     public class Pop : GameComponent 
     {
         #region Fields
+        private PopTemplate template;
         private Job job;
         private MapSpace space;
         private decimal money;
         private ConsumeablesCollection ownedResources;
-        private NeedCollection needs;
         #endregion
 
         #region Events
+        public event ValueChangedEventHandler<PopTemplate> TemplateChanged;
         public event ValueChangedEventHandler<Job> JobChanged;
         public event ValueChangedEventHandler<MapSpace> SpaceChanged;
         public event ValueChangedEventHandler<decimal> MoneyChanged;
         public event ValueChangedEventHandler<ConsumeablesCollection> OwnedResourcesChanged;
-        public event ValueChangedEventHandler<NeedCollection> NeedsChanged;
         #endregion
 
         #region Properties
+        public PopTemplate Template
+        {
+            get => template;
+            set
+            {
+                if (template != value)
+                {
+                    PopTemplate oldValue = template;
+                    template = value;
+                    TemplateChanged?.Invoke(this, new ValueChangedEventArgs<PopTemplate>(oldValue, template));
+                }
+            }
+        }
+
         public ConsumeablesCollection OwnedResources
         {
             get => ownedResources;
@@ -38,19 +52,6 @@ namespace CivCulture_Model.Models
                     ConsumeablesCollection oldResources = ownedResources;
                     ownedResources = value;
                     OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldResources, ownedResources));
-                }
-            }
-        }
-        public NeedCollection Needs
-        {
-            get => needs;
-            protected set
-            {
-                if (needs != value)
-                {
-                    NeedCollection oldNeeds = needs;
-                    needs = value;
-                    NeedsChanged?.Invoke(this, new ValueChangedEventArgs<NeedCollection>(oldNeeds, needs));
                 }
             }
         }
@@ -102,15 +103,10 @@ namespace CivCulture_Model.Models
         public Pop()
         {
             OwnedResources = new ConsumeablesCollection();
-            Needs = new NeedCollection();
         }
         #endregion
 
         #region Methods
-        public void WorkJob()
-        {
-            // @TODO
-        }
         #endregion
     }
 }
