@@ -16,6 +16,5 @@
                        Columns="{Binding NumColumns, Mode=OneWay}">
             </c:GridMap>
         </StackPanel>
-        <local:MapSpaceDetailsView DataContext="{Binding SelectedSpaceDetails}" Visibility="{Binding SourceSpace, Converter={cnv:ObjectToVisibilityConverter}, ConverterParameter=True}" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>

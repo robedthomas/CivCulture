@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CivCulture_Model.ViewModels
+namespace CivCulture_ViewModel.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {

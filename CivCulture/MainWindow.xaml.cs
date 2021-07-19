@@ -1,4 +1,4 @@
-﻿using CivCulture_Model.ViewModels;
+﻿using CivCulture_ViewModel.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

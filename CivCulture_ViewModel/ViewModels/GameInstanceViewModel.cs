@@ -1,5 +1,5 @@
-﻿using CivCulture_Model.Models;
-using CivCulture_Model.ViewModels;
+﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace CivCulture_ViewModel.ViewModels
     {
         #region Fields
         private GameMapViewModel mapVM;
+        private MapSpaceDetailsViewModel selectedSpaceDetails;
         #endregion
 
         #region Events
@@ -27,7 +28,28 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 if (mapVM != value)
                 {
+                    if (mapVM != null)
+                    {
+                        mapVM.SelectedSpaceChanged -= MapVM_SelectedSpaceChanged;
+                    }
                     mapVM = value;
+                    if (mapVM != null)
+                    {
+                        mapVM.SelectedSpaceChanged += MapVM_SelectedSpaceChanged;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public MapSpaceDetailsViewModel SelectedSpaceDetails
+        {
+            get => selectedSpaceDetails;
+            set
+            {
+                if (selectedSpaceDetails != value)
+                {
+                    selectedSpaceDetails = value;
                     OnPropertyChanged();
                 }
             }
@@ -46,6 +68,11 @@ namespace CivCulture_ViewModel.ViewModels
         {
             SourceInstance.GenerateMap();
             MapVM = new GameMapViewModel(SourceInstance.Map);
+        }
+
+        private void MapVM_SelectedSpaceChanged(object sender, ValueChangedEventArgs<MapSpaceViewModel> e)
+        {
+            SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace);
         }
         #endregion
     }
