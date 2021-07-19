@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models;
+using CivCulture_ViewModel.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace CivCulture_ViewModel.ViewModels
         #region Fields
         private GameMapViewModel mapVM;
         private MapSpaceDetailsViewModel selectedSpaceDetails;
+        private RelayCommand endTurnRC;
         #endregion
 
         #region Events
@@ -54,12 +56,26 @@ namespace CivCulture_ViewModel.ViewModels
                 }
             }
         }
+
+        public RelayCommand EndTurnRC
+        {
+            get => endTurnRC;
+            set
+            {
+                if (endTurnRC != value)
+                {
+                    endTurnRC = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
         #region Constructors
         public GameInstanceViewModel(GameInstance sourceInstance)
         {
             SourceInstance = sourceInstance;
+            EndTurnRC = new RelayCommand(EndTurn, CanEndTurn);
         }
         #endregion
 
@@ -73,6 +89,16 @@ namespace CivCulture_ViewModel.ViewModels
         private void MapVM_SelectedSpaceChanged(object sender, ValueChangedEventArgs<MapSpaceViewModel> e)
         {
             SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace);
+        }
+
+        private void EndTurn(object param)
+        {
+            SourceInstance.PassTurn();
+        }
+
+        private bool CanEndTurn(object param)
+        {
+            return true; // @TODO
         }
         #endregion
     }

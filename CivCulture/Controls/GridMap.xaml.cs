@@ -110,8 +110,6 @@ namespace CivCulture.Controls
         #endregion
 
         #region Methods
-        #endregion
-
         private void MapSpaceView_MouseUp(object sender, MouseButtonEventArgs e)
         {
             lock(mouseClickLock)
@@ -149,5 +147,6 @@ namespace CivCulture.Controls
                 }
             }
         }
+        #endregion
     }
 }

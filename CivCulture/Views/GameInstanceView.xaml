@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CivCulture.Views"
+             xmlns:c="clr-namespace:CivCulture.Controls"
              xmlns:cnv="clr-namespace:CivCulture.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <local:GameMapView x:Name="MapView" DataContext="{Binding MapVM}"/>
         <local:MapSpaceDetailsView DataContext="{Binding SelectedSpaceDetails}" Visibility="{Binding SourceSpace, Converter={cnv:ObjectToVisibilityConverter}, ConverterParameter=True}" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <c:TurnPasser EndTurnCommand="{Binding EndTurnRC}" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>
