@@ -62,7 +62,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         protected void WorkJobs(GameInstance instance)
         {
             // Order pops by job priority
-            List<Pop>[] popsByJobPriority = new List<Pop>[Job.MAX_JOB_PRIORITY];
+            List<Pop>[] popsByJobPriority = new List<Pop>[JobTemplate.MAX_JOB_PRIORITY];
             for (int i = 0; i < popsByJobPriority.Length; i++)
             {
                 popsByJobPriority[i] = new List<Pop>();
@@ -71,11 +71,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 if (pop.Job != null)
                 {
-                    popsByJobPriority[pop.Job.Priority].Add(pop);
+                    popsByJobPriority[pop.Job.Template.Priority].Add(pop);
                 }
                 else
                 {
-                    popsByJobPriority[Job.UNEMPLOYED_JOB_PRIORITY].Add(pop);
+                    popsByJobPriority[JobTemplate.UNEMPLOYED_JOB_PRIORITY].Add(pop);
                 }
             }
             // Work each pop's job
@@ -103,11 +103,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         /// <returns>True if the Job was successfully worked. False otherwise</returns>
         protected bool WorkJob(Job job, Pop workerPop)
         {
-            if (job.Inputs.IsSatisfiedBy(workerPop.OwnedResources))
+            if (job.Template.Inputs.IsSatisfiedBy(workerPop.OwnedResources))
             {
-                workerPop.OwnedResources.Subtract(job.Inputs);
-                workerPop.OwnedResources.Add(job.Outputs);
-                workerPop.Money += job.BasePay;
+                workerPop.OwnedResources.Subtract(job.Template.Inputs);
+                workerPop.OwnedResources.Add(job.Template.Outputs);
+                workerPop.Money += job.Template.BasePay;
                 return true;
             }
             return false;
@@ -126,7 +126,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected decimal GetEstimatedNetPay(Job job)
         {
-            return job.BasePay + job.Outputs.BaseValue - job.Inputs.BaseValue;
+            return job.Template.BasePay + job.Template.Outputs.BaseValue - job.Template.Inputs.BaseValue;
         }
         #endregion
     }
