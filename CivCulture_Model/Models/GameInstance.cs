@@ -118,14 +118,17 @@ namespace CivCulture_Model.Models
         #region Constructors
         public GameInstance()
         {
-            AllJobs = new ObservableCollection<Job>();
         }
         #endregion
 
         #region Methods
         public void GenerateMap()
         {
-            Map = MapGeneration.GenerateMap(MapConfig);
+            List<Pop> pops;
+            List<Job> jobs;
+            Map = MapGeneration.GenerateMap(MapConfig, out pops, out jobs);
+            AllPops = new ObservableCollection<Pop>(pops);
+            AllJobs = new ObservableCollection<Job>(jobs);
         }
 
         public void PassTurn()

@@ -26,9 +26,9 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Methods
-        public static GameInstance GenerateNewGame(MapGeneration mapGen, MapConfiguration mapConfig)
+        public static GameInstance GenerateNewGame(MapGeneration mapGen, MapConfiguration mapConfig, TurnLogic turnLogic)
         {
-            return new GameInstance() { MapGeneration = mapGen, MapConfig = mapConfig };
+            return new GameInstance() { MapGeneration = mapGen, MapConfig = mapConfig, TurnLogic = turnLogic };
         }
         #endregion
     }
