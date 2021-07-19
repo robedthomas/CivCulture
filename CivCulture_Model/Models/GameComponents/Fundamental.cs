@@ -16,10 +16,10 @@ namespace CivCulture_Model.Models
 
         public static void InitializeFundamentals()
         {
-            Food = new Fundamental("Food");
-            Production = new Fundamental("Production");
-            Money = new Fundamental("Money");
-            Luxuries = new Fundamental("Luxuries");
+            Food = new Fundamental("Food", 1);
+            Production = new Fundamental("Production", 3);
+            Money = new Fundamental("Money", 1);
+            Luxuries = new Fundamental("Luxuries", 6);
         }
         #endregion
 
@@ -34,7 +34,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Fundamental(string name)
+        public Fundamental(string name, decimal baseValue) : base(baseValue)
         {
             Name = name;
         }

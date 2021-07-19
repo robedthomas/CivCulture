@@ -2,6 +2,7 @@
 using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -55,7 +56,7 @@ namespace CivCulture_Model.Models
         {
             Width = width;
             Height = height;
-            Spaces = new MapSpaceCollection(Width, Height);
+            Spaces = new MapSpaceCollection(width, height);
         }
         #endregion
 
@@ -66,14 +67,32 @@ namespace CivCulture_Model.Models
             {
                 foreach (MapSpace newSpace in e.NewItems)
                 {
-                    // @TODO
+                    newSpace.Pops.CollectionChanged += Spaces_Pops_CollectionChanged;
                 }
             }
             if (e.OldItems != null)
             {
                 foreach (MapSpace oldSpace in e.OldItems)
                 {
-                    // @TODO
+                    oldSpace.Pops.CollectionChanged -= Spaces_Pops_CollectionChanged;
+                }
+            }
+        }
+
+        private void Spaces_Pops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Pop newPop in e.NewItems)
+                {
+                    
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Pop oldPop in e.OldItems)
+                {
+                    
                 }
             }
         }

@@ -12,6 +12,9 @@ namespace CivCulture_Model.Models
     public class Job : GameComponent
     {
         #region Static Members
+        public const int MAX_JOB_PRIORITY = 10;
+        public const int UNEMPLOYED_JOB_PRIORITY = MAX_JOB_PRIORITY;
+
         public static Job Gatherer_Wilderness;
         public static Job Gatherer_Wheat;
         public static Job Farmer_Wheat;
@@ -19,10 +22,10 @@ namespace CivCulture_Model.Models
         public static void InitializeJobs()
         {
             Resource.InitializeResources();
-            Gatherer_Wilderness = new Job("Gatherer", 0, null, new List<Tuple<Consumeable, decimal>>() { }, new List<Tuple<Consumeable, decimal>>() { new Tuple<Consumeable, decimal>(Fundamental.Food, 1.2M) });
+            Gatherer_Wilderness = new Job("Gatherer", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
 
-            Gatherer_Wheat = new Job("Gatherer", 0, null, new List<Tuple<Consumeable, decimal>>() { }, new List<Tuple<Consumeable, decimal>>() { new Tuple<Consumeable, decimal>(Resource.Wheat, 1M) });
-            Farmer_Wheat = new Job("Wheat Farmer", 0, null, new List<Tuple<Consumeable, decimal>>() { }, new List<Tuple<Consumeable, decimal>>() { new Tuple<Consumeable, decimal>(Resource.Wheat, 2M) });
+            Gatherer_Wheat = new Job("Gatherer", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 1M } });
+            Farmer_Wheat = new Job("Wheat Farmer", 0, null, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 2M } });
         }
 
         public static void InitializeTerrainResourceBindings()
@@ -36,10 +39,12 @@ namespace CivCulture_Model.Models
 
         #region Fields
         private Pop worker;
+        private MapSpace space;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<Pop> WorkerChanged;
+        public event ValueChangedEventHandler<MapSpace> SpaceChanged;
         #endregion
 
         #region Properties
@@ -48,6 +53,8 @@ namespace CivCulture_Model.Models
         public int Priority { get; protected set; }
 
         public JobSource Source { get; protected set; }
+
+        public decimal BasePay { get; protected set; }
 
         public ConsumeablesCollection Inputs { get; protected set; }
 
@@ -66,18 +73,33 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public MapSpace Space
+        {
+            get => space;
+            set
+            {
+                if (space != value)
+                {
+                    MapSpace oldValue = space;
+                    space = value;
+                    SpaceChanged?.Invoke(this, new ValueChangedEventArgs<MapSpace>(oldValue, space));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
-        public Job(string name, int priority, JobSource source, IEnumerable<Tuple<Consumeable, decimal>> inputs = null, IEnumerable<Tuple<Consumeable, decimal>> outputs = null)
+        public Job(string name, int priority, JobSource source, int basePay, ConsumeablesCollection inputs = null, ConsumeablesCollection outputs = null)
         {
             Name = name;
             Priority = priority;
             Source = source;
+            BasePay = basePay;
             Inputs = new ConsumeablesCollection();
             if (inputs != null)
             {
-                foreach (Tuple<Consumeable, decimal> pair in inputs)
+                foreach (KeyValuePair<Consumeable, decimal> pair in inputs)
                 {
                     Inputs.Add(pair);
                 }
@@ -85,7 +107,7 @@ namespace CivCulture_Model.Models
             Outputs = new ConsumeablesCollection();
             if (outputs != null)
             {
-                foreach (Tuple<Consumeable, decimal> pair in outputs)
+                foreach (KeyValuePair<Consumeable, decimal> pair in outputs)
                 {
                     Outputs.Add(pair);
                 }

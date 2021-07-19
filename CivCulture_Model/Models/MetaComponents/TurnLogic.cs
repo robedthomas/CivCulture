@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.Models
+namespace CivCulture_Model.Models.MetaComponents
 {
-    public class Consumeable : GameComponent
+    public abstract class TurnLogic : MetaComponent
     {
         #region Fields
         #endregion
@@ -15,17 +15,13 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
-        public decimal BaseValue { get; protected set; }
         #endregion
 
         #region Constructors
-        public Consumeable(decimal baseValue)
-        {
-            BaseValue = baseValue;
-        }
         #endregion
 
         #region Methods
+        public abstract void ExecuteGameTurn(GameInstance instance);
         #endregion
     }
 }

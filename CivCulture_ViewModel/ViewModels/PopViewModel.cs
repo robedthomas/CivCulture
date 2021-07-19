@@ -46,7 +46,7 @@ namespace CivCulture_ViewModel.ViewModels
             }
         }
 
-        public int Money
+        public decimal Money
         {
             get => SourcePop.Money;
         }
@@ -61,7 +61,7 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourcePop.Job.Name;
         }
 
-        public ObservableCollection<Tuple<Resource, int>> OwnedResources
+        public ConsumeablesCollection OwnedResources
         {
             get => SourcePop.OwnedResources;
         }
@@ -102,12 +102,12 @@ namespace CivCulture_ViewModel.ViewModels
             OnPropertyChanged(nameof(Needs));
         }
 
-        private void SourcePop_OwnedResourcesChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<System.Collections.ObjectModel.ObservableCollection<Tuple<Resource, int>>> e)
+        private void SourcePop_OwnedResourcesChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<ConsumeablesCollection> e)
         {
             OnPropertyChanged(nameof(OwnedResources));
         }
 
-        private void SourcePop_MoneyChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<int> e)
+        private void SourcePop_MoneyChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<decimal> e)
         {
             OnPropertyChanged(nameof(Money));
         }

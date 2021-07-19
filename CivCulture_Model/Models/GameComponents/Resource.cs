@@ -13,8 +13,8 @@ namespace CivCulture_Model.Models
         public static void InitializeResources()
         {
             Fundamental.InitializeFundamentals();
-            Wheat = new Resource("Wheat", new Tuple<Fundamental, decimal>(Fundamental.Food, 2M));
-            Wood = new Resource("Wood", new Tuple<Fundamental, decimal>(Fundamental.Production, 1M));
+            Wheat = new Resource("Wheat", 2, new Tuple<Fundamental, decimal>(Fundamental.Food, 2M));
+            Wood = new Resource("Wood", 1, new Tuple<Fundamental, decimal>(Fundamental.Production, 1M));
         }
         #endregion
 
@@ -31,7 +31,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Resource(string name, params Tuple<Fundamental, decimal>[] fundamentalValues)
+        public Resource(string name, int baseValue, params Tuple<Fundamental, decimal>[] fundamentalValues) : base(baseValue)
         {
             Name = name;
             foreach (Tuple<Fundamental, decimal> pair in fundamentalValues)

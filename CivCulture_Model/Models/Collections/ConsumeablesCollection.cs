@@ -4,10 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CivCulture_Model.Utilities;
 
 namespace CivCulture_Model.Models.Collections
 {
-    public class ConsumeablesCollection : ObservableCollection<Tuple<Consumeable, decimal>>
+    public class ConsumeablesCollection : ObservableDictionary<Consumeable, decimal>
     {
         #region Fields
         #endregion
@@ -16,12 +17,65 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Properties
+        public decimal BaseValue
+        {
+            get
+            {
+                decimal value = 0M;
+                foreach (KeyValuePair<Consumeable, decimal> pair in this)
+                {
+                    value += pair.Key.BaseValue * pair.Value;
+                }
+                return value;
+            }
+        }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
+        public void Add(ConsumeablesCollection collection)
+        {
+            foreach (KeyValuePair<Consumeable, decimal> pair in collection)
+            {
+                if (Contains(pair.Key))
+                {
+                    this[pair.Key] += pair.Value;
+                }
+                else
+                {
+                    this[pair.Key] = pair.Value;
+                }
+            }
+        }
+
+        public void Subtract(ConsumeablesCollection collection)
+        {
+            foreach (KeyValuePair<Consumeable, decimal> pair in collection)
+            {
+                if (Contains(pair.Key))
+                {
+                    this[pair.Key] -= pair.Value;
+                }
+                else
+                {
+                    this[pair.Key] = -pair.Value;
+                }
+            }
+        }
+
+        public bool IsSatisfiedBy(ConsumeablesCollection consumeables)
+        {
+            foreach (KeyValuePair<Consumeable, decimal> requirement in this)
+            {
+                if (!consumeables.Contains(requirement.Key) || consumeables[requirement.Key] < requirement.Value )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }

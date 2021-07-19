@@ -13,29 +13,31 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         private Job job;
-        private int money;
-        private ObservableCollection<Tuple<Resource, int>> ownedResources;
+        private MapSpace space;
+        private decimal money;
+        private ConsumeablesCollection ownedResources;
         private NeedCollection needs;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<Job> JobChanged;
-        public event ValueChangedEventHandler<int> MoneyChanged;
-        public event ValueChangedEventHandler<ObservableCollection<Tuple<Resource, int>>> OwnedResourcesChanged;
+        public event ValueChangedEventHandler<MapSpace> SpaceChanged;
+        public event ValueChangedEventHandler<decimal> MoneyChanged;
+        public event ValueChangedEventHandler<ConsumeablesCollection> OwnedResourcesChanged;
         public event ValueChangedEventHandler<NeedCollection> NeedsChanged;
         #endregion
 
         #region Properties
-        public ObservableCollection<Tuple<Resource, int>> OwnedResources
+        public ConsumeablesCollection OwnedResources
         {
             get => ownedResources;
             protected set
             {
                 if (ownedResources != value)
                 {
-                    ObservableCollection<Tuple<Resource, int>> oldResources = ownedResources;
+                    ConsumeablesCollection oldResources = ownedResources;
                     ownedResources = value;
-                    OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Tuple<Resource, int>>>(oldResources, ownedResources));
+                    OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldResources, ownedResources));
                 }
             }
         }
@@ -67,16 +69,30 @@ namespace CivCulture_Model.Models
             }
         }
 
-        public int Money
+        public MapSpace Space
+        {
+            get => space;
+            set
+            {
+                if (space != value)
+                {
+                    MapSpace oldValue = space;
+                    space = value;
+                    SpaceChanged?.Invoke(this, new ValueChangedEventArgs<MapSpace>(oldValue, space));
+                }
+            }
+        }
+
+        public decimal Money
         {
             get => money;
             set
             {
                 if (money != value)
                 {
-                    int oldValue = money;
+                    decimal oldValue = money;
                     money = value;
-                    MoneyChanged?.Invoke(this, new ValueChangedEventArgs<int>(oldValue, money));
+                    MoneyChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, money));
                 }
             }
         }
@@ -85,7 +101,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public Pop()
         {
-            OwnedResources = new ObservableCollection<Tuple<Resource, int>>();
+            OwnedResources = new ConsumeablesCollection();
             Needs = new NeedCollection();
         }
         #endregion

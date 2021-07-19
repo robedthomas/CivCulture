@@ -2,6 +2,7 @@
 using CivCulture_Model.Models.MetaComponents;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,14 +13,20 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         private GameMap map;
+        private ObservableCollection<Job> allJobs;
+        private ObservableCollection<Pop> allPops;
         private MapGeneration mapGeneration;
         private MapConfiguration mapConfig;
+        private TurnLogic turnLogic;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<GameMap> MapChanged;
+        public event ValueChangedEventHandler<ObservableCollection<Job>> AllJobsChanged;
+        public event ValueChangedEventHandler<ObservableCollection<Pop>> AllPopsChanged;
         public event ValueChangedEventHandler<MapGeneration> MapGenerationChanged;
         public event ValueChangedEventHandler<MapConfiguration> MapConfigChanged;
+        public event ValueChangedEventHandler<TurnLogic> TurnLogicChanged;
         #endregion
 
         #region Properties
@@ -33,6 +40,34 @@ namespace CivCulture_Model.Models
                     GameMap oldValue = map;
                     map = value;
                     MapChanged?.Invoke(this, new ValueChangedEventArgs<GameMap>(oldValue, map));
+                }
+            }
+        }
+
+        public ObservableCollection<Job> AllJobs
+        {
+            get => allJobs;
+            protected set
+            {
+                if (allJobs != value)
+                {
+                    ObservableCollection<Job> oldValue = allJobs;
+                    allJobs = value;
+                    AllJobsChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Job>>(oldValue, allJobs));
+                }
+            }
+        }
+
+        public ObservableCollection<Pop> AllPops
+        {
+            get => allPops;
+            protected set
+            {
+                if (allPops != value)
+                {
+                    ObservableCollection<Pop> oldValue = allPops;
+                    allPops = value;
+                    AllPopsChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Pop>>(oldValue, allPops));
                 }
             }
         }
@@ -64,15 +99,38 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public TurnLogic TurnLogic
+        {
+            get => turnLogic;
+            set
+            {
+                if (turnLogic != value)
+                {
+                    TurnLogic oldValue = turnLogic;
+                    turnLogic = value;
+                    TurnLogicChanged?.Invoke(this, new ValueChangedEventArgs<TurnLogic>(oldValue, turnLogic));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
+        public GameInstance()
+        {
+            AllJobs = new ObservableCollection<Job>();
+        }
         #endregion
 
         #region Methods
         public void GenerateMap()
         {
             Map = MapGeneration.GenerateMap(MapConfig);
+        }
+
+        public void PassTurn()
+        {
+            TurnLogic.ExecuteGameTurn(this);
         }
         #endregion
     }
