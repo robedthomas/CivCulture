@@ -58,7 +58,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string JobName
         {
-            get => SourcePop.Job.Name;
+            get => SourcePop.Job.Template.Name;
         }
 
         public ConsumeablesCollection OwnedResources
@@ -68,7 +68,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public NeedCollection Needs
         {
-            get => SourcePop.Needs;
+            get => SourcePop.Template == null ? null : SourcePop.Template.Needs;
         }
 
         public Brush FillBrush
@@ -83,21 +83,33 @@ namespace CivCulture_ViewModel.ViewModels
         #region Methods
         private void UnsubscribeFromSourcePopEvents()
         {
+            SourcePop.TemplateChanged -= SourcePop_TemplateChanged;
             SourcePop.JobChanged -= SourcePop_JobChanged;
             SourcePop.MoneyChanged -= SourcePop_MoneyChanged;
             SourcePop.OwnedResourcesChanged -= SourcePop_OwnedResourcesChanged;
-            SourcePop.NeedsChanged -= SourcePop_NeedsChanged;
         }
 
         private void SubscribeToSourcePopEvents()
         {
+            SourcePop.TemplateChanged += SourcePop_TemplateChanged;
             SourcePop.JobChanged += SourcePop_JobChanged;
             SourcePop.MoneyChanged += SourcePop_MoneyChanged;
             SourcePop.OwnedResourcesChanged += SourcePop_OwnedResourcesChanged;
-            SourcePop.NeedsChanged += SourcePop_NeedsChanged;
         }
 
-        private void SourcePop_NeedsChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<CivCulture_Model.Models.Collections.NeedCollection> e)
+        private void SourcePop_TemplateChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<PopTemplate> e)
+        {
+            if (e.OldValue != null)
+            {
+                e.OldValue.NeedsChanged -= SourcePop_Template_NeedsChanged;
+            }
+            if (e.NewValue != null)
+            {
+                e.NewValue.NeedsChanged += SourcePop_Template_NeedsChanged;
+            }
+        }
+
+        private void SourcePop_Template_NeedsChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<CivCulture_Model.Models.Collections.NeedCollection> e)
         {
             OnPropertyChanged(nameof(Needs));
         }
