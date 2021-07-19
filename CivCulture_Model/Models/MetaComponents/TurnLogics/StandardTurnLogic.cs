@@ -31,13 +31,14 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             // Trade resources and fundamentals between pops @TODO
             // Advance constructions @TODO
             // Start new constructions @TODO
+            // Consume pops' needs @TODO
             // Check for pop growth @TODO
             // Check for pop migration @TODO
         }
 
         protected void PromotePops(GameInstance instance)
         {
-            List<Job> emptyJobs = instance.AllJobs.Where(job => job.Worker != null).ToList();
+            List<Job> emptyJobs = instance.AllJobs.Where(job => job.Worker == null).ToList();
             while (emptyJobs.Count > 0)
             {
                 Job emptyJob = emptyJobs[0];
