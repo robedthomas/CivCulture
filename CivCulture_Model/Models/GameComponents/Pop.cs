@@ -100,8 +100,9 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Pop()
+        public Pop(PopTemplate template)
         {
+            Template = template;
             OwnedResources = new ConsumeablesCollection();
             JobChanged += This_JobChanged;
             SpaceChanged += This_SpaceChanged;

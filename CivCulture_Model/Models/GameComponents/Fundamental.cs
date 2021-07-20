@@ -20,6 +20,7 @@ namespace CivCulture_Model.Models
             Production = new Fundamental("Production", 3);
             Money = new Fundamental("Money", 1);
             Luxuries = new Fundamental("Luxuries", 6);
+            PopTemplate.InitializePopTemplates();
         }
         #endregion
 

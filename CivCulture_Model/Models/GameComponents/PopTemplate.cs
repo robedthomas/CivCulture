@@ -10,6 +10,17 @@ namespace CivCulture_Model.Models
 {
     public class PopTemplate : GameComponent
     {
+        #region Static Members
+        public static PopTemplate HunterGatherer;
+        public static PopTemplate Laborer;
+
+        public static void InitializePopTemplates()
+        {
+            HunterGatherer = new PopTemplate(necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.5M } });
+            Laborer = new PopTemplate(necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } });
+        }
+        #endregion
+
         #region Fields
         private NeedCollection needs;
         #endregion
@@ -35,6 +46,22 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
+        public PopTemplate(ConsumeablesCollection necessities = null, ConsumeablesCollection comforts = null, ConsumeablesCollection luxuries = null)
+        {
+            Needs = new NeedCollection();
+            if (necessities != null)
+            {
+                Needs[NeedType.Necessity] = necessities;
+            }
+            if (comforts != null)
+            {
+                Needs[NeedType.Comfort] = comforts;
+            }
+            if (luxuries != null)
+            {
+                Needs[NeedType.Luxury] = luxuries;
+            }
+        }
         #endregion
 
         #region Methods

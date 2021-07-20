@@ -101,6 +101,20 @@ namespace CivCulture_Model.Utilities
             }
         }
 
+        public bool TryGet(TKey key, out TValue value)
+        {
+            if (Contains(key))
+            {
+                value = this[key];
+                return true;
+            }
+            else
+            {
+                value = default(TValue);
+                return false;
+            }
+        }
+
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             Add(item.Key, item.Value);
