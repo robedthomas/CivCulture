@@ -72,7 +72,33 @@ namespace CivCulture_Model.Utilities
         public TValue this[TKey key]
         {
             get => SourceDict[key];
-            set => SourceDict[key] = value;
+            set
+            {
+                TValue oldValue = default(TValue);
+                bool alreadyPresent = SourceDict.ContainsKey(key);
+                if (alreadyPresent)
+                {
+                    oldValue = SourceDict[key];
+                }
+                SourceDict[key] = value;
+                if (alreadyPresent)
+                {
+                    int index = SourceDict.ToList().IndexOf(new KeyValuePair<TKey, TValue>(key, value));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Replace,
+                    new KeyValuePair<TKey, TValue>(key, value),
+                    new KeyValuePair<TKey, TValue>(key, oldValue),
+                    index
+                    ));
+                }
+                else
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Add,
+                    new List<KeyValuePair<TKey, TValue>>() { new KeyValuePair<TKey, TValue>(key, SourceDict[key]) }
+                    ));
+                }
+            }
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
@@ -85,8 +111,7 @@ namespace CivCulture_Model.Utilities
             SourceDict.Add(key, value);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
                 NotifyCollectionChangedAction.Add,
-                new Dictionary<TKey, TValue>() { { key, value } },
-                null
+                new Dictionary<TKey, TValue>() { { key, value } }
                 ));
         }
 
@@ -153,7 +178,6 @@ namespace CivCulture_Model.Utilities
                 bool res = SourceDict.Remove(key);
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
                     NotifyCollectionChangedAction.Remove,
-                    null,
                     new Dictionary<TKey, TValue>() { { key, removedValue } }
                     ));
                 return res;
