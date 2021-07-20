@@ -71,6 +71,32 @@ namespace CivCulture_Model.Models
         public Job(JobTemplate template)
         {
             Template = template;
+            WorkerChanged += This_WorkerChanged;
+            SpaceChanged += This_SpaceChanged;
+        }
+
+        private void This_WorkerChanged(object sender, ValueChangedEventArgs<Pop> e)
+        {
+            if (e.OldValue != null)
+            {
+                e.OldValue.Job = null;
+            }
+            if (e.NewValue != null)
+            {
+                e.NewValue.Job = this;
+            }
+        }
+
+        private void This_SpaceChanged(object sender, ValueChangedEventArgs<MapSpace> e)
+        {
+            if (e.OldValue != null)
+            {
+                e.OldValue.Jobs.Remove(this);
+            }
+            if (e.NewValue != null)
+            {
+                e.NewValue.Jobs.Add(this);
+            }
         }
         #endregion
 

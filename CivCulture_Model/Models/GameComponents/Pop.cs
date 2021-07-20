@@ -103,10 +103,35 @@ namespace CivCulture_Model.Models
         public Pop()
         {
             OwnedResources = new ConsumeablesCollection();
+            JobChanged += This_JobChanged;
+            SpaceChanged += This_SpaceChanged;
         }
         #endregion
 
         #region Methods
+        private void This_JobChanged(object sender, ValueChangedEventArgs<Job> e)
+        {
+            if (e.OldValue != null)
+            {
+                e.OldValue.Worker = null;
+            }
+            if (e.NewValue != null)
+            {
+                e.NewValue.Worker = this;
+            }
+        }
+
+        private void This_SpaceChanged(object sender, ValueChangedEventArgs<MapSpace> e)
+        {
+            if (e.OldValue != null)
+            {
+                e.OldValue.Pops.Remove(this);
+            }
+            if (e.NewValue != null)
+            {
+                e.NewValue.Pops.Add(this);
+            }
+        }
         #endregion
     }
 }

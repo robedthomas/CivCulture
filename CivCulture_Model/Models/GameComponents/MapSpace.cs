@@ -47,14 +47,14 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public MapSpace(int row, int column, Terrain terrain = null)
+        public MapSpace(int row, int column, Terrain terrain, params TerrainResource[] terrainResources)
         {
             Row = row;
             Column = column;
             Terrain = terrain;
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
-            TerrainResources = new ObservableCollection<TerrainResource>();
+            TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
         }
         #endregion
 
