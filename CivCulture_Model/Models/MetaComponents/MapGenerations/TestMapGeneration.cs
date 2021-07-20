@@ -40,7 +40,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
 
             Job job = new Job(JobTemplate.Gatherer_Wilderness);
             allJobs.Add(job);
-            Pop pop = new Pop() { Money = 100, Job = job, Space = map.Spaces[0, 0] };
+            Pop pop = new Pop(PopTemplate.Laborer) { Money = 100, Job = job, Space = map.Spaces[0, 0] };
             pop.OwnedResources.Add(Resource.Wheat, 15);
             pop.OwnedResources.Add(Resource.Wood, 8);
             allPops.Add(pop);

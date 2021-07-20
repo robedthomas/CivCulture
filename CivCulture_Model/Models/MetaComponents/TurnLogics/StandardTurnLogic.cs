@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,15 +24,15 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         #region Methods
         public override void ExecuteGameTurn(GameInstance instance)
         {
-            // Check for pop job promotions @TODO
+            // Check for pop job promotions and assign pops to empty job
             PromotePops(instance);
-            // Assign pops to empty jobs @TODO
             // Work jobs in order of priority, low to high
             WorkJobs(instance);
             // Trade resources and fundamentals between pops @TODO
             // Advance constructions @TODO
             // Start new constructions @TODO
             // Consume pops' needs @TODO
+            ConsumePopNeeds(instance);
             // Check for pop growth @TODO
             // Check for pop migration @TODO
         }
@@ -123,6 +124,26 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 pop.Job = null;
             }
             // @TODO
+        }
+
+        protected void ConsumePopNeeds(GameInstance instance)
+        {
+            foreach (Pop pop in instance.AllPops)
+            {
+                // For each need type, consume those resources if the Pop deems it worth it
+                if (pop.Template.Needs.TryGet(NeedType.Necessity, out ConsumeablesCollection necessities))
+                {
+                    if (necessities.IsSatisfiedBy(pop.OwnedResources))
+                    {
+                        pop.OwnedResources.Subtract(necessities);
+                    }
+                    else
+                    {
+                        // Failed to satisfy necessities @TODO
+                    }
+                }
+                // Do same for comforts and luxuries
+            }
         }
 
         protected decimal GetEstimatedNetPay(Job job)

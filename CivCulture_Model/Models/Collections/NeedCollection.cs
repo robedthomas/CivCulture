@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace CivCulture_Model.Models.Collections
         Luxury
     }
 
-    public class NeedCollection : ObservableCollection<Tuple<NeedType, Consumeable, int>>
+    public class NeedCollection : ObservableDictionary<NeedType, ConsumeablesCollection>
     {
         #region Fields
         #endregion
