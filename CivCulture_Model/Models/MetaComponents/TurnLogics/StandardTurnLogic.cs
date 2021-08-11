@@ -10,6 +10,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
     public class StandardTurnLogic : TurnLogic
     {
         #region Fields
+        private const decimal POP_SATISFACTION_INCREASE = 0.1M;
+        private const decimal POP_SATISFACTION_DECREASE = 0.2M;
         #endregion
 
         #region Events
@@ -34,7 +36,9 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             // Consume pops' needs @TODO
             ConsumePopNeeds(instance);
             // Check for pop growth @TODO
+            GrowPops(instance);
             // Check for pop migration @TODO
+            MigratePops(instance);
         }
 
         protected void PromotePops(GameInstance instance)
@@ -136,10 +140,13 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     if (necessities.IsSatisfiedBy(pop.OwnedResources))
                     {
                         pop.OwnedResources.Subtract(necessities);
+                        pop.Satisfaction += POP_SATISFACTION_INCREASE;
                     }
                     else
                     {
                         // Failed to satisfy necessities @TODO
+                        pop.Satisfaction -= POP_SATISFACTION_DECREASE;
+                        // @TODO: subtract as many resources as possible
                     }
                 }
                 // Do same for comforts and luxuries
@@ -149,6 +156,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         protected decimal GetEstimatedNetPay(Job job)
         {
             return job.Template.BasePay + job.Template.Outputs.BaseValue - job.Template.Inputs.BaseValue;
+        }
+
+        protected void GrowPops (GameInstance instance)
+        {
+
         }
         #endregion
     }
