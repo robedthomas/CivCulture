@@ -12,6 +12,7 @@ namespace CivCulture_ViewModel.ViewModels
     public class GameInstanceViewModel : BaseViewModel
     {
         #region Fields
+        private GameInstance sourceInstance;
         private GameMapViewModel mapVM;
         private MapSpaceDetailsViewModel selectedSpaceDetails;
         private RelayCommand endTurnRC;
@@ -21,7 +22,30 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Properties
-        public GameInstance SourceInstance { get; set; }
+        public GameInstance SourceInstance
+        {
+            get => sourceInstance;
+            set
+            {
+                if (sourceInstance != value)
+                {
+                    if (sourceInstance != null)
+                    {
+                        sourceInstance.MapChanged -= SourceInstance_MapChanged;
+                    }
+                    sourceInstance = value;
+                    if (sourceInstance != null)
+                    {
+                        sourceInstance.MapChanged += SourceInstance_MapChanged;
+                    }
+                    if (sourceInstance.Map != null)
+                    {
+                        SourceInstance_MapChanged(this, null);
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public GameMapViewModel MapVM
         {
@@ -80,15 +104,14 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Methods
-        public void GenerateNewMap()
-        {
-            SourceInstance.GenerateMap();
-            MapVM = new GameMapViewModel(SourceInstance.Map);
-        }
-
         private void MapVM_SelectedSpaceChanged(object sender, ValueChangedEventArgs<MapSpaceViewModel> e)
         {
             SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace);
+        }
+
+        private void SourceInstance_MapChanged(object sender, ValueChangedEventArgs<GameMap> e)
+        {
+            MapVM = new GameMapViewModel(SourceInstance.Map);
         }
 
         private void EndTurn(object param)

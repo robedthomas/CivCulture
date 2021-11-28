@@ -97,7 +97,6 @@ namespace CivCulture_ViewModel.ViewModels
         {
             MainModel.CurrentGame = MainModel.GenerateNewGame(new TestMapGeneration(), new MapConfiguration() { Height = 2, Width = 2 }, new StandardTurnLogic());
             GameInstanceVM = new GameInstanceViewModel(MainModel.CurrentGame);
-            GameInstanceVM.GenerateNewMap();
             MenuVisibility = Visibility.Collapsed;
             GameVisibility = Visibility.Visible;
         }

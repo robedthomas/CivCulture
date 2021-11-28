@@ -28,7 +28,10 @@ namespace CivCulture_Model.Models
         #region Methods
         public static GameInstance GenerateNewGame(MapGeneration mapGen, MapConfiguration mapConfig, TurnLogic turnLogic)
         {
-            return new GameInstance() { MapGeneration = mapGen, MapConfig = mapConfig, TurnLogic = turnLogic };
+            GameInstance output = new GameInstance() { MapGeneration = mapGen, MapConfig = mapConfig, TurnLogic = turnLogic };
+            output.GenerateMap();
+            turnLogic.InitGameInstance(output);
+            return output;
         }
         #endregion
     }

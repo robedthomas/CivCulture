@@ -168,14 +168,27 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 while (pop.Space.PopGrowthProgress >= 1M)
                 {
                     pop.Space.PopGrowthProgress--;
-                    Pop newPop = new Pop(null);
-                    pop.Space.Pops.Add(newPop);
+                    Pop newPop = new Pop(pop.Space.NextPopTemplate) { Space = pop.Space };
+                    pop.Space.NextPopTemplate = GetNextPopTemplate(pop.Space);
                     newPops.Add(newPop);
                 }
             }
             foreach (Pop newPop in newPops)
             {
                 instance.AllPops.Add(newPop);
+            }
+        }
+
+        protected PopTemplate GetNextPopTemplate(MapSpace space)
+        {
+            return PopTemplate.HunterGatherer;
+        }
+
+        public override void InitGameInstance(GameInstance instance)
+        {
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                space.NextPopTemplate = GetNextPopTemplate(space);
             }
         }
         #endregion

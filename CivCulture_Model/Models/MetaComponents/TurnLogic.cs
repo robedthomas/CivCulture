@@ -21,6 +21,8 @@ namespace CivCulture_Model.Models.MetaComponents
         #endregion
 
         #region Methods
+        public abstract void InitGameInstance(GameInstance instance);
+
         public abstract void ExecuteGameTurn(GameInstance instance);
         #endregion
     }
