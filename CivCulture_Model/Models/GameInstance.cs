@@ -18,6 +18,7 @@ namespace CivCulture_Model.Models
         private MapGeneration mapGeneration;
         private MapConfiguration mapConfig;
         private TurnLogic turnLogic;
+        private Random randomSeed;
         #endregion
 
         #region Events
@@ -27,6 +28,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<MapGeneration> MapGenerationChanged;
         public event ValueChangedEventHandler<MapConfiguration> MapConfigChanged;
         public event ValueChangedEventHandler<TurnLogic> TurnLogicChanged;
+        public event ValueChangedEventHandler<Random> RandomSeedChanged;
         #endregion
 
         #region Properties
@@ -113,11 +115,31 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public Random RandomSeed
+        {
+            get => randomSeed;
+            set
+            {
+                if (randomSeed != value)
+                {
+                    Random oldValue = randomSeed;
+                    randomSeed = value;
+                    RandomSeedChanged?.Invoke(this, new ValueChangedEventArgs<Random>(oldValue, value));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
         public GameInstance()
         {
+            RandomSeed = new Random();
+        }
+
+        public GameInstance(int seed)
+        {
+            RandomSeed = new Random(seed);
         }
         #endregion
 

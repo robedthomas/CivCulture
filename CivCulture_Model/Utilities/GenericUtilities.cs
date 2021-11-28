@@ -8,6 +8,8 @@ namespace CivCulture_Model.Utilities
 {
     public static class GenericUtilities
     {
+        private static Random commonRandom = new Random();
+
         public static T[] Flatten2DArray<T>(T[,] array)
         {
             if (array == null)
@@ -25,6 +27,35 @@ namespace CivCulture_Model.Utilities
                 }
             }
             return result;
+        }
+
+        public static T PickRandom<T>(this IEnumerable<T> collection, Random random)
+        {
+            return collection.ElementAt(random.Next(0, collection.Count()));
+        }
+
+        public static T PickRandom<T>(this IEnumerable<T> collection)
+        {
+            return collection.PickRandom(commonRandom);
+        }
+
+        public static bool TryFindIndex<T>(this T[,] array, T targetItem, out int firstIndex, out int secondIndex)
+        {
+            firstIndex = -1;
+            secondIndex = -1;
+            for (int i = 0; i <= array.GetUpperBound(0); i++)
+            {
+                for (int j = 0; j <= array.GetUpperBound(1); j++)
+                {
+                    if (array[i, j].Equals(targetItem))
+                    {
+                        firstIndex = i;
+                        secondIndex = j;
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

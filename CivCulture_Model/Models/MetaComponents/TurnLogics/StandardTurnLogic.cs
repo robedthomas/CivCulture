@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         private const decimal POP_SATISFACTION_INCREASE = 0.1M;
         private const decimal POP_SATISFACTION_DECREASE = 0.2M;
         private const decimal POP_GROWTH_FACTOR = 0.2M;
+        private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
+        private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.1M;
         #endregion
 
         #region Events
@@ -36,10 +39,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             // Start new constructions @TODO
             // Consume pops' needs @TODO
             ConsumePopNeeds(instance);
-            // Check for pop growth @TODO
+            // Check for pop growth
             GrowPops(instance);
             // Check for pop migration @TODO
-            // MigratePops(instance);
+            MigratePops(instance);
         }
 
         protected void PromotePops(GameInstance instance)
@@ -177,6 +180,40 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 instance.AllPops.Add(newPop);
             }
+        }
+
+        protected void MigratePops(GameInstance instance)
+        {
+            foreach (Pop pop in instance.AllPops)
+            {
+                // Unemployed or very dissatisfied pops migrate
+                if (pop.Job == null || pop.Satisfaction <= POP_MIGRATION_SATISFACTION_THRESHOLD)
+                {
+                    MigratePop(pop, instance);
+                }
+            }
+        }
+
+        protected void MigratePop(Pop pop, GameInstance instance)
+        {
+            List<MapSpace> adjacentSpaces = instance.Map.Spaces.GetAllSpacesWithinDistance(pop.Space, 1, false);
+            // Check adjacent spaces for free jobs
+            List<MapSpace> possibleDestinations = adjacentSpaces.Where(space => space.Jobs.Any(job => job.Worker == null)).ToList();
+            // If no free jobs, choose an adjacent space at random
+            if (possibleDestinations.Count == 0)
+            {
+                possibleDestinations = adjacentSpaces;
+            }
+            if (possibleDestinations.Count > 0)
+            {
+                MigratePop(pop, possibleDestinations.PickRandom(instance.RandomSeed), instance);
+            }
+        }
+
+        protected void MigratePop(Pop pop, MapSpace destination, GameInstance instance)
+        {
+            pop.Space = destination;
+            pop.Satisfaction += POP_MIGRATION_SATISFACTION_CHANGE;
         }
 
         protected PopTemplate GetNextPopTemplate(MapSpace space)

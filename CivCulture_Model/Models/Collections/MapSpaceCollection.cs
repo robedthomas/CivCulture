@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace CivCulture_Model.Models.Collections
 {
@@ -74,6 +75,48 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Methods
+        public int GetDistance(MapSpace firstSpace, MapSpace secondSpace, bool includeDiagonals)
+        {
+            if (includeDiagonals)
+            {
+                return Math.Max(Math.Abs(firstSpace.Row - secondSpace.Row), Math.Abs(firstSpace.Column - secondSpace.Column));
+            }
+            else
+            {
+                return Math.Abs(firstSpace.Row - secondSpace.Row) + Math.Abs(firstSpace.Column - secondSpace.Column);
+            }
+        }
+
+        public List<MapSpace> GetAllSpacesWithinDistance(MapSpace targetSpace, int distance, bool includeDiagonals)
+        {
+            if (allSpaces.TryFindIndex(targetSpace, out int targetCol, out int targetRow))
+            {
+                if (distance >= 0)
+                {
+                    List<MapSpace> output = new List<MapSpace>();
+                    for (int i = 0; i <= allSpaces.GetUpperBound(0); i++)
+                    {
+                        for (int j = 0; j <= allSpaces.GetUpperBound(1); j++)
+                        {
+                            if (allSpaces[i, j] != targetSpace && GetDistance(targetSpace, allSpaces[i, j], includeDiagonals) <= distance)
+                            {
+                                output.Add(allSpaces[i, j]);
+                            }
+                        }
+                    }
+                    return output;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException($"Require non-negative distance, got {distance}");
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"Received invalid MapSpace as parameter to GetAllSpacesWithinDistance()");
+            }
+        }
+
         #region IEnumerable<>
         IEnumerator IEnumerable.GetEnumerator()
         {
