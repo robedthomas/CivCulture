@@ -12,6 +12,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         #region Fields
         private const decimal POP_SATISFACTION_INCREASE = 0.1M;
         private const decimal POP_SATISFACTION_DECREASE = 0.2M;
+        private const decimal POP_GROWTH_FACTOR = 0.2M;
         #endregion
 
         #region Events
@@ -38,7 +39,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             // Check for pop growth @TODO
             GrowPops(instance);
             // Check for pop migration @TODO
-            MigratePops(instance);
+            // MigratePops(instance);
         }
 
         protected void PromotePops(GameInstance instance)
@@ -68,7 +69,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         protected void WorkJobs(GameInstance instance)
         {
             // Order pops by job priority
-            List<Pop>[] popsByJobPriority = new List<Pop>[JobTemplate.MAX_JOB_PRIORITY];
+            List<Pop>[] popsByJobPriority = new List<Pop>[JobTemplate.MAX_JOB_PRIORITY + 1];
             for (int i = 0; i < popsByJobPriority.Length; i++)
             {
                 popsByJobPriority[i] = new List<Pop>();
@@ -160,7 +161,22 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void GrowPops (GameInstance instance)
         {
-
+            List<Pop> newPops = new List<Pop>();
+            foreach (Pop pop in instance.AllPops)
+            {
+                pop.Space.PopGrowthProgress += pop.Satisfaction * POP_GROWTH_FACTOR;
+                while (pop.Space.PopGrowthProgress >= 1M)
+                {
+                    pop.Space.PopGrowthProgress--;
+                    Pop newPop = new Pop(null);
+                    pop.Space.Pops.Add(newPop);
+                    newPops.Add(newPop);
+                }
+            }
+            foreach (Pop newPop in newPops)
+            {
+                instance.AllPops.Add(newPop);
+            }
         }
         #endregion
     }

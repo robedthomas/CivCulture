@@ -11,10 +11,14 @@ namespace CivCulture_Model.Models
     public class MapSpace : GameComponent
     {
         #region Fields
+        private decimal popGrowthProgress;
+        private PopTemplate nextPopTemplate;
         private Terrain terrain;
         #endregion
 
         #region Events
+        public event ValueChangedEventHandler<decimal> PopGrowthProgressChanged;
+        public event ValueChangedEventHandler<PopTemplate> NextPopTemplateChanged;
         public event ValueChangedEventHandler<Terrain> TerrainChanged;
         #endregion
 
@@ -24,6 +28,34 @@ namespace CivCulture_Model.Models
         public int Column { get; protected set; }
 
         public string Name { get; set; }
+
+        public decimal PopGrowthProgress
+        {
+            get => popGrowthProgress;
+            set
+            {
+                if (popGrowthProgress != value)
+                {
+                    decimal oldValue = popGrowthProgress;
+                    popGrowthProgress = value;
+                    PopGrowthProgressChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, popGrowthProgress));
+                }
+            }
+        }
+
+        public PopTemplate NextPopTemplate
+        {
+            get => nextPopTemplate;
+            set
+            {
+                if (nextPopTemplate != value)
+                {
+                    PopTemplate oldValue = nextPopTemplate;
+                    nextPopTemplate = value;
+                    NextPopTemplateChanged?.Invoke(this, new ValueChangedEventArgs<PopTemplate>(oldValue, nextPopTemplate));
+                }
+            }
+        }
 
         public Terrain Terrain
         {

@@ -16,20 +16,36 @@ namespace CivCulture_Model.Models
 
         public static void InitializePopTemplates()
         {
-            HunterGatherer = new PopTemplate(necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.5M } });
-            Laborer = new PopTemplate(necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } });
+            HunterGatherer = new PopTemplate("Hunter Gatherer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.5M } });
+            Laborer = new PopTemplate("Laborer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } });
         }
         #endregion
 
         #region Fields
+        private string name;
         private NeedCollection needs;
         #endregion
 
         #region Events
+        public ValueChangedEventHandler<string> NameChanged;
         public ValueChangedEventHandler<NeedCollection> NeedsChanged;
         #endregion
 
         #region Properties
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (name != value)
+                {
+                    string oldValue = name;
+                    name = value;
+                    NameChanged?.Invoke(this, new ValueChangedEventArgs<string>(oldValue, value));
+                }
+            }
+        }
+
         public NeedCollection Needs
         {
             get => needs;
@@ -46,8 +62,9 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public PopTemplate(ConsumeablesCollection necessities = null, ConsumeablesCollection comforts = null, ConsumeablesCollection luxuries = null)
+        public PopTemplate(string name, ConsumeablesCollection necessities = null, ConsumeablesCollection comforts = null, ConsumeablesCollection luxuries = null)
         {
+            Name = name;
             Needs = new NeedCollection();
             if (necessities != null)
             {
