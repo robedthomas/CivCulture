@@ -42,6 +42,7 @@ namespace CivCulture_ViewModel.ViewModels
                         sourceSpace.Jobs.CollectionChanged += Jobs_CollectionChanged;
                         sourceSpace.TerrainResources.CollectionChanged += TerrainResources_CollectionChanged;
                         sourceSpace.TerrainChanged += Terrain_Changed;
+                        
                     }
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Row));
@@ -90,7 +91,7 @@ namespace CivCulture_ViewModel.ViewModels
         #region Methods
         private void Pops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException(); // @TODO
+            // @TODO
         }
 
         private void Jobs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

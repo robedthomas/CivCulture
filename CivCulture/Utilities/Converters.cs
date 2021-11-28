@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -39,6 +40,36 @@ namespace CivCulture.Utilities.Converters
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class PopTemplateToTemplateNameConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is null)
+            {
+                return "NULL";
+            }
+            return (value as PopTemplate).Name;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class DecimalToDoubleConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return System.Convert.ToDouble((decimal)value);
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return System.Convert.ToDecimal((double)value);
         }
     }
 }

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CivCulture.Views"
              xmlns:c="clr-namespace:CivCulture.Controls"
+             xmlns:conv="clr-namespace:CivCulture.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
@@ -61,11 +62,20 @@
                     </GroupBox>
                     <GroupBox Grid.Row="3" Header="Pops">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <DataGrid ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="Next Pop:"/>
+                                <TextBlock Text="{Binding NextPopTemplate, Mode=OneWay, Converter={conv:PopTemplateToTemplateNameConverter}}" Margin="5,0,0,0"/>
+                            </StackPanel>
+                            <ProgressBar Grid.Row="0" Value="{Binding PopGrowthProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" HorizontalAlignment="Right" Width="100" Margin="0,0,20,0"/>
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn Header="Icon">
                                         <DataGridTemplateColumn.CellTemplate>

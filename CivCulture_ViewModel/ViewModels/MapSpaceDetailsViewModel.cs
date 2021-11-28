@@ -1,4 +1,5 @@
-﻿using CivCulture_Model.Models;
+﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -120,6 +121,16 @@ namespace CivCulture_ViewModel.ViewModels
         {
             get => MAX_POPS_PER_ROW;
         }
+
+        public decimal PopGrowthProgress
+        {
+            get => SourceSpace.PopGrowthProgress;
+        }
+
+        public PopTemplate NextPopTemplate
+        {
+            get => SourceSpace.NextPopTemplate;
+        }
         #endregion
 
         #region Constructors
@@ -136,6 +147,8 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.Jobs.CollectionChanged -= SourceSpace_Jobs_CollectionChanged;
             SourceSpace.TerrainResources.CollectionChanged -= SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged -= SourceSpace_TerrainChanged;
+            sourceSpace.PopGrowthProgressChanged -= SourceSpace_PopGrowthProgressChanged;
+            sourceSpace.NextPopTemplateChanged -= SourceSpace_NextPopTemplateChanged;
         }
 
         private void SubscribeToSourceSpaceEvents()
@@ -144,6 +157,8 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.Jobs.CollectionChanged += SourceSpace_Jobs_CollectionChanged;
             SourceSpace.TerrainResources.CollectionChanged += SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged += SourceSpace_TerrainChanged;
+            sourceSpace.PopGrowthProgressChanged += SourceSpace_PopGrowthProgressChanged;
+            sourceSpace.NextPopTemplateChanged += SourceSpace_NextPopTemplateChanged;
         }
 
         private void SourceSpace_TerrainChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Terrain> e)
@@ -183,6 +198,16 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourceSpace_TerrainResources_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // @TODO: define when TerrainResourceViewModel is created
+        }
+
+        private void SourceSpace_NextPopTemplateChanged(object sender, ValueChangedEventArgs<PopTemplate> e)
+        {
+            OnPropertyChanged(nameof(NextPopTemplate));
+        }
+
+        private void SourceSpace_PopGrowthProgressChanged(object sender, ValueChangedEventArgs<decimal> e)
+        {
+            OnPropertyChanged(nameof(PopGrowthProgress));
         }
         #endregion
     }
