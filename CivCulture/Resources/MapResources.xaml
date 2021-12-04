@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="InvalidTerrainBrush" Color="Black"/>
+    <SolidColorBrush x:Key="GrasslandTerrainBrush" Color="Green"/>
+    <SolidColorBrush x:Key="PlainsTerrainBrush" Color="Goldenrod"/>
+    <SolidColorBrush x:Key="MountainsTerrainBrush" Color="SaddleBrown"/>
+</ResourceDictionary>

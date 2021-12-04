@@ -72,4 +72,30 @@ namespace CivCulture.Utilities.Converters
             return System.Convert.ToDecimal((double)value);
         }
     }
+
+    public class MapSpaceToTerrainBrushConverter : ValueConverter
+    {
+        private static Uri mapResourcesUri = new Uri("Resources/MapResources.xaml", UriKind.RelativeOrAbsolute);
+        private static string invalidTerrainBrushName = "InvalidTerrainBrush";
+        private static string terrainBrushNameSuffix = "TerrainBrush";
+
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is MapSpace space)
+            {
+                ResourceDictionary mapResources = new ResourceDictionary() { Source = mapResourcesUri };
+                if (space.Terrain == null)
+                {
+                    return mapResources[invalidTerrainBrushName] as System.Windows.Media.Brush;
+                }
+                return mapResources[space.Terrain.Name + terrainBrushNameSuffix] as System.Windows.Media.Brush;
+            }
+            throw new ArgumentException();
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
