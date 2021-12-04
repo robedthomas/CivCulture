@@ -91,7 +91,10 @@ namespace CivCulture_ViewModel.ViewModels
         #region Methods
         private void Pops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // @TODO
+            if (e.NewItems != null || e.OldItems != null)
+            {
+                OnPropertyChanged(nameof(PopCount));
+            }
         }
 
         private void Jobs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
