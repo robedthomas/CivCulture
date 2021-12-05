@@ -106,7 +106,14 @@ namespace CivCulture_ViewModel.ViewModels
         #region Methods
         private void MapVM_SelectedSpaceChanged(object sender, ValueChangedEventArgs<MapSpaceViewModel> e)
         {
-            SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace);
+            if (e.NewValue is null)
+            {
+                SelectedSpaceDetails = null;
+            }
+            else
+            {
+                SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace);
+            }
         }
 
         private void SourceInstance_MapChanged(object sender, ValueChangedEventArgs<GameMap> e)
