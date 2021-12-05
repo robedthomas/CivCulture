@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Models.Forecasts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,8 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
+        public PopForecast Forecast { get; private set; }
+
         public PopTemplate Template
         {
             get => template;
@@ -126,6 +129,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public Pop(PopTemplate template)
         {
+            Forecast = new PopForecast(this);
             Template = template;
             OwnedResources = new ConsumeablesCollection();
             JobChanged += This_JobChanged;
