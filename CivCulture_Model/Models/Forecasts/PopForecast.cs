@@ -147,7 +147,10 @@ namespace CivCulture_Model.Models.Forecasts
                 e.OldValue.MoneyChanged -= MoneyChangedHandler;
                 e.OldValue.SatisfactionChanged -= SatisfactionChangedHandler;
                 e.OldValue.OwnedResourcesChanged -= SourceModel_OwnedResourcesChanged;
-                e.OldValue.OwnedResources.CollectionChanged -= OwnedResourcesCollectionChangedHandler;
+                if (e.OldValue.OwnedResources != null)
+                {
+                    e.OldValue.OwnedResources.CollectionChanged -= OwnedResourcesCollectionChangedHandler;
+                }
             }
             if (e.NewValue != null)
             {
@@ -157,7 +160,10 @@ namespace CivCulture_Model.Models.Forecasts
                 e.NewValue.MoneyChanged += MoneyChangedHandler;
                 e.NewValue.SatisfactionChanged += SatisfactionChangedHandler;
                 e.NewValue.OwnedResourcesChanged += SourceModel_OwnedResourcesChanged;
-                e.NewValue.OwnedResources.CollectionChanged += OwnedResourcesCollectionChangedHandler;
+                if (e.NewValue.OwnedResources != null)
+                {
+                    e.NewValue.OwnedResources.CollectionChanged += OwnedResourcesCollectionChangedHandler;
+                }
             }
         }
 

@@ -80,6 +80,7 @@ namespace CivCulture_Model.Models.Modifiers
         public Modifiable()
         {
             Modifiers = new ObservableCollection<Modifier<TValue>>();
+            FactorModifiers = new ObservableCollection<Modifier<decimal>>();
         }
         #endregion
 

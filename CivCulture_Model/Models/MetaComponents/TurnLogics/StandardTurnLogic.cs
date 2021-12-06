@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Models.Modifiers;
 using CivCulture_Model.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
     {
         #region Fields
         private const decimal POP_SATISFACTION_INCREASE = 0.1M;
-        private const decimal POP_SATISFACTION_DECREASE = 0.2M;
+        private const decimal POP_SATISFACTION_DECREASE = -0.2M;
         private const decimal POP_GROWTH_FACTOR = 0.2M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
         private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.1M;
@@ -30,6 +31,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         #region Methods
         public override void ExecuteGameTurn(GameInstance instance)
         {
+            // Clear out all forecasts
+            ClearForecasts(instance);
             // Check for pop job promotions and assign pops to empty job
             PromotePops(instance);
             // Work jobs in order of priority, low to high
@@ -43,6 +46,17 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             GrowPops(instance);
             // Check for pop migration @TODO
             MigratePops(instance);
+        }
+
+        protected void ClearForecasts(GameInstance instance)
+        {
+            // Clear out pop forecasts
+            foreach (Pop pop in instance.AllPops)
+            {
+                pop.Forecast.MoneyChange.Modifiers.Clear();
+                pop.Forecast.SatisfactionChange.Modifiers.Clear();
+            }
+            // @TODO: Clear out space forecasts
         }
 
         protected void PromotePops(GameInstance instance)
@@ -118,6 +132,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 workerPop.OwnedResources.Subtract(job.Template.Inputs);
                 workerPop.OwnedResources.Add(job.Template.Outputs);
                 workerPop.Money += job.Template.BasePay;
+                workerPop.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>("Job Base Pay", job.Template.BasePay));
                 return true;
             }
             return false;
@@ -145,11 +160,13 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     {
                         pop.OwnedResources.Subtract(necessities);
                         pop.Satisfaction += POP_SATISFACTION_INCREASE;
+                        pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Necessities Met", POP_SATISFACTION_INCREASE));
                     }
                     else
                     {
                         // Failed to satisfy necessities @TODO
-                        pop.Satisfaction -= POP_SATISFACTION_DECREASE;
+                        pop.Satisfaction += POP_SATISFACTION_DECREASE;
+                        pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Necessities Not Met", POP_SATISFACTION_DECREASE));
                         // @TODO: subtract as many resources as possible
                     }
                 }
@@ -214,6 +231,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             pop.Space = destination;
             pop.Satisfaction += POP_MIGRATION_SATISFACTION_CHANGE;
+            pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Migration", POP_MIGRATION_SATISFACTION_CHANGE));
         }
 
         protected PopTemplate GetNextPopTemplate(MapSpace space)
