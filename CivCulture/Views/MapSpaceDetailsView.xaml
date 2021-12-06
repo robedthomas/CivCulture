@@ -74,7 +74,7 @@
                                 <TextBlock Text="Next Pop:"/>
                                 <TextBlock Text="{Binding NextPopTemplate, Mode=OneWay, Converter={conv:PopTemplateToTemplateNameConverter}}" Margin="5,0,0,0"/>
                             </StackPanel>
-                            <ProgressBar Grid.Row="0" Value="{Binding PopGrowthProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" HorizontalAlignment="Right" Width="100" Margin="0,0,20,0"/>
+                            <ProgressBar Grid.Row="0" Value="{Binding PopGrowthProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" HorizontalAlignment="Right" Width="120" Height="18" Margin="0,0,15,5"/>
                             <DataGrid Grid.Row="1" ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn Header="Icon">
@@ -84,8 +84,27 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Money" Binding="{Binding Money}"/>
                                     <DataGridTextColumn Header="Job" Binding="{Binding JobName}"/>
+                                    <DataGridTemplateColumn Header="Money">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Money}"/>
+                                                    <TextBlock Text="{Binding MoneyChange, Converter={conv:ModifiableToStringConverter}}" Margin="6,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Satisfaction">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Satisfaction}"/>
+                                                    <TextBlock Text="{Binding SatisfactionChange, Converter={conv:ModifiableToStringConverter}}" Margin="6,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTemplateColumn Header="Resources">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>

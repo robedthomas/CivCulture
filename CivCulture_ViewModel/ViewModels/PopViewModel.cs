@@ -51,6 +51,21 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourcePop.Money;
         }
 
+        public decimal MoneyChange
+        {
+            get => SourcePop.Forecast.MoneyChange.Value;
+        }
+
+        public decimal Satisfaction
+        {
+            get => SourcePop.Satisfaction;
+        }
+
+        public decimal SatisfactionChange
+        {
+            get => SourcePop.Forecast.SatisfactionChange.Value;
+        }
+
         public Job Job
         {
             get => SourcePop.Job;

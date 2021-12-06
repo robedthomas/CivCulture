@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Models;
+using CivCulture_Model.Models.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -84,13 +85,44 @@ namespace CivCulture.Utilities.Converters
             if (value is MapSpace space)
             {
                 ResourceDictionary mapResources = new ResourceDictionary() { Source = mapResourcesUri };
-                if (space.Terrain == null)
+                if (space.Terrain == null || !mapResources.Contains(space.Terrain.Name + terrainBrushNameSuffix))
                 {
                     return mapResources[invalidTerrainBrushName] as System.Windows.Media.Brush;
                 }
                 return mapResources[space.Terrain.Name + terrainBrushNameSuffix] as System.Windows.Media.Brush;
             }
             throw new ArgumentException();
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ModifiableToStringConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            decimal modification;
+            if (value is DecimalModifiable decMod)
+            {
+                modification = decMod.Value;
+                
+            }
+            else if (value is decimal mod)
+            {
+                modification = mod;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+            if (modification >= 0)
+            {
+                return $"(+{modification})";
+            }
+            return $"({modification})";
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
