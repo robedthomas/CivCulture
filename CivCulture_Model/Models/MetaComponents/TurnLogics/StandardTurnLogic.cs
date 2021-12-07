@@ -40,11 +40,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             // Trade resources and fundamentals between pops @TODO
             // Advance constructions @TODO
             // Start new constructions @TODO
-            // Consume pops' needs @TODO
+            // Consume pops' needs
             ConsumePopNeeds(instance);
             // Check for pop growth
             GrowPops(instance);
-            // Check for pop migration @TODO
+            // Check for pop migration
             MigratePops(instance);
         }
 
