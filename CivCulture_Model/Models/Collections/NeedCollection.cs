@@ -1,4 +1,4 @@
-﻿using CivCulture_Model.Utilities;
+﻿using GenericUtilities.Observables;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

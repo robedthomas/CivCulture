@@ -1,4 +1,4 @@
-﻿using CivCulture_Model.Utilities;
+﻿using GenericUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

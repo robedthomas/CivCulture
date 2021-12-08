@@ -1,4 +1,4 @@
-﻿using CivCulture_Model.Utilities;
+﻿using GenericUtilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -125,7 +125,7 @@ namespace CivCulture_Model.Models.Collections
 
         public IEnumerator<MapSpace> GetEnumerator()
         {
-            return new MapSpaceCollectionEnumerator(GenericUtilities.Flatten2DArray(allSpaces));
+            return new MapSpaceCollectionEnumerator(allSpaces.Flatten2DArray());
         }
         #endregion
         #endregion

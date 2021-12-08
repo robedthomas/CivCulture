@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.Utilities
+namespace GenericUtilities
 {
-    public static class GenericUtilities
+    public static class ExtensionMethods
     {
         private static Random commonRandom = new Random();
 
-        public static T[] Flatten2DArray<T>(T[,] array)
+        public static T[] Flatten2DArray<T>(this T[,] array)
         {
             if (array == null)
             {

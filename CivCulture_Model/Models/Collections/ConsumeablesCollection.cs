@@ -1,10 +1,10 @@
-﻿using System;
+﻿using GenericUtilities.Observables;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CivCulture_Model.Utilities;
 
 namespace CivCulture_Model.Models.Collections
 {

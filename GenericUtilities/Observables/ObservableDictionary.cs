@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.Utilities
+namespace GenericUtilities.Observables
 {
     /// <summary>
     /// An observable collection with dictionary behavior

@@ -1,6 +1,6 @@
 ﻿using CivCulture_Model.Models.Collections;
 using CivCulture_Model.Models.Modifiers;
-using CivCulture_Model.Utilities;
+using GenericUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
