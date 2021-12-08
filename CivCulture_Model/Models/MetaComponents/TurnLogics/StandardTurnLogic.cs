@@ -77,8 +77,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     Job oldJob = targetPop.Job;
                     targetPop.Job = emptyJob;
                     emptyJob.Worker = targetPop;
-                    oldJob.Worker = null;
-                    emptyJobs.Insert(0, oldJob);
+                    if (oldJob != null)
+                    {
+                        oldJob.Worker = null;
+                        emptyJobs.Insert(0, oldJob);
+                    }
                 }
             }
         }

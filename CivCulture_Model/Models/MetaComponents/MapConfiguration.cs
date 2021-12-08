@@ -17,6 +17,11 @@ namespace CivCulture_Model.Models.MetaComponents
         #region Properties
         public int Width { get; set; }
         public int Height { get; set; }
+
+        public int MinimumNumberPops
+        {
+            get => 1; // @TODO: make configurable
+        }
         #endregion
 
         #region Constructors

@@ -95,7 +95,7 @@ namespace CivCulture_ViewModel.ViewModels
         #region Methods
         private void GenerateNewGame(object param)
         {
-            MainModel.CurrentGame = MainModel.GenerateNewGame(new TestMapGeneration(), new MapConfiguration() { Height = 2, Width = 2 }, new StandardTurnLogic());
+            MainModel.CurrentGame = MainModel.GenerateNewGame(new RandomMapGeneration(), new MapConfiguration() { Height = 2, Width = 3 }, new StandardTurnLogic());
             GameInstanceVM = new GameInstanceViewModel(MainModel.CurrentGame);
             MenuVisibility = Visibility.Collapsed;
             GameVisibility = Visibility.Visible;

@@ -74,7 +74,10 @@ namespace CivCulture_Model.Models
             {
                 foreach (MapSpace oldSpace in e.OldItems)
                 {
-                    oldSpace.Pops.CollectionChanged -= Spaces_Pops_CollectionChanged;
+                    if (oldSpace != null)
+                    {
+                        oldSpace.Pops.CollectionChanged -= Spaces_Pops_CollectionChanged;
+                    }
                 }
             }
         }

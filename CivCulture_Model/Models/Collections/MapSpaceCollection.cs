@@ -43,7 +43,7 @@ namespace CivCulture_Model.Models.Collections
             }
             else
             {
-                throw new ArgumentException("MapSpaceCollection: width must be positive");
+                throw new ArgumentOutOfRangeException("MapSpaceCollection: width must be positive");
             }
             if (height > 0)
             {
@@ -51,9 +51,9 @@ namespace CivCulture_Model.Models.Collections
             }
             else
             {
-                throw new ArgumentException("MapSpaceCollection: height must be positive");
+                throw new ArgumentOutOfRangeException("MapSpaceCollection: height must be positive");
             }
-            allSpaces = new MapSpace[width, height];
+            allSpaces = new MapSpace[height, width];
         }
 
         public MapSpaceCollection(int width, int height, IEnumerable<MapSpace> spaces) : this(width, height)

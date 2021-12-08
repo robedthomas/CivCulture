@@ -12,9 +12,10 @@ namespace CivCulture_Model.Models.MetaComponents
         /// Generates a new GameMap from the given configuration
         /// </summary>
         /// <param name="config">Configuration parameters for map generation</param>
+        /// <param name="seed">Random number generator to use for generation</param>
         /// <param name="allPops">All Pops generated during map generation</param>
         /// <param name="allJobs">All Jobs generated during map generation</param>
         /// <returns></returns>
-        public abstract GameMap GenerateMap(MapConfiguration config, out List<Pop> allPops, out List<Job> allJobs);
+        public abstract GameMap GenerateMap(MapConfiguration config, Random seed, out List<Pop> allPops, out List<Job> allJobs);
     }
 }

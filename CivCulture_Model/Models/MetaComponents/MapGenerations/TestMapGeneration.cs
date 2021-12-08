@@ -22,7 +22,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Pop> allPops, out List<Job> allJobs)
         {
             if (!TerrainResource.Initialized)
             {

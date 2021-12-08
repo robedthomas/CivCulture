@@ -148,7 +148,7 @@ namespace CivCulture_Model.Models
         {
             List<Pop> pops;
             List<Job> jobs;
-            Map = MapGeneration.GenerateMap(MapConfig, out pops, out jobs);
+            Map = MapGeneration.GenerateMap(MapConfig, RandomSeed, out pops, out jobs);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
         }
