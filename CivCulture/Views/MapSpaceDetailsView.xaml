@@ -20,6 +20,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
@@ -52,15 +53,9 @@
                             </Grid.ColumnDefinitions>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="2" Header="Jobs">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="3" Header="Pops">
+                </Grid>
+                <TabControl Grid.Row="2" TabStripPlacement="Bottom">
+                    <TabItem Header="Pops">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -120,8 +115,17 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
-                    </GroupBox>
-                </Grid>
+                    </TabItem>
+                    <TabItem Header="Jobs">
+
+                    </TabItem>
+                    <TabItem Header="Resources">
+
+                    </TabItem>
+                    <TabItem Header="Stockpile">
+
+                    </TabItem>
+                </TabControl>
             </Grid>
         </Border>
     </Grid>
