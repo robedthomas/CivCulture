@@ -85,7 +85,7 @@
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Money}"/>
-                                                    <TextBlock Text="{Binding MoneyChange, Converter={conv:ModifiableToStringConverter}}" Margin="6,0,0,0"/>
+                                                    <TextBlock Text="{Binding MoneyChange, Converter={conv:ModifiableToStringConverter}}" ToolTip="{Binding MoneyChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -95,7 +95,7 @@
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Satisfaction}"/>
-                                                    <TextBlock Text="{Binding SatisfactionChange, Converter={conv:ModifiableToStringConverter}}" Margin="6,0,0,0"/>
+                                                    <TextBlock Text="{Binding SatisfactionChange, Converter={conv:ModifiableToStringConverter}}" ToolTip="{Binding SatisfactionChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

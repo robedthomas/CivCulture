@@ -31,6 +31,37 @@ namespace CivCulture_Model.Models.Modifiers
         #endregion
 
         #region Methods
+        public override string ToString()
+        {
+            string modVal;
+            if (modification is int intMod)
+            {
+                if (intMod >= 0)
+                {
+                    modVal = $"+{intMod}";
+                }
+                else
+                {
+                    modVal = $"{intMod}";
+                }
+            }
+            else if (modification is decimal decMod)
+            {
+                if (decMod >= 0)
+                {
+                    modVal = $"+{decMod}";
+                }
+                else
+                {
+                    modVal = $"{decMod}";
+                }
+            }
+            else
+            {
+                modVal = modification.ToString();
+            }
+            return $"({modVal}) {Name}";
+        }
         #endregion
     }
 }

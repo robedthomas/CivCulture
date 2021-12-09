@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Models;
 using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Models.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,9 +52,9 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourcePop.Money;
         }
 
-        public decimal MoneyChange
+        public Modifiable<decimal> MoneyChange
         {
-            get => SourcePop.Forecast.MoneyChange.Value;
+            get => SourcePop.Forecast.MoneyChange;
         }
 
         public decimal Satisfaction
@@ -61,9 +62,9 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourcePop.Satisfaction;
         }
 
-        public decimal SatisfactionChange
+        public Modifiable<decimal> SatisfactionChange
         {
-            get => SourcePop.Forecast.SatisfactionChange.Value;
+            get => SourcePop.Forecast.SatisfactionChange;
         }
 
         public Job Job

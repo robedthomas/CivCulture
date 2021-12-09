@@ -108,7 +108,6 @@ namespace CivCulture.Utilities.Converters
             if (value is DecimalModifiable decMod)
             {
                 modification = decMod.Value;
-                
             }
             else if (value is decimal mod)
             {
@@ -123,6 +122,28 @@ namespace CivCulture.Utilities.Converters
                 return $"(+{modification})";
             }
             return $"({modification})";
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ModifiableToTooltipConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DecimalModifiable decMod)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.AppendJoin("\n", decMod.Modifiers);
+                return builder.ToString();
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
