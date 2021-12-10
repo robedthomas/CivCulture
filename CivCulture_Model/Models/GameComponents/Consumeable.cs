@@ -15,12 +15,15 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
+        public string Name { get; private set; }
+
         public decimal BaseValue { get; protected set; }
         #endregion
 
         #region Constructors
-        public Consumeable(decimal baseValue)
+        public Consumeable(string name, decimal baseValue)
         {
+            Name = name;
             BaseValue = baseValue;
         }
         #endregion

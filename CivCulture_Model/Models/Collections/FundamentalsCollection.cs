@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GenericUtilities.Observables;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models.Collections
 {
-    public class FundamentalsCollection : ObservableCollection<Tuple<Fundamental, decimal>>
+    public class FundamentalsCollection : ObservableDictionary<Fundamental, decimal>
     {
         #region Fields
         #endregion

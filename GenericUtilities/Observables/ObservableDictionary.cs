@@ -46,6 +46,16 @@ namespace GenericUtilities.Observables
                 }
             }
         }
+
+        public IEnumerable<TKey> Keys
+        {
+            get => SourceDict.Keys;
+        }
+
+        public IEnumerable<TValue> Values
+        {
+            get => SourceDict.Values;
+        }
         #endregion
 
         #region Constructors
@@ -103,7 +113,7 @@ namespace GenericUtilities.Observables
 
         public bool TryGet(TKey key, out TValue value)
         {
-            if (Contains(key))
+            if (ContainsKey(key))
             {
                 value = this[key];
                 return true;
@@ -142,15 +152,15 @@ namespace GenericUtilities.Observables
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            return Contains(item.Key);
+            return ContainsKey(item.Key);
         }
 
-        public bool Contains(TKey key)
+        public bool ContainsKey(TKey key)
         {
             return SourceDict.ContainsKey(key);
         }
 
-        public bool Contains(TValue value)
+        public bool ContainsValue(TValue value)
         {
             return SourceDict.ContainsValue(value);
         }

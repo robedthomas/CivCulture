@@ -35,7 +35,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Fundamental(string name, decimal baseValue) : base(baseValue)
+        public Fundamental(string name, decimal baseValue) : base(name, baseValue)
         {
             Name = name;
         }

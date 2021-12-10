@@ -39,7 +39,7 @@ namespace CivCulture_Model.Models.Collections
         {
             foreach (KeyValuePair<Consumeable, decimal> pair in collection)
             {
-                if (Contains(pair.Key))
+                if (ContainsKey(pair.Key))
                 {
                     this[pair.Key] += pair.Value;
                 }
@@ -54,7 +54,7 @@ namespace CivCulture_Model.Models.Collections
         {
             foreach (KeyValuePair<Consumeable, decimal> pair in collection)
             {
-                if (Contains(pair.Key))
+                if (ContainsKey(pair.Key))
                 {
                     this[pair.Key] -= pair.Value;
                 }
@@ -69,7 +69,7 @@ namespace CivCulture_Model.Models.Collections
         {
             foreach (KeyValuePair<Consumeable, decimal> requirement in this)
             {
-                if (!consumeables.Contains(requirement.Key) || consumeables[requirement.Key] < requirement.Value )
+                if (!consumeables.ContainsKey(requirement.Key) || consumeables[requirement.Key] < requirement.Value )
                 {
                     return false;
                 }

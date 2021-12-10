@@ -13,7 +13,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
     {
         #region Fields
         private const decimal POP_SATISFACTION_INCREASE = 0.1M;
-        private const decimal POP_SATISFACTION_DECREASE = -0.2M;
+        private const decimal POP_SATISFACTION_DECREASE = -0.3M;
         private const decimal POP_GROWTH_FACTOR = 0.2M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
         private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.1M;
@@ -159,22 +159,91 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 // For each need type, consume those resources if the Pop deems it worth it
                 if (pop.Template.Needs.TryGet(NeedType.Necessity, out ConsumeablesCollection necessities))
                 {
-                    if (necessities.IsSatisfiedBy(pop.OwnedResources))
+                    decimal needsSatisfactionRatio = SatisfyNeedsWithResources(necessities, pop.OwnedResources);
+                    if (needsSatisfactionRatio == 1M)
                     {
-                        pop.OwnedResources.Subtract(necessities);
                         pop.Satisfaction += POP_SATISFACTION_INCREASE;
                         pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Necessities Met", POP_SATISFACTION_INCREASE));
                     }
                     else
                     {
                         // Failed to satisfy necessities @TODO
-                        pop.Satisfaction += POP_SATISFACTION_DECREASE;
+                        pop.Satisfaction += POP_SATISFACTION_DECREASE * (1 - needsSatisfactionRatio);
                         pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Necessities Not Met", POP_SATISFACTION_DECREASE));
                         // @TODO: subtract as many resources as possible
                     }
                 }
                 // Do same for comforts and luxuries
             }
+        }
+
+        protected decimal SatisfyNeedsWithResources(ConsumeablesCollection needs, ConsumeablesCollection resources)
+        {
+            decimal totalNeedsCount = 0, unsatisfiedNeedsCount = 0;
+            foreach (Consumeable need in needs.Keys)
+            {
+                totalNeedsCount += needs[need];
+                unsatisfiedNeedsCount += SatisfyNeedWithResources(need, needs[need], resources);
+            }
+            return 1M - (unsatisfiedNeedsCount / totalNeedsCount);
+        }
+
+        protected decimal SatisfyNeedWithResources(Consumeable need, decimal countNeeded, ConsumeablesCollection resources)
+        {
+            List<Consumeable> relevantResources = new List<Consumeable>();
+            foreach (Consumeable resource in resources.Keys)
+            {
+                if (resource == need || (resource is Resource r && need is Fundamental f && r.Yields(f)))
+                {
+                    relevantResources.Add(resource);
+                }
+            }
+            relevantResources.OrderBy((resource) => GetNeedSatisfactionValue(need, resource));
+            for (int i = 0; i < relevantResources.Count && countNeeded > 0; i++)
+            {
+                decimal numResourceConsumed, numNeedSatisfied;
+                if (relevantResources[i] is Fundamental f)
+                {
+                    numResourceConsumed = numNeedSatisfied = Math.Min(resources[f], countNeeded);
+                }
+                else
+                {
+                    Resource r = relevantResources[i] as Resource;
+                    if (need is Resource resourceNeed)
+                    {
+                        numResourceConsumed = numNeedSatisfied = Math.Min(resources[r], countNeeded);
+                    }
+                    else
+                    {
+                        Fundamental fundamentalNeed = need as Fundamental;
+                        numNeedSatisfied = Math.Min(resources[r] * r.YieldOfFundamental(fundamentalNeed), countNeeded);
+                        numResourceConsumed = numNeedSatisfied / r.YieldOfFundamental(fundamentalNeed);
+                    }
+                }
+                resources[relevantResources[i]] -= numResourceConsumed;
+                countNeeded -= numNeedSatisfied;
+            }
+            return countNeeded;
+        }
+
+        protected static decimal GetNeedSatisfactionValue(Consumeable need, Consumeable resource)
+        {
+            if (need is Fundamental fundamentalNeed)
+            {
+                if (resource is Fundamental f)
+                {
+                    return f.BaseValue;
+                }
+                else if (resource is Resource r)
+                {
+                    return r.BaseValue / r.FundementalValues[fundamentalNeed];
+                }
+            }
+            else if (need is Resource resourceNeed && resourceNeed == resource)
+            {
+                return resource.BaseValue;
+            }
+            throw new ArgumentException($"Passed two incompatible Consumeables: Need = {{{need.Name}}}, Resource = {{{resource.Name}}}");
         }
 
         protected decimal GetEstimatedNetPay(Job job)

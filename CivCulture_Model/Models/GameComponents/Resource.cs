@@ -25,23 +25,29 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
-        public string Name { get; private set; }
-
         public FundamentalsCollection FundementalValues { get; private set; } = new FundamentalsCollection();
         #endregion
 
         #region Constructors
-        public Resource(string name, int baseValue, params Tuple<Fundamental, decimal>[] fundamentalValues) : base(baseValue)
+        public Resource(string name, int baseValue, params Tuple<Fundamental, decimal>[] fundamentalValues) : base(name, baseValue)
         {
-            Name = name;
             foreach (Tuple<Fundamental, decimal> pair in fundamentalValues)
             {
-                FundementalValues.Add(pair);
+                FundementalValues.Add(pair.Item1, pair.Item2);
             }
         }
         #endregion
 
         #region Methods
+        public bool Yields(Fundamental fundamental)
+        {
+            return FundementalValues.ContainsKey(fundamental);
+        }
+
+        public decimal YieldOfFundamental(Fundamental fundamental)
+        {
+            return Yields(fundamental) ? FundementalValues[fundamental] : 0M;
+        }
         #endregion
     }
 }
