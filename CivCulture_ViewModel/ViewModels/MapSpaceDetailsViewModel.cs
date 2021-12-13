@@ -131,6 +131,16 @@ namespace CivCulture_ViewModel.ViewModels
         {
             get => SourceSpace.NextPopTemplate;
         }
+
+        public int FilledJobCount
+        {
+            get => SourceSpace.Jobs.Where(job => job.Worker != null).Count();
+        }
+
+        public int TotalJobCount
+        {
+            get => SourceSpace.Jobs.Count;
+        }
         #endregion
 
         #region Constructors
@@ -149,6 +159,10 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.TerrainChanged -= SourceSpace_TerrainChanged;
             sourceSpace.PopGrowthProgressChanged -= SourceSpace_PopGrowthProgressChanged;
             sourceSpace.NextPopTemplateChanged -= SourceSpace_NextPopTemplateChanged;
+            foreach (Job job in SourceSpace.Jobs)
+            {
+                job.WorkerChanged -= Job_WorkerChanged;
+            }
         }
 
         private void SubscribeToSourceSpaceEvents()
@@ -159,6 +173,10 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.TerrainChanged += SourceSpace_TerrainChanged;
             sourceSpace.PopGrowthProgressChanged += SourceSpace_PopGrowthProgressChanged;
             sourceSpace.NextPopTemplateChanged += SourceSpace_NextPopTemplateChanged;
+            foreach (Job job in SourceSpace.Jobs)
+            {
+                job.WorkerChanged += Job_WorkerChanged;
+            }
         }
 
         private void SourceSpace_TerrainChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Terrain> e)
@@ -192,7 +210,27 @@ namespace CivCulture_ViewModel.ViewModels
 
         private void SourceSpace_Jobs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // @TODO: define when JobViewModel is created
+            if (e.NewItems != null)
+            {
+                foreach (Job newJob in e.NewItems)
+                {
+                    newJob.WorkerChanged += Job_WorkerChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Job oldJob in e.NewItems)
+                {
+                    oldJob.WorkerChanged -= Job_WorkerChanged;
+                }
+            }
+            OnPropertyChanged(nameof(FilledJobCount));
+            OnPropertyChanged(nameof(TotalJobCount));
+        }
+
+        private void Job_WorkerChanged(object sender, ValueChangedEventArgs<Pop> e)
+        {
+            OnPropertyChanged(nameof(FilledJobCount));
         }
 
         private void SourceSpace_TerrainResources_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
