@@ -29,7 +29,7 @@ namespace CivCulture.Utilities.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (((string)parameter).ToLower() == "true")
+            if (parameter != null && ((string)parameter).ToLower() == "true")
             {
                 return value == null ? Visibility.Collapsed : Visibility.Visible;
             }
