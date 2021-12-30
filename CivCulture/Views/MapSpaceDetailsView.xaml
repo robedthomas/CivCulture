@@ -128,6 +128,32 @@
                                 <TextBlock Text="/" Margin="2,0,0,0"/>
                                 <TextBlock Text="{Binding TotalJobCount}" Margin="2,0,0,0"/>
                             </StackPanel>
+                            <ListBox Grid.Row="1" ItemsSource="{Binding AllJobGroups}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding Value.JobName}"/>
+                                            <ListBox ItemsSource="{Binding Value.Jobs}">
+                                                <ListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ListBox.ItemsPanel>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <local:JobView DataContext="{Binding}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Resources">

@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models;
+using GenericUtilities.Observables;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +20,7 @@ namespace CivCulture_ViewModel.ViewModels
         private string spaceName;
         private ObservableCollection<PopViewModel> popVMs;
         private PopViewModel selectedPop;
+        private ObservableDictionary<JobTemplate, JobGroupViewModel> allJobGroups;
         #endregion
 
         #region Events
@@ -32,6 +34,7 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 if (sourceSpace != value)
                 {
+                    AllJobGroups = GetJobGroupsFromSpace(value);
                     PopViewModels = new ObservableCollection<PopViewModel>();
                     if (sourceSpace != null)
                     {
@@ -141,6 +144,19 @@ namespace CivCulture_ViewModel.ViewModels
         {
             get => SourceSpace.Jobs.Count;
         }
+
+        public ObservableDictionary<JobTemplate, JobGroupViewModel> AllJobGroups
+        {
+            get => allJobGroups;
+            set
+            {
+                if (allJobGroups != value)
+                {
+                    allJobGroups = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
         #region Constructors
@@ -179,6 +195,24 @@ namespace CivCulture_ViewModel.ViewModels
             }
         }
 
+        private ObservableDictionary<JobTemplate, JobGroupViewModel> GetJobGroupsFromSpace(MapSpace space)
+        {
+            if (space == null)
+            {
+                return null;
+            }
+            ObservableDictionary<JobTemplate, JobGroupViewModel> output = new ObservableDictionary<JobTemplate, JobGroupViewModel>();
+            foreach (Job job in space.Jobs)
+            {
+                if (!output.ContainsKey(job.Template))
+                {
+                    output.Add(job.Template, new JobGroupViewModel(job.Template));
+                }
+                output[job.Template].Jobs.Add(new JobViewModel(job));
+            }
+            return output;
+        }
+
         private void SourceSpace_TerrainChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Terrain> e)
         {
             OnPropertyChanged(nameof(TerrainName));
@@ -214,6 +248,11 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 foreach (Job newJob in e.NewItems)
                 {
+                    if (!AllJobGroups.ContainsKey(newJob.Template))
+                    {
+                        AllJobGroups.Add(newJob.Template, new JobGroupViewModel(newJob.Template));
+                    }
+                    AllJobGroups[newJob.Template].Jobs.Add(new JobViewModel(newJob));
                     newJob.WorkerChanged += Job_WorkerChanged;
                 }
             }
@@ -221,6 +260,19 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 foreach (Job oldJob in e.NewItems)
                 {
+                    JobViewModel targetVM = null;
+                    foreach (JobViewModel jobVM in AllJobGroups[oldJob.Template].Jobs)
+                    {
+                        if (jobVM.SourceJob == oldJob)
+                        {
+                            targetVM = jobVM;
+                            break;
+                        }
+                    }
+                    if (targetVM != null)
+                    {
+                        AllJobGroups[oldJob.Template].Jobs.Remove(targetVM);
+                    }
                     oldJob.WorkerChanged -= Job_WorkerChanged;
                 }
             }
