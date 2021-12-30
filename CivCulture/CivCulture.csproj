@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\FoodIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\FoodIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CivCulture_Model\CivCulture_Model.csproj" />
     <ProjectReference Include="..\CivCulture_ViewModel\CivCulture_ViewModel.csproj" />
   </ItemGroup>

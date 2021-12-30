@@ -151,4 +151,27 @@ namespace CivCulture.Utilities.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class ResourceToIconConverter : ValueConverter
+    {
+        private static Uri iconResourcesUri = new Uri("Resources/Icons/IconsDictionary.xaml", UriKind.RelativeOrAbsolute);
+        private static ResourceDictionary iconsDictionary = new ResourceDictionary() { Source = iconResourcesUri };
+
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Consumeable c)
+            {
+                if (c == Fundamental.Food)
+                {
+                    return iconsDictionary["FoodIcon"];
+                }
+            }
+            return null;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

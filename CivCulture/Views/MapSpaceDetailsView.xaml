@@ -105,7 +105,16 @@
                                             <DataTemplate>
                                                 <DataGrid ItemsSource="{Binding OwnedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Header="Resource" Binding="{Binding Key.Name}"/>
+                                                        <DataGridTemplateColumn Header="Resource">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <ContentControl Content="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                                        <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
                                                         <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
