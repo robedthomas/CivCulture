@@ -22,8 +22,8 @@ namespace CivCulture_Model.Models
             Resource.InitializeResources();
             Gatherer_Wilderness = new JobTemplate("Gatherer", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
 
-            Gatherer_Wheat = new JobTemplate("Gatherer", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 1M } });
-            Farmer_Wheat = new JobTemplate("Wheat Farmer", 0, null, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 2M } });
+            Gatherer_Wheat = new JobTemplate("Gatherer (Wheat)", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 1M } });
+            Farmer_Wheat = new JobTemplate("Farmer (Wheat)", 0, null, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 2M } });
         }
 
         public static void InitializeTerrainResourceBindings()
