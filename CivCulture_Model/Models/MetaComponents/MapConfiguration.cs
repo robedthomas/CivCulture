@@ -22,6 +22,11 @@ namespace CivCulture_Model.Models.MetaComponents
         {
             get => 1; // @TODO: make configurable
         }
+
+        public int NumberBuilderJobsPerSpace
+        {
+            get => 2; // @TODO: make configurable
+        }
         #endregion
 
         #region Constructors

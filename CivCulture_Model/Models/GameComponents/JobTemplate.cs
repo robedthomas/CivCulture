@@ -13,6 +13,7 @@ namespace CivCulture_Model.Models
         public const int MAX_JOB_PRIORITY = 10;
         public const int UNEMPLOYED_JOB_PRIORITY = MAX_JOB_PRIORITY;
 
+        public static JobTemplate Builder;
         public static JobTemplate Gatherer_Wilderness;
         public static JobTemplate Gatherer_Wheat;
         public static JobTemplate Farmer_Wheat;
@@ -20,6 +21,8 @@ namespace CivCulture_Model.Models
         public static void InitializeJobTemplates()
         {
             Resource.InitializeResources();
+            Builder = new JobTemplate("Builder", 1, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Production, 1M } });
+
             Gatherer_Wilderness = new JobTemplate("Gatherer", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
 
             Gatherer_Wheat = new JobTemplate("Gatherer (Wheat)", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 1M } });
@@ -28,6 +31,8 @@ namespace CivCulture_Model.Models
 
         public static void InitializeTerrainResourceBindings()
         {
+            Builder.Source = null; // All spaces have generic Builder jobs
+
             Gatherer_Wilderness.Source = TerrainResource.Wilderness;
 
             Gatherer_Wheat.Source = TerrainResource.Wheat;

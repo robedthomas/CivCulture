@@ -169,6 +169,12 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             List<Job> output = new List<Job>();
             foreach (MapSpace space in map.Spaces)
             {
+                for (int i = 0; i < config.NumberBuilderJobsPerSpace; i++)
+                {
+                    Job builderJob = new Job(JobTemplate.Builder);
+                    builderJob.Space = space;
+                    output.Add(builderJob);
+                }
                 foreach (TerrainResource resource in space.TerrainResources)
                 {
                     foreach (JobTemplate template in resource.ChildJobs)
