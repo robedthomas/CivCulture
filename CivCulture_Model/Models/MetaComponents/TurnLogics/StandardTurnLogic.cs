@@ -301,6 +301,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void MigratePop(Pop pop, MapSpace destination, GameInstance instance)
         {
+            if (pop.Job != null)
+            {
+                pop.Job.Worker = null;
+                pop.Job = null;
+            }
             pop.Space = destination;
             pop.Satisfaction += POP_MIGRATION_SATISFACTION_CHANGE;
             pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Migration", POP_MIGRATION_SATISFACTION_CHANGE));
