@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 
@@ -163,18 +164,18 @@ namespace CivCulture.Utilities.Converters
             {
                 if (f == Fundamental.Food)
                 {
-                    return iconsDictionary["FoodIcon"];
+                    return (iconsDictionary["FoodIcon"] as Image).Source;
                 }
                 else if (f == Fundamental.Money)
                 {
-                    return iconsDictionary["MoneyIcon"];
+                    return (iconsDictionary["MoneyIcon"] as Image).Source;
                 }
             }
             else if (value is Resource r)
             {
                 if (r == Resource.Wheat)
                 {
-                    return iconsDictionary["WheatIcon"];
+                    return (iconsDictionary["WheatIcon"] as Image).Source;
                 }
             }
             return null;

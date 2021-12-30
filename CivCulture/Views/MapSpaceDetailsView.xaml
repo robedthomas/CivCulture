@@ -109,7 +109,7 @@
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <StackPanel Orientation="Horizontal">
-                                                                        <ContentControl Content="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                                        <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
                                                                         <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
                                                                     </StackPanel>
                                                                 </DataTemplate>
