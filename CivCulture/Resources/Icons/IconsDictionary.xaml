@@ -1,4 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Image x:Key="FoodIcon" Source="FoodIcon.png"/>
+    <Image x:Key="MoneyIcon" Source="MoneyIcon.png"/>
+    <Image x:Key="WheatIcon" Source="WheatIcon.png"/>
 </ResourceDictionary>

@@ -159,11 +159,22 @@ namespace CivCulture.Utilities.Converters
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Consumeable c)
+            if (value is Fundamental f)
             {
-                if (c == Fundamental.Food)
+                if (f == Fundamental.Food)
                 {
                     return iconsDictionary["FoodIcon"];
+                }
+                else if (f == Fundamental.Money)
+                {
+                    return iconsDictionary["MoneyIcon"];
+                }
+            }
+            else if (value is Resource r)
+            {
+                if (r == Resource.Wheat)
+                {
+                    return iconsDictionary["WheatIcon"];
                 }
             }
             return null;
