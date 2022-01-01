@@ -13,6 +13,7 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         private JobTemplate template;
+        private JobSource source;
         private Pop worker;
         private MapSpace space;
         #endregion
@@ -21,6 +22,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<Pop> WorkerChanged;
         public event ValueChangedEventHandler<MapSpace> SpaceChanged;
         public event ValueChangedEventHandler<JobTemplate> TemplateChanged;
+        public event ValueChangedEventHandler<JobSource> SourceChanged;
         #endregion
 
         #region Properties
@@ -34,6 +36,20 @@ namespace CivCulture_Model.Models
                     JobTemplate oldValue = template;
                     template = value;
                     TemplateChanged?.Invoke(this, new ValueChangedEventArgs<JobTemplate>(oldValue, template));
+                }
+            }
+        }
+
+        public JobSource Source
+        {
+            get => source;
+            set
+            {
+                if (source != value)
+                {
+                    JobSource oldValue = source;
+                    source = value;
+                    SourceChanged?.Invoke(this, new ValueChangedEventArgs<JobSource>(oldValue, source));
                 }
             }
         }
@@ -68,9 +84,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Job(JobTemplate template)
+        public Job(JobTemplate template, JobSource source)
         {
             Template = template;
+            Source = source;
             WorkerChanged += This_WorkerChanged;
             SpaceChanged += This_SpaceChanged;
         }

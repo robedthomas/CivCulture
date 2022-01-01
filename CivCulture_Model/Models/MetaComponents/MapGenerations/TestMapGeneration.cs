@@ -38,7 +38,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             newSpaces[1, 1] = new MapSpace(1, 1, null);
             map.Spaces = newSpaces;
 
-            Job job = new Job(JobTemplate.Gatherer_Wilderness);
+            Job job = new Job(JobTemplate.Gatherer_Wilderness, TerrainResource.Wilderness);
             allJobs.Add(job);
             Pop pop = new Pop(PopTemplate.Laborer) { Money = 100, Job = job, Space = map.Spaces[0, 0] };
             pop.OwnedResources.Add(Resource.Wheat, 15);

@@ -171,7 +171,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             {
                 for (int i = 0; i < config.NumberBuilderJobsPerSpace; i++)
                 {
-                    Job builderJob = new Job(JobTemplate.Builder);
+                    Job builderJob = new Job(JobTemplate.Builder, null); // @TODO: eventually set the source of Builder jobs to a tech
                     builderJob.Space = space;
                     output.Add(builderJob);
                 }
@@ -179,7 +179,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 {
                     foreach (JobTemplate template in resource.ChildJobs)
                     {
-                        Job newJob = new Job(template);
+                        Job newJob = new Job(template, resource);
                         newJob.Space = space;
                         output.Add(newJob);
                     }

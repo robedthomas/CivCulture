@@ -21,22 +21,12 @@ namespace CivCulture_Model.Models
         public static void InitializeJobTemplates()
         {
             Resource.InitializeResources();
-            Builder = new JobTemplate("Builder", 1, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Production, 1M } });
+            Builder = new JobTemplate("Builder", 1, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Production, 1M } });
 
-            Gatherer_Wilderness = new JobTemplate("Gatherer", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
+            Gatherer_Wilderness = new JobTemplate("Gatherer", 0, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
 
-            Gatherer_Wheat = new JobTemplate("Gatherer (Wheat)", 0, null, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 1M } });
-            Farmer_Wheat = new JobTemplate("Farmer (Wheat)", 0, null, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 2M } });
-        }
-
-        public static void InitializeTerrainResourceBindings()
-        {
-            Builder.Source = null; // All spaces have generic Builder jobs
-
-            Gatherer_Wilderness.Source = TerrainResource.Wilderness;
-
-            Gatherer_Wheat.Source = TerrainResource.Wheat;
-            Farmer_Wheat.Source = TerrainResource.Wheat;
+            Gatherer_Wheat = new JobTemplate("Gatherer (Wheat)", 0, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 1M } });
+            Farmer_Wheat = new JobTemplate("Farmer (Wheat)", 0, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Resource.Wheat, 2M } });
         }
         #endregion
 
@@ -51,8 +41,6 @@ namespace CivCulture_Model.Models
 
         public int Priority { get; protected set; }
 
-        public JobSource Source { get; protected set; }
-
         public decimal BasePay { get; protected set; }
 
         public ConsumeablesCollection Inputs { get; protected set; }
@@ -61,11 +49,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public JobTemplate(string name, int priority, JobSource source, int basePay, ConsumeablesCollection inputs = null, ConsumeablesCollection outputs = null)
+        public JobTemplate(string name, int priority, int basePay, ConsumeablesCollection inputs = null, ConsumeablesCollection outputs = null)
         {
             Name = name;
             Priority = priority;
-            Source = source;
             BasePay = basePay;
             Inputs = new ConsumeablesCollection();
             if (inputs != null)

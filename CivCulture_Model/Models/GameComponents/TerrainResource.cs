@@ -23,7 +23,6 @@ namespace CivCulture_Model.Models
             Wheat = new TerrainResource() { Name = "Wheat" };
             Wheat.ChildJobs.Add(JobTemplate.Gatherer_Wheat);
             Wheat.ChildJobs.Add(JobTemplate.Farmer_Wheat);
-            JobTemplate.InitializeTerrainResourceBindings();
             Initialized = true;
         }
         #endregion
