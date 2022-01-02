@@ -32,9 +32,24 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Constructors
+        public ConsumeablesCollection() { }
+
+        public ConsumeablesCollection(ConsumeablesCollection copyFrom) : base(copyFrom) { }
         #endregion
 
         #region Methods
+        public override void Add(Consumeable consumeable, decimal count)
+        {
+            if (ContainsKey(consumeable))
+            {
+                this[consumeable] += count;
+            }
+            else
+            {
+                base.Add(consumeable, count);
+            }
+        }
+
         public void Add(ConsumeablesCollection collection)
         {
             foreach (KeyValuePair<Consumeable, decimal> pair in collection)
@@ -50,18 +65,31 @@ namespace CivCulture_Model.Models.Collections
             }
         }
 
+        public void Add(NeedCollection needs)
+        {
+            foreach (NeedType needType in needs.Keys)
+            {
+                Add(needs[needType]);
+            }
+        }
+
         public void Subtract(ConsumeablesCollection collection)
         {
             foreach (KeyValuePair<Consumeable, decimal> pair in collection)
             {
-                if (ContainsKey(pair.Key))
-                {
-                    this[pair.Key] -= pair.Value;
-                }
-                else
-                {
-                    this[pair.Key] = -pair.Value;
-                }
+                Subtract(pair.Key, pair.Value);
+            }
+        }
+
+        public void Subtract(Consumeable consumeable, decimal countToSubtract)
+        {
+            if (ContainsKey(consumeable))
+            {
+                this[consumeable] -= countToSubtract;
+            }
+            else
+            {
+                this[consumeable] = -countToSubtract;
             }
         }
 

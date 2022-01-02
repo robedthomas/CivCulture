@@ -17,6 +17,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         private const decimal POP_GROWTH_FACTOR = 0.2M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
         private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.1M;
+        private const decimal DEFAULT_STOCKPILE_MONEY = 100M;
+        private const decimal STOCKPILE_PURCHASE_VALUE_MODIFIER = 1.05M;
         #endregion
 
         #region Events
@@ -37,7 +39,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             PromotePops(instance);
             // Work jobs in order of priority, low to high
             WorkJobs(instance);
-            // Trade resources and fundamentals between pops @TODO
+            // Trade resources and fundamentals between pops
+            TradePopResourcesWithStockpile(instance);
             // Advance constructions @TODO
             // Start new constructions @TODO
             // Consume pops' needs
@@ -150,6 +153,111 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 pop.Job = null;
             }
             // @TODO
+        }
+
+        protected void TradePopResourcesWithStockpile(GameInstance instance)
+        {
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                // Sell all excess resources to the space's stockpile
+                foreach (Pop resident in space.Pops)
+                {
+                    SellPopResourcesToStockpile(resident);
+                }
+                // Buy all needed resources from the space's stockpile
+                foreach (Pop resident in space.Pops)
+                {
+                    BuyPopResourcesFromStockpile(resident);
+                }
+            }
+        }
+
+        protected ConsumeablesCollection SellPopResourcesToStockpile(Pop pop)
+        {
+            // Compile all needs for this pop into one collection
+            ConsumeablesCollection allNeeds = new ConsumeablesCollection();
+            allNeeds.Add(pop.Template.Needs);
+            // Sell all resources that aren't needed
+            ConsumeablesCollection resourcesToSell = new ConsumeablesCollection(pop.OwnedResources);
+            resourcesToSell.Subtract(allNeeds);
+            ConsumeablesCollection resourcesSold = SellResourcesToStockpile(resourcesToSell, pop, pop.Space);
+            return resourcesSold;
+        }
+
+        protected ConsumeablesCollection SellResourcesToStockpile(ConsumeablesCollection resourcesToSell, Pop owner, MapSpace stockpileSpace)
+        {
+            ConsumeablesCollection resourcesSold = new ConsumeablesCollection();
+            foreach (Consumeable resource in resourcesToSell.Keys)
+            {
+                if (stockpileSpace.ResourceStockpileMoney > 0)
+                {
+                    if (resourcesToSell[resource] > 0)
+                    {
+                        decimal countToSell = Math.Min(resourcesToSell[resource], stockpileSpace.ResourceStockpileMoney / GetResourceSaleValue(resource, stockpileSpace));
+                        decimal saleValue = GetResourceSaleValue(resource, stockpileSpace) * countToSell;
+                        resourcesSold.Add(resource, countToSell);
+                        owner.OwnedResources.Subtract(resource, countToSell);
+                        stockpileSpace.ResourceStockpile.Add(resource, countToSell);
+                        owner.Money += saleValue;
+                        owner.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>($"Sold {countToSell} {resource.Name}", saleValue));
+                        stockpileSpace.ResourceStockpileMoney -= saleValue;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return resourcesSold;
+        }
+
+        protected ConsumeablesCollection BuyPopResourcesFromStockpile(Pop pop)
+        {
+            // Compile all needs for this pop into one collection
+            ConsumeablesCollection allNeeds = new ConsumeablesCollection();
+            allNeeds.Add(pop.Template.Needs);
+            // Buy all needs not yet owned
+            ConsumeablesCollection resourcesNeeded = new ConsumeablesCollection(allNeeds);
+            resourcesNeeded.Subtract(pop.OwnedResources);
+            ConsumeablesCollection resourcesBought = BuyResourcesFromStockpile(resourcesNeeded, pop, pop.Space);
+            return resourcesBought;
+        }
+
+        protected ConsumeablesCollection BuyResourcesFromStockpile(ConsumeablesCollection resourcesToBuy, Pop owner, MapSpace stockpileSpace)
+        {
+            ConsumeablesCollection resourcesBought = new ConsumeablesCollection();
+            foreach (Consumeable resource in resourcesToBuy.Keys)
+            {
+                if (owner.Money > 0)
+                {
+                    if (resourcesToBuy[resource] > 0 && stockpileSpace.ResourceStockpile.ContainsKey(resource))
+                    {
+                        decimal countToBuy = Math.Min(Math.Min(resourcesToBuy[resource], stockpileSpace.ResourceStockpile[resource]), owner.Money / GetResourcePurchaseValue(resource, stockpileSpace));
+                        decimal purchaseValue = GetResourcePurchaseValue(resource, stockpileSpace) * countToBuy;
+                        resourcesBought.Add(resource, countToBuy);
+                        owner.OwnedResources.Add(resource, countToBuy);
+                        stockpileSpace.ResourceStockpile.Subtract(resource, countToBuy);
+                        owner.Money -= purchaseValue;
+                        owner.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>($"Sold {countToBuy} {resource.Name}", -purchaseValue));
+                        stockpileSpace.ResourceStockpileMoney += purchaseValue;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return resourcesBought;
+        }
+
+        protected decimal GetResourceSaleValue(Consumeable resource, MapSpace stockpileSpace)
+        {
+            return resource.BaseValue;
+        }
+
+        protected decimal GetResourcePurchaseValue(Consumeable resource, MapSpace stockpileSpace)
+        {
+            return resource.BaseValue * STOCKPILE_PURCHASE_VALUE_MODIFIER;
         }
 
         protected void ConsumePopNeeds(GameInstance instance)
@@ -321,6 +429,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (MapSpace space in instance.Map.Spaces)
             {
                 space.NextPopTemplate = GetNextPopTemplate(space);
+                space.ResourceStockpileMoney = DEFAULT_STOCKPILE_MONEY;
             }
         }
         #endregion

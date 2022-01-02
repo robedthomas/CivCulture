@@ -130,7 +130,7 @@ namespace GenericUtilities.Observables
             Add(item.Key, item.Value);
         }
 
-        public void Add(TKey key, TValue value)
+        public virtual void Add(TKey key, TValue value)
         {
             SourceDict.Add(key, value);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(

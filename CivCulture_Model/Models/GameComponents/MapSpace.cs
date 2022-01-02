@@ -16,6 +16,7 @@ namespace CivCulture_Model.Models
         private PopTemplate nextPopTemplate;
         private Terrain terrain;
         private ConsumeablesCollection resourceStockpile;
+        private decimal resourceStockpileMoney;
         #endregion
 
         #region Events
@@ -23,6 +24,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<PopTemplate> NextPopTemplateChanged;
         public event ValueChangedEventHandler<Terrain> TerrainChanged;
         public event ValueChangedEventHandler<ConsumeablesCollection> ResourceStockpileChanged;
+        public event ValueChangedEventHandler<decimal> ResourceStockpileMoneyChanged;
         #endregion
 
         #region Properties
@@ -84,6 +86,20 @@ namespace CivCulture_Model.Models
                     ConsumeablesCollection oldValue = resourceStockpile;
                     resourceStockpile = value;
                     ResourceStockpileChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldValue, value));
+                }
+            }
+        }
+
+        public decimal ResourceStockpileMoney
+        {
+            get => resourceStockpileMoney;
+            set
+            {
+                if (resourceStockpileMoney != value)
+                {
+                    decimal oldValue = resourceStockpileMoney;
+                    resourceStockpileMoney = value;
+                    ResourceStockpileMoneyChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, value));
                 }
             }
         }
