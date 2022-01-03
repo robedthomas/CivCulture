@@ -15,7 +15,7 @@ namespace GenericUtilities.Observables
     /// </summary>
     /// <typeparam name="TKey">The key type</typeparam>
     /// <typeparam name="TValue">The value type</typeparam>
-    public class ObservableDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ICollection<KeyValuePair<TKey, TValue>>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         #region Fields
         private bool isReadOnly = false;
@@ -47,12 +47,12 @@ namespace GenericUtilities.Observables
             }
         }
 
-        public IEnumerable<TKey> Keys
+        public ICollection<TKey> Keys
         {
             get => SourceDict.Keys;
         }
 
-        public IEnumerable<TValue> Values
+        public ICollection<TValue> Values
         {
             get => SourceDict.Values;
         }
@@ -111,18 +111,9 @@ namespace GenericUtilities.Observables
             }
         }
 
-        public bool TryGet(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, out TValue value)
         {
-            if (ContainsKey(key))
-            {
-                value = this[key];
-                return true;
-            }
-            else
-            {
-                value = default(TValue);
-                return false;
-            }
+            return SourceDict.TryGetValue(key, out value);
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)

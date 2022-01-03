@@ -189,18 +189,17 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             ConsumeablesCollection resourcesSold = new ConsumeablesCollection();
             foreach (Consumeable resource in resourcesToSell.Keys)
             {
-                if (stockpileSpace.ResourceStockpileMoney > 0)
+                if (stockpileSpace.Money > 0)
                 {
                     if (resourcesToSell[resource] > 0)
                     {
-                        decimal countToSell = Math.Min(resourcesToSell[resource], stockpileSpace.ResourceStockpileMoney / GetResourceSaleValue(resource, stockpileSpace));
+                        decimal countToSell = Math.Min(resourcesToSell[resource], stockpileSpace.Money / GetResourceSaleValue(resource, stockpileSpace));
                         decimal saleValue = GetResourceSaleValue(resource, stockpileSpace) * countToSell;
-                        resourcesSold.Add(resource, countToSell);
-                        owner.OwnedResources.Subtract(resource, countToSell);
-                        stockpileSpace.ResourceStockpile.Add(resource, countToSell);
-                        owner.Money += saleValue;
-                        owner.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>($"Sold {countToSell} {resource.Name}", saleValue));
-                        stockpileSpace.ResourceStockpileMoney -= saleValue;
+                        if (owner.TrySell(resource, countToSell, saleValue, stockpileSpace))
+                        {
+                            owner.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>($"Sold {countToSell} {resource.Name}", saleValue));
+                            resourcesSold.Add(resource, countToSell);
+                        }
                     }
                 }
                 else
@@ -230,16 +229,15 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 if (owner.Money > 0)
                 {
-                    if (resourcesToBuy[resource] > 0 && stockpileSpace.ResourceStockpile.ContainsKey(resource))
+                    if (resourcesToBuy[resource] > 0 && stockpileSpace.OwnedResources.ContainsKey(resource))
                     {
-                        decimal countToBuy = Math.Min(Math.Min(resourcesToBuy[resource], stockpileSpace.ResourceStockpile[resource]), owner.Money / GetResourcePurchaseValue(resource, stockpileSpace));
+                        decimal countToBuy = Math.Min(Math.Min(resourcesToBuy[resource], stockpileSpace.OwnedResources[resource]), owner.Money / GetResourcePurchaseValue(resource, stockpileSpace));
                         decimal purchaseValue = GetResourcePurchaseValue(resource, stockpileSpace) * countToBuy;
-                        resourcesBought.Add(resource, countToBuy);
-                        owner.OwnedResources.Add(resource, countToBuy);
-                        stockpileSpace.ResourceStockpile.Subtract(resource, countToBuy);
-                        owner.Money -= purchaseValue;
-                        owner.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>($"Sold {countToBuy} {resource.Name}", -purchaseValue));
-                        stockpileSpace.ResourceStockpileMoney += purchaseValue;
+                        if (stockpileSpace.TrySell(resource, countToBuy, purchaseValue, owner))
+                        {
+                            owner.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>($"Bought {countToBuy} {resource.Name}", -purchaseValue));
+                            resourcesBought.Add(resource, countToBuy);
+                        }
                     }
                 }
                 else
@@ -265,7 +263,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (Pop pop in instance.AllPops)
             {
                 // For each need type, consume those resources if the Pop deems it worth it
-                if (pop.Template.Needs.TryGet(NeedType.Necessity, out ConsumeablesCollection necessities))
+                if (pop.Template.Needs.TryGetValue(NeedType.Necessity, out ConsumeablesCollection necessities))
                 {
                     decimal needsSatisfactionRatio = SatisfyNeedsWithResources(necessities, pop.OwnedResources);
                     if (needsSatisfactionRatio == 1M)
@@ -386,7 +384,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (MapSpace space in instance.Map.Spaces)
             {
                 space.NextPopTemplate = GetNextPopTemplate(space);
-                space.ResourceStockpileMoney = DEFAULT_STOCKPILE_MONEY;
+                space.Money = DEFAULT_STOCKPILE_MONEY;
             }
         }
         #endregion

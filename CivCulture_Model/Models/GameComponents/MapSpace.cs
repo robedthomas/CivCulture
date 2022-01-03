@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class MapSpace : GameComponent
+    public class MapSpace : ResourceOwner
     {
         #region Fields
         private decimal popGrowthProgress;
         private PopTemplate nextPopTemplate;
         private Terrain terrain;
-        private ConsumeablesCollection resourceStockpile;
         private decimal resourceStockpileMoney;
         #endregion
 
@@ -75,35 +74,6 @@ namespace CivCulture_Model.Models
                 }
             }
         }
-
-        public ConsumeablesCollection ResourceStockpile
-        {
-            get => resourceStockpile;
-            set
-            {
-                if (resourceStockpile != value)
-                {
-                    ConsumeablesCollection oldValue = resourceStockpile;
-                    resourceStockpile = value;
-                    ResourceStockpileChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldValue, value));
-                }
-            }
-        }
-
-        public decimal ResourceStockpileMoney
-        {
-            get => resourceStockpileMoney;
-            set
-            {
-                if (resourceStockpileMoney != value)
-                {
-                    decimal oldValue = resourceStockpileMoney;
-                    resourceStockpileMoney = value;
-                    ResourceStockpileMoneyChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, value));
-                }
-            }
-        }
-
         public ObservableCollection<Pop> Pops { get; protected set; }
 
         public ObservableCollection<Job> Jobs { get; protected set; }
@@ -112,7 +82,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public MapSpace(int row, int column, Terrain terrain, params TerrainResource[] terrainResources)
+        public MapSpace(int row, int column, Terrain terrain, params TerrainResource[] terrainResources) : base()
         {
             Row = row;
             Column = column;
@@ -120,7 +90,6 @@ namespace CivCulture_Model.Models
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
             TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
-            ResourceStockpile = new ConsumeablesCollection();
         }
         #endregion
 
