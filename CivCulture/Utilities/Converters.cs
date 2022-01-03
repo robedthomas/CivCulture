@@ -160,24 +160,25 @@ namespace CivCulture.Utilities.Converters
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Fundamental f)
+            string resourceName;
+            if (parameter is string name)
             {
-                if (f == Fundamental.Food)
-                {
-                    return (iconsDictionary["FoodIcon"] as Image).Source;
-                }
-                else if (f == Fundamental.Money)
-                {
-                    return (iconsDictionary["MoneyIcon"] as Image).Source;
-                }
+                resourceName = name;
             }
-            else if (value is Resource r)
+            else if (value is Consumeable c && c != null)
             {
-                if (r == Resource.Wheat)
-                {
-                    return (iconsDictionary["WheatIcon"] as Image).Source;
-                }
+                resourceName = c.Name;
             }
+            else
+            {
+                return null;
+            }
+            string iconKey = $"{resourceName}Icon";
+            if (iconsDictionary.Contains(iconKey))
+            {
+                return (iconsDictionary[iconKey] as Image).Source;
+            }
+            // throw new ArgumentException($"Requested icon for Consumeable that lacks an icon: {resourceName}");
             return null;
         }
 

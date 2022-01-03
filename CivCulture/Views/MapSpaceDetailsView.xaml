@@ -12,6 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/CommonResources.xaml"/>
+                <ResourceDictionary Source="/Resources/Icons/IconsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -169,7 +170,33 @@
 
                     </TabItem>
                     <TabItem Header="Stockpile">
-
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DataGrid Grid.Column="0" ItemsSource="{Binding StockpileResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                <TextBlock Text="Money:"/>
+                                <Image Source="{Binding Converter={conv:ResourceToIconConverter}, ConverterParameter=Money}" Width="16" Height="16" Margin="5,0,0,0"/>
+                                <TextBlock Text="{Binding StockpileMoney}" Margin="2,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </Grid>

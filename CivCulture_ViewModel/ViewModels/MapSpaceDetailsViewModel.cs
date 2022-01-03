@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models;
+using CivCulture_Model.Models.Collections;
 using GenericUtilities.Observables;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,8 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged(nameof(TerrainName));
                     OnPropertyChanged(nameof(NumPopRows));
                     OnPropertyChanged(nameof(NumPopColumns));
+                    OnPropertyChanged(nameof(StockpileResources));
+                    OnPropertyChanged(nameof(StockpileMoney));
                     SpaceName = SourceSpace.Name;
                 }
             }
@@ -157,6 +160,16 @@ namespace CivCulture_ViewModel.ViewModels
                 }
             }
         }
+
+        public ConsumeablesCollection StockpileResources
+        {
+            get => SourceSpace.OwnedResources;
+        }
+
+        public decimal StockpileMoney
+        {
+            get => SourceSpace.Money;
+        }
         #endregion
 
         #region Constructors
@@ -175,6 +188,8 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.TerrainChanged -= SourceSpace_TerrainChanged;
             sourceSpace.PopGrowthProgressChanged -= SourceSpace_PopGrowthProgressChanged;
             sourceSpace.NextPopTemplateChanged -= SourceSpace_NextPopTemplateChanged;
+            sourceSpace.OwnedResourcesChanged -= SourceSpace_OwnedResourcesChanged;
+            sourceSpace.MoneyChanged -= SourceSpace_MoneyChanged;
             foreach (Job job in SourceSpace.Jobs)
             {
                 job.WorkerChanged -= Job_WorkerChanged;
@@ -189,6 +204,8 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.TerrainChanged += SourceSpace_TerrainChanged;
             sourceSpace.PopGrowthProgressChanged += SourceSpace_PopGrowthProgressChanged;
             sourceSpace.NextPopTemplateChanged += SourceSpace_NextPopTemplateChanged;
+            sourceSpace.OwnedResourcesChanged += SourceSpace_OwnedResourcesChanged;
+            sourceSpace.MoneyChanged += SourceSpace_MoneyChanged;
             foreach (Job job in SourceSpace.Jobs)
             {
                 job.WorkerChanged += Job_WorkerChanged;
@@ -298,6 +315,16 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourceSpace_PopGrowthProgressChanged(object sender, ValueChangedEventArgs<decimal> e)
         {
             OnPropertyChanged(nameof(PopGrowthProgress));
+        }
+
+        private void SourceSpace_MoneyChanged(object sender, ValueChangedEventArgs<decimal> e)
+        {
+            OnPropertyChanged(nameof(StockpileMoney));
+        }
+
+        private void SourceSpace_OwnedResourcesChanged(object sender, ValueChangedEventArgs<ConsumeablesCollection> e)
+        {
+            OnPropertyChanged(nameof(StockpileResources));
         }
         #endregion
     }
