@@ -31,13 +31,11 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
-        public string Name { get; protected set; }
         #endregion
 
         #region Constructors
         public Fundamental(string name, decimal baseValue) : base(name, baseValue)
         {
-            Name = name;
         }
         #endregion
 
