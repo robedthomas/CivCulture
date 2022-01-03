@@ -57,7 +57,6 @@ namespace CivCulture_ViewModel.ViewModels
 
         public ObservableCollection<Tuple<string, MapGeneration>> AllMapGenerations { get; } = new ObservableCollection<Tuple<string, MapGeneration>>()
         {
-            new Tuple<string, MapGeneration>("Test", new TestMapGeneration()),
             new Tuple<string, MapGeneration>("Random", new RandomMapGeneration()),
         };
 
