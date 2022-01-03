@@ -298,60 +298,17 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected decimal SatisfyNeedWithResources(Consumeable need, decimal countNeeded, ConsumeablesCollection resources)
         {
-            List<Consumeable> relevantResources = new List<Consumeable>();
-            foreach (Consumeable resource in resources.Keys)
+            decimal countConsumed;
+            if (resources.ContainsKey(need))
             {
-                if (resource == need || (resource is Resource r && need is Fundamental f && r.Yields(f)))
-                {
-                    relevantResources.Add(resource);
-                }
+                countConsumed = Math.Min(countNeeded, resources[need]);
             }
-            relevantResources.OrderBy((resource) => GetNeedSatisfactionValue(need, resource));
-            for (int i = 0; i < relevantResources.Count && countNeeded > 0; i++)
+            else
             {
-                decimal numResourceConsumed, numNeedSatisfied;
-                if (relevantResources[i] is Fundamental f)
-                {
-                    numResourceConsumed = numNeedSatisfied = Math.Min(resources[f], countNeeded);
-                }
-                else
-                {
-                    Resource r = relevantResources[i] as Resource;
-                    if (need is Resource resourceNeed)
-                    {
-                        numResourceConsumed = numNeedSatisfied = Math.Min(resources[r], countNeeded);
-                    }
-                    else
-                    {
-                        Fundamental fundamentalNeed = need as Fundamental;
-                        numNeedSatisfied = Math.Min(resources[r] * r.YieldOfFundamental(fundamentalNeed), countNeeded);
-                        numResourceConsumed = numNeedSatisfied / r.YieldOfFundamental(fundamentalNeed);
-                    }
-                }
-                resources[relevantResources[i]] -= numResourceConsumed;
-                countNeeded -= numNeedSatisfied;
+                countConsumed = 0;
             }
-            return countNeeded;
-        }
-
-        protected static decimal GetNeedSatisfactionValue(Consumeable need, Consumeable resource)
-        {
-            if (need is Fundamental fundamentalNeed)
-            {
-                if (resource is Fundamental f)
-                {
-                    return f.BaseValue;
-                }
-                else if (resource is Resource r)
-                {
-                    return r.BaseValue / r.FundementalValues[fundamentalNeed];
-                }
-            }
-            else if (need is Resource resourceNeed && resourceNeed == resource)
-            {
-                return resource.BaseValue;
-            }
-            throw new ArgumentException($"Passed two incompatible Consumeables: Need = {{{need.Name}}}, Resource = {{{resource.Name}}}");
+            resources.Subtract(need, countConsumed);
+            return countNeeded - countConsumed;
         }
 
         protected decimal GetEstimatedNetPay(Job job)
