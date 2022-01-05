@@ -12,18 +12,17 @@ namespace CivCulture_Model.Models
     public class MapSpace : ResourceOwner
     {
         #region Fields
+        public const int BUILDING_SLOTS_PER_SPACE = 10;
+
         private decimal popGrowthProgress;
         private PopTemplate nextPopTemplate;
         private Terrain terrain;
-        private decimal resourceStockpileMoney;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<decimal> PopGrowthProgressChanged;
         public event ValueChangedEventHandler<PopTemplate> NextPopTemplateChanged;
         public event ValueChangedEventHandler<Terrain> TerrainChanged;
-        public event ValueChangedEventHandler<ConsumeablesCollection> ResourceStockpileChanged;
-        public event ValueChangedEventHandler<decimal> ResourceStockpileMoneyChanged;
         #endregion
 
         #region Properties
@@ -46,6 +45,8 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public int EmptyBuildingSlotCount { get; protected set; }
 
         public PopTemplate NextPopTemplate
         {
@@ -78,6 +79,8 @@ namespace CivCulture_Model.Models
 
         public ObservableCollection<Job> Jobs { get; protected set; }
 
+        public ObservableCollection<Building> Buildings { get; protected set; }
+
         public ObservableCollection<TerrainResource> TerrainResources { get; protected set; }
         #endregion
 
@@ -89,7 +92,23 @@ namespace CivCulture_Model.Models
             Terrain = terrain;
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
+            Buildings = new ObservableCollection<Building>();
             TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
+            EmptyBuildingSlotCount = BUILDING_SLOTS_PER_SPACE;
+
+            Buildings.CollectionChanged += Buildings_CollectionChanged;
+        }
+
+        private void Buildings_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                EmptyBuildingSlotCount -= e.NewItems.Count;
+            }
+            if (e.OldItems != null)
+            {
+                EmptyBuildingSlotCount += e.OldItems.Count;
+            }
         }
         #endregion
 
