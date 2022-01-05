@@ -38,7 +38,7 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Methods
-        public override void Add(Consumeable consumeable, decimal count)
+        public new void Add(Consumeable consumeable, decimal count)
         {
             if (ContainsKey(consumeable))
             {

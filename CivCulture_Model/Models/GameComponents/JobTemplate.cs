@@ -54,22 +54,8 @@ namespace CivCulture_Model.Models
             Name = name;
             Priority = priority;
             BasePay = basePay;
-            Inputs = new ConsumeablesCollection();
-            if (inputs != null)
-            {
-                foreach (KeyValuePair<Consumeable, decimal> pair in inputs)
-                {
-                    Inputs.Add(pair);
-                }
-            }
-            Outputs = new ConsumeablesCollection();
-            if (outputs != null)
-            {
-                foreach (KeyValuePair<Consumeable, decimal> pair in outputs)
-                {
-                    Outputs.Add(pair);
-                }
-            }
+            Inputs = new ConsumeablesCollection(inputs);
+            Outputs = new ConsumeablesCollection(outputs);
         }
         #endregion
 
