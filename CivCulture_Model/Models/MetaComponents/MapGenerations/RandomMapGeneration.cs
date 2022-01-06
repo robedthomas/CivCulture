@@ -28,6 +28,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             {
                 TerrainResource.InitializeTerrainResources();
             }
+            BuildingTemplate.InitializeBuildingTemplates();
             GameMap map = new GameMap(config.Width, config.Height);
             GenerateSpaces(map, config, seed);
             allPops = GenerateInitialPops(map, config, seed);

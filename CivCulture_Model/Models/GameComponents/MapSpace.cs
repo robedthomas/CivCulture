@@ -17,12 +17,14 @@ namespace CivCulture_Model.Models
         private decimal popGrowthProgress;
         private PopTemplate nextPopTemplate;
         private Terrain terrain;
+        private Building currentConstruction;
         #endregion
 
         #region Events
         public event ValueChangedEventHandler<decimal> PopGrowthProgressChanged;
         public event ValueChangedEventHandler<PopTemplate> NextPopTemplateChanged;
         public event ValueChangedEventHandler<Terrain> TerrainChanged;
+        public event ValueChangedEventHandler<Building> CurrentConstructionChanged;
         #endregion
 
         #region Properties
@@ -75,11 +77,28 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public Building CurrentConstruction
+        {
+            get => currentConstruction;
+            set
+            {
+                if (currentConstruction != value)
+                {
+                    Building oldValue = currentConstruction;
+                    currentConstruction = value;
+                    CurrentConstructionChanged?.Invoke(this, new ValueChangedEventArgs<Building>(oldValue, value));
+                }
+            }
+        }
+
         public ObservableCollection<Pop> Pops { get; protected set; }
 
         public ObservableCollection<Job> Jobs { get; protected set; }
 
         public ObservableCollection<Building> Buildings { get; protected set; }
+
+        public ObservableCollection<BuildingTemplate> AvailableBuildings { get; protected set; }
 
         public ObservableCollection<TerrainResource> TerrainResources { get; protected set; }
         #endregion
@@ -93,6 +112,7 @@ namespace CivCulture_Model.Models
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
             Buildings = new ObservableCollection<Building>();
+            AvailableBuildings = new ObservableCollection<BuildingTemplate>();
             TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
             EmptyBuildingSlotCount = BUILDING_SLOTS_PER_SPACE;
 

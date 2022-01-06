@@ -15,7 +15,7 @@ namespace CivCulture_Model.Models
 
         public static void InitializeBuildingTemplates()
         {
-            MudHuts = new BuildingTemplate("Mud Huts", new ConsumeablesCollection() { { Fundamental.Production, 10 } }, new ConsumeablesCollection() { { Fundamental.Shelter, 3 } });
+            MudHuts = new BuildingTemplate("Mud Huts", new ObservableCollection<JobTemplate>(), false, new ConsumeablesCollection() { { Fundamental.Production, 10 } }, new ConsumeablesCollection() { { Fundamental.Shelter, 3 } });
         }
         #endregion
 
@@ -28,6 +28,8 @@ namespace CivCulture_Model.Models
         #region Properties
         public string Name { get; protected set; }
 
+        public bool IsSpaceUnique { get; protected set; }
+
         public ConsumeablesCollection Costs { get; protected set; }
 
         public ConsumeablesCollection Outputs { get; protected set; }
@@ -36,7 +38,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public BuildingTemplate(string name, ConsumeablesCollection costs = null, ConsumeablesCollection outputs = null, IEnumerable<JobTemplate> jobs = null)
+        public BuildingTemplate(string name, IEnumerable<JobTemplate> jobs, bool isSpaceUnique = false, ConsumeablesCollection costs = null, ConsumeablesCollection outputs = null)
         {
             Name = name;
             Costs = new ConsumeablesCollection(costs);

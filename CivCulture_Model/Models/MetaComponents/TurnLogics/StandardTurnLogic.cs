@@ -37,12 +37,15 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             ClearForecasts(instance);
             // Check for pop job promotions and assign pops to empty job
             PromotePops(instance);
+            // Produce resources from buildings
+            ProduceBuildingResources(instance);
             // Work jobs in order of priority, low to high
             WorkJobs(instance);
             // Trade resources and fundamentals between pops
             TradePopResourcesWithStockpile(instance);
             // Advance constructions @TODO
-            // Start new constructions @TODO
+            // Start new constructions
+            StartNewConstructions(instance);
             // Consume pops' needs
             ConsumePopNeeds(instance);
             // Check for pop growth
@@ -84,6 +87,20 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     {
                         oldJob.Worker = null;
                         emptyJobs.Insert(0, oldJob);
+                    }
+                }
+            }
+        }
+
+        protected void ProduceBuildingResources(GameInstance instance)
+        {
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                foreach(Building building in space.Buildings)
+                {
+                    if (building.IsComplete)
+                    {
+                        space.OwnedResources.Add(building.Template.Outputs);
                     }
                 }
             }
@@ -258,6 +275,30 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             return resource.BaseValue * STOCKPILE_PURCHASE_VALUE_MODIFIER;
         }
 
+        protected void StartNewConstructions(GameInstance instance)
+        {
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                // Only start new constructions for spaces that don't have a current construction
+                if (space.CurrentConstruction is null)
+                {
+                    space.CurrentConstruction = GenerateNewConstructionForSpace(space, instance);
+                }
+            }
+        }
+
+        protected Building GenerateNewConstructionForSpace(MapSpace space, GameInstance instance)
+        {
+            if (space.AvailableBuildings.Count > 0)
+            {
+                // For now, just select any of the available building templates for this space
+                // @TODO: base selection off of space's resources in demand
+                BuildingTemplate targetTemplate = space.AvailableBuildings.PickRandom(instance.RandomSeed);
+                return new Building(targetTemplate, space);
+            }
+            return null;
+        }
+
         protected void ConsumePopNeeds(GameInstance instance)
         {
             foreach (Pop pop in instance.AllPops)
@@ -385,6 +426,32 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 space.NextPopTemplate = GetNextPopTemplate(space);
                 space.Money = DEFAULT_STOCKPILE_MONEY;
+                space.Buildings.CollectionChanged += Space_Buildings_CollectionChanged;
+                space.AvailableBuildings.Add(BuildingTemplate.MudHuts);
+            }
+        }
+
+        private void Space_Buildings_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Building newBuilding in e.NewItems)
+                {
+                    if (newBuilding.Template.IsSpaceUnique)
+                    {
+                        (sender as MapSpace).AvailableBuildings.Remove(newBuilding.Template);
+                    }
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Building oldBuilding in e.OldItems)
+                {
+                    if (oldBuilding.Template.IsSpaceUnique)
+                    {
+                        (sender as MapSpace).AvailableBuildings.Add(oldBuilding.Template);
+                    }
+                }
             }
         }
         #endregion
