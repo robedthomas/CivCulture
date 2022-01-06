@@ -43,7 +43,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             WorkJobs(instance);
             // Trade resources and fundamentals between pops
             TradePopResourcesWithStockpile(instance);
-            // Advance constructions @TODO
+            // Advance constructions
+            AdvanceConstructions(instance);
             // Start new constructions
             StartNewConstructions(instance);
             // Consume pops' needs
@@ -273,6 +274,39 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         protected decimal GetResourcePurchaseValue(Consumeable resource, MapSpace stockpileSpace)
         {
             return resource.BaseValue * STOCKPILE_PURCHASE_VALUE_MODIFIER;
+        }
+
+        protected void AdvanceConstructions(GameInstance instance)
+        {
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                if (space.CurrentConstruction != null)
+                {
+                    ConsumeablesCollection resourcesConsumed = GetResourcesToAdvanceConstruction(space.CurrentConstruction, space.OwnedResources);
+                    space.OwnedResources.Subtract(resourcesConsumed);
+                    space.CurrentConstruction.RemainingCosts.Subtract(resourcesConsumed);
+                    space.CurrentConstruction.CompletionLevel = Building.GetCompletionLevel(space.CurrentConstruction);
+                    if (space.CurrentConstruction.IsComplete)
+                    {
+                        space.Buildings.Add(space.CurrentConstruction);
+                        space.CurrentConstruction = null;
+                    }
+                }
+            }
+        }
+
+        protected ConsumeablesCollection GetResourcesToAdvanceConstruction(Building construction, ConsumeablesCollection availableResources)
+        {
+            ConsumeablesCollection resourcesConsumed = new ConsumeablesCollection();
+            foreach (Consumeable req in construction.Template.Costs.Keys)
+            {
+                if (availableResources.ContainsKey(req))
+                {
+                    decimal countConsumed = Math.Min(availableResources[req], construction.Template.Costs[req]);
+                    resourcesConsumed.Add(req, countConsumed);
+                }
+            }
+            return resourcesConsumed;
         }
 
         protected void StartNewConstructions(GameInstance instance)

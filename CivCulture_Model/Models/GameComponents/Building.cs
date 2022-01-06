@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,14 @@ namespace CivCulture_Model.Models
         #region Events
         public ValueChangedEventHandler<BuildingTemplate> TemplateChanged;
         public ValueChangedEventHandler<MapSpace> SpaceChanged;
+        public ValueChangedEventHandler<ConsumeablesCollection> RemainingCostsChanged;
         public ValueChangedEventHandler<decimal> CompletionLevelChanged;
         #endregion
 
         #region Fields
         private BuildingTemplate template;
         private MapSpace space;
+        private ConsumeablesCollection remainingCosts;
         private decimal completionLevel;
         #endregion
 
@@ -46,6 +49,20 @@ namespace CivCulture_Model.Models
                     MapSpace oldValue = space;
                     space = value;
                     SpaceChanged?.Invoke(this, new ValueChangedEventArgs<MapSpace>(oldValue, value));
+                }
+            }
+        }
+
+        public ConsumeablesCollection RemainingCosts
+        {
+            get => remainingCosts;
+            set
+            {
+                if (remainingCosts != value)
+                {
+                    ConsumeablesCollection oldValue = remainingCosts;
+                    remainingCosts = value;
+                    RemainingCostsChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldValue, value));
                 }
             }
         }
@@ -84,10 +101,17 @@ namespace CivCulture_Model.Models
             Template = template;
             Space = space;
             CompletionLevel = 0;
+            RemainingCosts = new ConsumeablesCollection(Template.Costs);
         }
         #endregion
 
         #region Methods
+        public static decimal GetCompletionLevel(Building targetBuilding)
+        {
+            decimal originalCostCount = targetBuilding.Template.Costs.Values.Sum();
+            decimal remainingCostCount = targetBuilding.RemainingCosts.Values.Sum();
+            return 1M - (remainingCostCount / originalCostCount);
+        }
         #endregion
     }
 }
