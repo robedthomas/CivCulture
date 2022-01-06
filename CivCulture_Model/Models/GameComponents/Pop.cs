@@ -4,12 +4,14 @@ using CivCulture_Model.Models.Forecasts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    [DebuggerDisplay("{Template.Name} Pop")]
     public class Pop : ResourceOwner 
     {
         #region Fields

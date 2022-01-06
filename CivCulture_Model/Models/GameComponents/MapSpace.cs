@@ -3,12 +3,14 @@ using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    [DebuggerDisplay("MapSpace: (X,Y)=({Column},{Row}) Terrain={Terrain.Name}")]
     public class MapSpace : ResourceOwner
     {
         #region Fields

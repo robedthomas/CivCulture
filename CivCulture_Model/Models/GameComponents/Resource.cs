@@ -1,9 +1,11 @@
 ﻿using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CivCulture_Model.Models
 {
+    [DebuggerDisplay("{Name} Resource")]
     public class Resource : Consumeable
     {
         #region Static Members

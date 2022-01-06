@@ -2,12 +2,14 @@
 using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    [DebuggerDisplay("{Template.Name} Building")]
     public class Building : JobSource
     {
         #region Events
