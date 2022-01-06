@@ -3,4 +3,6 @@
     <Image x:Key="FoodIcon" Source="FoodIcon.png"/>
     <Image x:Key="MoneyIcon" Source="MoneyIcon.png"/>
     <Image x:Key="WheatIcon" Source="WheatIcon.png"/>
+
+    <Image x:Key="MudHutsIcon" Source="MudHutsIcon.png"/>
 </ResourceDictionary>

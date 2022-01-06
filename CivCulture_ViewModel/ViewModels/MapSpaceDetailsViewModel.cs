@@ -20,6 +20,7 @@ namespace CivCulture_ViewModel.ViewModels
         private MapSpace sourceSpace;
         private string spaceName;
         private ObservableCollection<PopViewModel> popVMs;
+        private ObservableCollection<BuildingViewModel> buildingViewModels;
         private PopViewModel selectedPop;
         private ObservableDictionary<JobTemplate, JobGroupViewModel> allJobGroups;
         #endregion
@@ -37,6 +38,7 @@ namespace CivCulture_ViewModel.ViewModels
                 {
                     AllJobGroups = GetJobGroupsFromSpace(value);
                     PopViewModels = new ObservableCollection<PopViewModel>();
+                    BuildingViewModels = new ObservableCollection<BuildingViewModel>();
                     if (sourceSpace != null)
                     {
                         UnsubscribeFromSourceSpaceEvents();
@@ -48,6 +50,10 @@ namespace CivCulture_ViewModel.ViewModels
                         foreach (Pop pop in sourceSpace.Pops)
                         {
                             PopViewModels.Add(new PopViewModel() { SourcePop = pop });
+                        }
+                        foreach (Building building in sourceSpace.Buildings)
+                        {
+                            BuildingViewModels.Add(new BuildingViewModel(building));
                         }
                     }
                     OnPropertyChanged();
@@ -100,6 +106,19 @@ namespace CivCulture_ViewModel.ViewModels
                 if (popVMs != value)
                 {
                     popVMs = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ObservableCollection<BuildingViewModel> BuildingViewModels
+        {
+            get => buildingViewModels;
+            set
+            {
+                if (buildingViewModels != value)
+                {
+                    buildingViewModels = value;
                     OnPropertyChanged();
                 }
             }
@@ -184,6 +203,7 @@ namespace CivCulture_ViewModel.ViewModels
         {
             SourceSpace.Pops.CollectionChanged -= SourceSpace_Pops_CollectionChanged;
             SourceSpace.Jobs.CollectionChanged -= SourceSpace_Jobs_CollectionChanged;
+            SourceSpace.Buildings.CollectionChanged -= SourceSpace_Buildings_CollectionChanged;
             SourceSpace.TerrainResources.CollectionChanged -= SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged -= SourceSpace_TerrainChanged;
             sourceSpace.PopGrowthProgressChanged -= SourceSpace_PopGrowthProgressChanged;
@@ -200,6 +220,7 @@ namespace CivCulture_ViewModel.ViewModels
         {
             SourceSpace.Pops.CollectionChanged += SourceSpace_Pops_CollectionChanged;
             SourceSpace.Jobs.CollectionChanged += SourceSpace_Jobs_CollectionChanged;
+            SourceSpace.Buildings.CollectionChanged += SourceSpace_Buildings_CollectionChanged;
             SourceSpace.TerrainResources.CollectionChanged += SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged += SourceSpace_TerrainChanged;
             sourceSpace.PopGrowthProgressChanged += SourceSpace_PopGrowthProgressChanged;
@@ -295,6 +316,28 @@ namespace CivCulture_ViewModel.ViewModels
             }
             OnPropertyChanged(nameof(FilledJobCount));
             OnPropertyChanged(nameof(TotalJobCount));
+        }
+
+        private void SourceSpace_Buildings_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+            {
+                foreach (Building oldBuilding in e.OldItems)
+                {
+                    BuildingViewModel oldVM = BuildingViewModels.First((vm) => vm.SourceBuilding == oldBuilding);
+                    if (oldVM != null)
+                    {
+                        BuildingViewModels.Remove(oldVM);
+                    }
+                }
+            }
+            if (e.NewItems != null)
+            {
+                foreach (Building newBuilding in e.NewItems)
+                {
+                    BuildingViewModels.Add(new BuildingViewModel(newBuilding));
+                }
+            }
         }
 
         private void Job_WorkerChanged(object sender, ValueChangedEventArgs<Pop> e)

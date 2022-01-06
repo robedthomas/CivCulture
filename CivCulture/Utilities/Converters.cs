@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Windows.Media;
 
 namespace CivCulture.Utilities.Converters
 {
@@ -179,6 +180,61 @@ namespace CivCulture.Utilities.Converters
                 return (iconsDictionary[iconKey] as Image).Source;
             }
             // throw new ArgumentException($"Requested icon for Consumeable that lacks an icon: {resourceName}");
+            return null;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BuildingToIconConverter : ValueConverter
+    {
+        private static Uri iconResourcesUri = new Uri("Resources/Icons/IconsDictionary.xaml", UriKind.RelativeOrAbsolute);
+        private static ResourceDictionary iconsDictionary = new ResourceDictionary() { Source = iconResourcesUri };
+
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string resourceName;
+            if (parameter is string name)
+            {
+                resourceName = name;
+            }
+            else if (value is Building b && b != null)
+            {
+                resourceName = b.Template.Name.Replace(" ", string.Empty);
+            }
+            else
+            {
+                return null;
+            }
+            string iconKey = $"{resourceName}Icon";
+            if (iconsDictionary.Contains(iconKey))
+            {
+                return (iconsDictionary[iconKey] as Image).Source;
+            }
+            // throw new ArgumentException($"Requested icon for Consumeable that lacks an icon: {resourceName}");
+            return null;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BuildingToBackgroundConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Building b)
+            {
+                if (b.Template == BuildingTemplate.MudHuts)
+                {
+                    return Brushes.Brown;
+                }
+            }
             return null;
         }
 
