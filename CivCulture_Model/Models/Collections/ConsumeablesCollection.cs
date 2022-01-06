@@ -104,6 +104,17 @@ namespace CivCulture_Model.Models.Collections
             }
             return true;
         }
+
+        public void ClearNonAccumulatingConsumeables()
+        {
+            foreach (Consumeable resource in Keys)
+            {
+                if (!resource.Accumulates)
+                {
+                    this[resource] = 0;
+                }
+            }
+        }
         #endregion
     }
 }

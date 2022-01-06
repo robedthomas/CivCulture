@@ -27,7 +27,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Resource(string name, int baseValue) : base(name, baseValue)
+        public Resource(string name, int baseValue, bool accumulates = true) : base(name, baseValue, accumulates: accumulates)
         {
         }
         #endregion

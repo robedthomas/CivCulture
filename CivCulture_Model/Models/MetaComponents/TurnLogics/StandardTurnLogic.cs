@@ -33,6 +33,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         #region Methods
         public override void ExecuteGameTurn(GameInstance instance)
         {
+            // Clear out all non-accumulating consumeables among owned resources
+            ClearNonAccumulatingResources(instance);
             // Clear out all forecasts
             ClearForecasts(instance);
             // Check for pop job promotions and assign pops to empty job
@@ -53,6 +55,18 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             GrowPops(instance);
             // Check for pop migration
             MigratePops(instance);
+        }
+
+        protected void ClearNonAccumulatingResources(GameInstance instance)
+        {
+            foreach (Pop pop in instance.AllPops)
+            {
+                pop.OwnedResources.ClearNonAccumulatingConsumeables();
+            }
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                space.OwnedResources.ClearNonAccumulatingConsumeables();
+            }
         }
 
         protected void ClearForecasts(GameInstance instance)

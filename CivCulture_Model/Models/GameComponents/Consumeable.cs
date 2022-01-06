@@ -18,13 +18,16 @@ namespace CivCulture_Model.Models
         public string Name { get; private set; }
 
         public decimal BaseValue { get; protected set; }
+
+        public bool Accumulates { get; protected set; }
         #endregion
 
         #region Constructors
-        public Consumeable(string name, decimal baseValue)
+        public Consumeable(string name, decimal baseValue, bool accumulates = true)
         {
             Name = name;
             BaseValue = baseValue;
+            Accumulates = accumulates;
         }
         #endregion
 
