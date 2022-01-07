@@ -55,6 +55,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             GrowPops(instance);
             // Check for pop migration
             MigratePops(instance);
+            // Update each space's market
+            UpdateMarkets(instance);
         }
 
         protected void ClearNonAccumulatingResources(GameInstance instance)
@@ -76,8 +78,15 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 pop.Forecast.MoneyChange.Modifiers.Clear();
                 pop.Forecast.SatisfactionChange.Modifiers.Clear();
+                pop.ConsumedResources.Clear();
+                pop.ProducedResources.Clear();
             }
             // @TODO: Clear out space forecasts
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                space.ConsumedResources.Clear();
+                space.ProducedResources.Clear();
+            }
         }
 
         protected void PromotePops(GameInstance instance)
@@ -118,6 +127,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     if (building.IsComplete)
                     {
                         space.OwnedResources.Add(building.Template.Outputs);
+                        space.ProducedResources.Add(building.Template.Outputs);
                     }
                 }
             }
@@ -196,12 +206,12 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 // Sell all excess resources to the space's stockpile
                 foreach (Pop resident in space.Pops)
                 {
-                    SellPopResourcesToStockpile(resident);
+                    space.ProducedResources.Add(SellPopResourcesToStockpile(resident));
                 }
                 // Buy all needed resources from the space's stockpile
                 foreach (Pop resident in space.Pops)
                 {
-                    BuyPopResourcesFromStockpile(resident);
+                    space.ConsumedResources.Add(BuyPopResourcesFromStockpile(resident));
                 }
             }
         }
@@ -284,12 +294,12 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected decimal GetResourceSaleValue(Consumeable resource, MapSpace stockpileSpace)
         {
-            return resource.BaseValue;
+            return stockpileSpace.ResourceMarket.ResourcePrices[resource];
         }
 
         protected decimal GetResourcePurchaseValue(Consumeable resource, MapSpace stockpileSpace)
         {
-            return resource.BaseValue * STOCKPILE_PURCHASE_VALUE_MODIFIER;
+            return stockpileSpace.ResourceMarket.ResourcePrices[resource] * STOCKPILE_PURCHASE_VALUE_MODIFIER;
         }
 
         protected void AdvanceConstructions(GameInstance instance)
@@ -300,6 +310,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 {
                     ConsumeablesCollection resourcesConsumed = GetResourcesToAdvanceConstruction(space.CurrentConstruction, space.OwnedResources);
                     space.OwnedResources.Subtract(resourcesConsumed);
+                    space.ConsumedResources.Add(resourcesConsumed);
                     space.CurrentConstruction.RemainingCosts.Subtract(resourcesConsumed);
                     space.CurrentConstruction.CompletionLevel = Building.GetCompletionLevel(space.CurrentConstruction);
                     if (space.CurrentConstruction.IsComplete)
@@ -402,7 +413,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected decimal GetEstimatedNetPay(Job job)
         {
-            return job.Template.BasePay + job.Template.Outputs.BaseValue - job.Template.Inputs.BaseValue;
+            if (job.Space == null)
+            {
+                return job.Template.BasePay + job.Template.Outputs.BaseValue - job.Template.Inputs.BaseValue;
+            }
+            return job.Template.BasePay + job.Template.Outputs.GetMarketValue(job.Space.ResourceMarket) - job.Template.Inputs.GetMarketValue(job.Space.ResourceMarket);
         }
 
         protected void GrowPops (GameInstance instance)
@@ -463,6 +478,15 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             pop.Space = destination;
             pop.Satisfaction += POP_MIGRATION_SATISFACTION_CHANGE;
             pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Migration", POP_MIGRATION_SATISFACTION_CHANGE));
+        }
+
+        protected void UpdateMarkets(GameInstance instance)
+        {
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                space.ResourceMarket.DemandedResources = new ConsumeablesCollection(space.ConsumedResources);
+                space.ResourceMarket.SuppliedResources = new ConsumeablesCollection(space.ProducedResources);
+            }
         }
 
         protected PopTemplate GetNextPopTemplate(MapSpace space)

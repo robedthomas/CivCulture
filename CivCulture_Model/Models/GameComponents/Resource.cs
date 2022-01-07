@@ -9,6 +9,8 @@ namespace CivCulture_Model.Models
     public class Resource : Consumeable
     {
         #region Static Members
+        public static HashSet<Resource> AllResources = new HashSet<Resource>();
+
         public static Resource Wheat;
         public static Resource Wood;
 
@@ -31,6 +33,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public Resource(string name, int baseValue, bool accumulates = true) : base(name, baseValue, accumulates: accumulates)
         {
+            AllResources.Add(this);
         }
         #endregion
 

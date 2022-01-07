@@ -11,6 +11,8 @@ namespace CivCulture_Model.Models
     public class Fundamental : Consumeable
     {
         #region Static Members
+        public static HashSet<Fundamental> AllFundamentals = new HashSet<Fundamental>();
+
         public static Fundamental Food;
         public static Fundamental Production;
         public static Fundamental Money;
@@ -24,6 +26,7 @@ namespace CivCulture_Model.Models
             Money = new Fundamental("Money", 1);
             Shelter = new Fundamental("Shelter", 3, accumulates: false);
             Luxuries = new Fundamental("Luxuries", 6);
+
             PopTemplate.InitializePopTemplates();
         }
         #endregion
@@ -40,6 +43,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public Fundamental(string name, decimal baseValue, bool accumulates = true) : base(name, baseValue, accumulates: accumulates)
         {
+            AllFundamentals.Add(this);
         }
         #endregion
 

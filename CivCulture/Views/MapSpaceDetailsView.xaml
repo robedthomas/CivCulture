@@ -208,14 +208,26 @@
                     <TabItem Header="Resources">
 
                     </TabItem>
-                    <TabItem Header="Stockpile">
+                    <TabItem Header="Market">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <DataGrid Grid.Column="0" ItemsSource="{Binding StockpileResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                <TextBlock Text="Money:"/>
+                                <Image Source="{Binding Converter={conv:ResourceToIconConverter}, ConverterParameter=Money}" Width="16" Height="16" Margin="5,0,0,0"/>
+                                <TextBlock Text="{Binding StockpileMoney}" Margin="2,0,0,0"/>
+                            </StackPanel>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Stockpile" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding StockpileResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn Header="Resource">
                                         <DataGridTemplateColumn.CellTemplate>
@@ -230,11 +242,54 @@
                                     <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,0,0,0">
-                                <TextBlock Text="Money:"/>
-                                <Image Source="{Binding Converter={conv:ResourceToIconConverter}, ConverterParameter=Money}" Width="16" Height="16" Margin="5,0,0,0"/>
-                                <TextBlock Text="{Binding StockpileMoney}" Margin="2,0,0,0"/>
-                            </StackPanel>
+                            <Label Grid.Row="1" Grid.Column="1" Content="Supply" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="1" ItemsSource="{Binding MarketSuppliedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Label Grid.Row="1" Grid.Column="2" Content="Demand" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="2" ItemsSource="{Binding MarketDemandedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Label Grid.Row="1" Grid.Column="3" Content="Prices" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="3" ItemsSource="{Binding MarketResourcePrices}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Price" Binding="{Binding Value}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                     </TabItem>
                 </TabControl>

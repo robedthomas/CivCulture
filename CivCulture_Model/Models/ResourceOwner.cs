@@ -13,11 +13,15 @@ namespace CivCulture_Model.Models
     {
         #region Events
         public event ValueChangedEventHandler<ConsumeablesCollection> OwnedResourcesChanged;
+        public event ValueChangedEventHandler<ConsumeablesCollection> ConsumedResourcesChanged;
+        public event ValueChangedEventHandler<ConsumeablesCollection> ProducedResourcesChanged;
         public event ValueChangedEventHandler<decimal> MoneyChanged;
         #endregion
 
         #region Fields
         private ConsumeablesCollection ownedResources;
+        private ConsumeablesCollection consumedResources;
+        private ConsumeablesCollection producedResources;
         private decimal money;
         #endregion
 
@@ -32,6 +36,34 @@ namespace CivCulture_Model.Models
                     ConsumeablesCollection oldResources = ownedResources;
                     ownedResources = value;
                     OwnedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldResources, ownedResources));
+                }
+            }
+        }
+
+        public ConsumeablesCollection ConsumedResources
+        {
+            get => consumedResources;
+            protected set
+            {
+                if (consumedResources != value)
+                {
+                    ConsumeablesCollection oldResources = consumedResources;
+                    consumedResources = value;
+                    ConsumedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldResources, consumedResources));
+                }
+            }
+        }
+
+        public ConsumeablesCollection ProducedResources
+        {
+            get => producedResources;
+            protected set
+            {
+                if (producedResources != value)
+                {
+                    ConsumeablesCollection oldResources = producedResources;
+                    producedResources = value;
+                    ProducedResourcesChanged?.Invoke(this, new ValueChangedEventArgs<ConsumeablesCollection>(oldResources, producedResources));
                 }
             }
         }
@@ -55,6 +87,8 @@ namespace CivCulture_Model.Models
         public ResourceOwner()
         {
             OwnedResources = new ConsumeablesCollection();
+            ConsumedResources = new ConsumeablesCollection();
+            ProducedResources = new ConsumeablesCollection();
         }
         #endregion
 

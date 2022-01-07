@@ -15,6 +15,8 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         public const int BUILDING_SLOTS_PER_SPACE = 10;
+        public const decimal MAX_RESOURCE_COST_MULTIPLIER = 3M;
+        public const decimal MIN_RESOURCE_COST_MULTIPLIER = 0.1M;
 
         private decimal popGrowthProgress;
         private PopTemplate nextPopTemplate;
@@ -103,6 +105,8 @@ namespace CivCulture_Model.Models
         public ObservableCollection<BuildingTemplate> AvailableBuildings { get; protected set; }
 
         public ObservableCollection<TerrainResource> TerrainResources { get; protected set; }
+
+        public Market ResourceMarket { get; protected set; }
         #endregion
 
         #region Constructors
@@ -116,11 +120,14 @@ namespace CivCulture_Model.Models
             Buildings = new ObservableCollection<Building>();
             AvailableBuildings = new ObservableCollection<BuildingTemplate>();
             TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
+            ResourceMarket = new Market(CalculateResourcePrice);
             EmptyBuildingSlotCount = BUILDING_SLOTS_PER_SPACE;
 
             Buildings.CollectionChanged += Buildings_CollectionChanged;
         }
+        #endregion
 
+        #region Methods
         public ConsumeablesCollection GetTotalOutput()
         {
             ConsumeablesCollection totalOutput = ConsumeablesCollection.Sum(
@@ -134,6 +141,37 @@ namespace CivCulture_Model.Models
                 select building.Template.Outputs
                 ));
             return totalOutput;
+        }
+
+        private decimal CalculateResourcePrice(Consumeable targetResource, Market owner)
+        {
+            decimal countSupplied = owner.SuppliedResources.ContainsKey(targetResource) ? owner.SuppliedResources[targetResource] : 0;
+            decimal countDemanded = owner.DemandedResources.ContainsKey(targetResource) ? owner.DemandedResources[targetResource] : 0;
+            return targetResource.BaseValue * CalculateResourcePriceMultiplier(countSupplied, countDemanded);
+        }
+
+        private static decimal CalculateResourcePriceMultiplier(decimal countSupplied, decimal countDemanded)
+        {
+            if (countSupplied == countDemanded) // Also covers both being zero
+            {
+                return 1;
+            }
+            else if (countSupplied == 0)
+            {
+                return MAX_RESOURCE_COST_MULTIPLIER;
+            }
+            else if (countDemanded == 0)
+            {
+                return MIN_RESOURCE_COST_MULTIPLIER;
+            }
+            else if (countSupplied > countDemanded)
+            {
+                return Math.Max(countDemanded / countSupplied, MIN_RESOURCE_COST_MULTIPLIER);
+            }
+            else
+            {
+                return Math.Min(countDemanded / countSupplied, MAX_RESOURCE_COST_MULTIPLIER);
+            }
         }
 
         private void Buildings_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -161,9 +199,6 @@ namespace CivCulture_Model.Models
                 EmptyBuildingSlotCount += e.OldItems.Count;
             }
         }
-        #endregion
-
-        #region Methods
         #endregion
     }
 }

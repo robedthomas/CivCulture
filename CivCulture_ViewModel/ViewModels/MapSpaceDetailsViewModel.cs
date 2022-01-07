@@ -203,6 +203,21 @@ namespace CivCulture_ViewModel.ViewModels
         {
             get => SourceSpace.Money;
         }
+
+        public ConsumeablesCollection MarketDemandedResources
+        {
+            get => SourceSpace.ResourceMarket.DemandedResources;
+        }
+
+        public ConsumeablesCollection MarketSuppliedResources
+        {
+            get => SourceSpace.ResourceMarket.SuppliedResources;
+        }
+
+        public ConsumeablesCollection MarketResourcePrices
+        {
+            get => SourceSpace.ResourceMarket.ResourcePrices;
+        }
         #endregion
 
         #region Constructors

@@ -116,6 +116,16 @@ namespace CivCulture_Model.Models.Collections
             }
         }
 
+        public decimal GetMarketValue(Market market)
+        {
+            decimal totalValue = 0;
+            foreach (KeyValuePair<Consumeable, decimal> pair in this)
+            {
+                totalValue += market.ResourcePrices[pair.Key] * pair.Value;
+            }
+            return totalValue;
+        }
+
         public static ConsumeablesCollection Sum(IEnumerable<ConsumeablesCollection> collections)
         {
             ConsumeablesCollection output = new ConsumeablesCollection();
