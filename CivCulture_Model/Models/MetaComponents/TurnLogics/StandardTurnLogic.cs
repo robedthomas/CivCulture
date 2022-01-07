@@ -82,26 +82,28 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void PromotePops(GameInstance instance)
         {
-            List<Job> emptyJobs = instance.AllJobs.Where(job => job.Worker == null).ToList();
-            while (emptyJobs.Count > 0)
+            foreach (MapSpace space in instance.Map.Spaces)
             {
-                Job emptyJob = emptyJobs[0];
-                emptyJobs.RemoveAt(0);
-                // Find all pops in the same space as the empty job and order them by current pay, high to low
-                List<Pop> popsInSpaceByPay = instance.AllPops.Where(pop => pop.Space == emptyJob.Space).OrderByDescending(pop => { return pop.Job == null ? 0 : GetEstimatedNetPay(pop.Job); }).ToList();
-                // Filter out pops whose base pay is already equal to or above the empty job's
-                // @TODO: improve performance by doing only one lookup
-                popsInSpaceByPay = popsInSpaceByPay.Where(pop => pop.Job == null ? true : GetEstimatedNetPay(pop.Job) < GetEstimatedNetPay(emptyJob)).ToList();
-                Pop targetPop = popsInSpaceByPay.Count > 0 ? popsInSpaceByPay.First() : null;
-                if (targetPop != null)
+                Stack<Job> emptyJobs = new Stack<Job>(space.Jobs.Where(job => job.Worker == null));
+                while(emptyJobs.Count > 0)
                 {
-                    Job oldJob = targetPop.Job;
-                    targetPop.Job = emptyJob;
-                    emptyJob.Worker = targetPop;
-                    if (oldJob != null)
+                    Job emptyJob = emptyJobs.Pop();
+                    // Find all pops in the same space as the empty job and order them by current pay, high to low
+                    List<Pop> popsInSpaceByPay = space.Pops.OrderByDescending(pop => { return pop.Job == null ? 0 : GetEstimatedNetPay(pop.Job); }).ToList();
+                    // Filter out pops whose base pay is already equal to or above the empty job's
+                    // @TODO: improve performance by doing only one lookup
+                    popsInSpaceByPay = popsInSpaceByPay.Where(pop => pop.Job == null ? true : GetEstimatedNetPay(pop.Job) < GetEstimatedNetPay(emptyJob)).ToList();
+                    Pop targetPop = popsInSpaceByPay.Count > 0 ? popsInSpaceByPay.First() : null;
+                    if (targetPop != null)
                     {
-                        oldJob.Worker = null;
-                        emptyJobs.Insert(0, oldJob);
+                        Job oldJob = targetPop.Job;
+                        targetPop.Job = emptyJob;
+                        emptyJob.Worker = targetPop;
+                        if (oldJob != null)
+                        {
+                            oldJob.Worker = null;
+                            emptyJobs.Push(oldJob);
+                        }
                     }
                 }
             }
