@@ -75,74 +75,74 @@
                     <TabItem Header="Pops">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <TextBlock Text="Next Pop:"/>
-                                <TextBlock Text="{Binding NextPopTemplate, Mode=OneWay, Converter={conv:PopTemplateToTemplateNameConverter}}" Margin="5,0,0,0"/>
-                            </StackPanel>
-                            <ProgressBar Grid.Row="0" Value="{Binding PopGrowthProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" HorizontalAlignment="Right" Width="120" Height="18" Margin="0,0,15,5"/>
-                            <DataGrid Grid.Row="1" ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
-                                <DataGrid.Columns>
-                                    <DataGridTemplateColumn Header="Icon">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <local:PopView DataContext="{Binding}"/>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Job" Binding="{Binding JobName}"/>
-                                    <DataGridTemplateColumn Header="Money">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Money}"/>
-                                                    <TextBlock Text="{Binding MoneyChange, Converter={conv:ModifiableToStringConverter}}" ToolTip="{Binding MoneyChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Satisfaction">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Satisfaction}"/>
-                                                    <TextBlock Text="{Binding SatisfactionChange, Converter={conv:ModifiableToStringConverter}}" ToolTip="{Binding SatisfactionChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Resources">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DataGrid ItemsSource="{Binding OwnedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
-                                                    <DataGrid.Columns>
-                                                        <DataGridTemplateColumn Header="Resource">
-                                                            <DataGridTemplateColumn.CellTemplate>
-                                                                <DataTemplate>
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
-                                                                        <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
-                                                                    </StackPanel>
-                                                                </DataTemplate>
-                                                            </DataGridTemplateColumn.CellTemplate>
-                                                        </DataGridTemplateColumn>
-                                                        <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
-                                                    </DataGrid.Columns>
-                                                </DataGrid>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="Next Pop:"/>
+                                    <TextBlock Text="{Binding NextPopTemplate, Mode=OneWay, Converter={conv:PopTemplateToTemplateNameConverter}}" Margin="5,0,0,0"/>
+                                </StackPanel>
+                                <ProgressBar Grid.Row="0" Value="{Binding PopGrowthProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" HorizontalAlignment="Right" Width="120" Height="18" Margin="0,0,15,5"/>
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Icon">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <local:PopView DataContext="{Binding}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Job" Binding="{Binding JobName}"/>
+                                        <DataGridTemplateColumn Header="Money">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Money, StringFormat=N}"/>
+                                                        <TextBlock Text="{Binding MoneyChange, Converter={conv:ModifiableToStringConverter}, StringFormat=N}" ToolTip="{Binding MoneyChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Satisfaction">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Satisfaction, StringFormat=N}"/>
+                                                        <TextBlock Text="{Binding SatisfactionChange, Converter={conv:ModifiableToStringConverter}}" ToolTip="{Binding SatisfactionChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Resources">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DataGrid ItemsSource="{Binding OwnedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn Header="Resource">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                                            <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
                         </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Jobs">
@@ -224,7 +224,7 @@
                             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,0,0,0">
                                 <TextBlock Text="Money:"/>
                                 <Image Source="{Binding Converter={conv:ResourceToIconConverter}, ConverterParameter=Money}" Width="16" Height="16" Margin="5,0,0,0"/>
-                                <TextBlock Text="{Binding StockpileMoney}" Margin="2,0,0,0"/>
+                                <TextBlock Text="{Binding StockpileMoney, StringFormat=N}" Margin="2,0,0,0"/>
                             </StackPanel>
                             <Label Grid.Row="1" Grid.Column="0" Content="Stockpile" FontWeight="Bold"/>
                             <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding StockpileResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
@@ -239,7 +239,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Label Grid.Row="1" Grid.Column="1" Content="Supply" FontWeight="Bold"/>
@@ -255,7 +255,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Label Grid.Row="1" Grid.Column="2" Content="Demand" FontWeight="Bold"/>
@@ -271,7 +271,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Count" Binding="{Binding Value}"/>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Label Grid.Row="1" Grid.Column="3" Content="Prices" FontWeight="Bold"/>
@@ -287,7 +287,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="Price" Binding="{Binding Value}"/>
+                                    <DataGridTextColumn Header="Price" Binding="{Binding Value, StringFormat=N}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
