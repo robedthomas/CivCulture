@@ -16,8 +16,8 @@ namespace CivCulture_Model.Models
 
         public static void InitializePopTemplates()
         {
-            HunterGatherer = new PopTemplate("Hunter Gatherer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.5M } });
-            Laborer = new PopTemplate("Laborer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } });
+            HunterGatherer = new PopTemplate("Hunter Gatherer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.75M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 0.5M } });
+            Laborer = new PopTemplate("Laborer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 1M } });
         }
         #endregion
 

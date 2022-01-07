@@ -12,8 +12,12 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
     public class StandardTurnLogic : TurnLogic
     {
         #region Fields
-        private const decimal POP_SATISFACTION_INCREASE = 0.1M;
-        private const decimal POP_SATISFACTION_DECREASE = -0.3M;
+        private const decimal POP_NECESSITIES_SATISFACTION_INCREASE = 0.1M;
+        private const decimal POP_NECESSITIES_SATISFACTION_DECREASE = -0.3M;
+        private const decimal POP_NECESSITIES_COMFORTS_INCREASE = 0.2M;
+        private const decimal POP_NECESSITIES_COMFORTS_DECREASE = -0.05M;
+        private const decimal POP_NECESSITIES_LUXURIES_INCREASE = 0.3M;
+        private const decimal POP_NECESSITIES_LUXURIES_DECREASE = -0.01M;
         private const decimal POP_GROWTH_FACTOR = 0.2M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
         private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.1M;
@@ -365,23 +369,44 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (Pop pop in instance.AllPops)
             {
                 // For each need type, consume those resources if the Pop deems it worth it
-                if (pop.Template.Needs.TryGetValue(NeedType.Necessity, out ConsumeablesCollection necessities))
+                ConsumePopNeedsOfType(NeedType.Necessity, pop, POP_NECESSITIES_SATISFACTION_INCREASE, POP_NECESSITIES_SATISFACTION_DECREASE);
+                ConsumePopNeedsOfType(NeedType.Comfort, pop, POP_NECESSITIES_COMFORTS_INCREASE, POP_NECESSITIES_COMFORTS_DECREASE);
+                ConsumePopNeedsOfType(NeedType.Luxury, pop, POP_NECESSITIES_LUXURIES_INCREASE, POP_NECESSITIES_LUXURIES_DECREASE);
+            }
+        }
+
+        protected void ConsumePopNeedsOfType(NeedType typeOfNeed, Pop pop, decimal satisfactionIncrease, decimal satisfactionDecrease)
+        {
+            if (pop.Template.Needs.TryGetValue(typeOfNeed, out ConsumeablesCollection necessities))
+            {
+                string pluralNeedName;
+                switch (typeOfNeed)
                 {
-                    decimal needsSatisfactionRatio = SatisfyNeedsWithResources(necessities, pop.OwnedResources);
-                    if (needsSatisfactionRatio == 1M)
-                    {
-                        pop.Satisfaction += POP_SATISFACTION_INCREASE;
-                        pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Necessities Met", POP_SATISFACTION_INCREASE));
-                    }
-                    else
-                    {
-                        // Failed to satisfy necessities @TODO
-                        pop.Satisfaction += POP_SATISFACTION_DECREASE * (1 - needsSatisfactionRatio);
-                        pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Necessities Not Met", POP_SATISFACTION_DECREASE));
-                        // @TODO: subtract as many resources as possible
-                    }
+                    case NeedType.Necessity:
+                        pluralNeedName = "Necessities";
+                        break;
+                    case NeedType.Comfort:
+                        pluralNeedName = "Comforts";
+                        break;
+                    case NeedType.Luxury:
+                        pluralNeedName = "Luxuries";
+                        break;
+                    default:
+                        pluralNeedName = "ERROR!";
+                        break;
                 }
-                // Do same for comforts and luxuries
+                decimal needsSatisfactionRatio = SatisfyNeedsWithResources(necessities, pop.OwnedResources);
+                if (needsSatisfactionRatio == 1M)
+                {
+                    pop.Satisfaction += satisfactionIncrease;
+                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Met", satisfactionIncrease));
+                }
+                else
+                {
+                    pop.Satisfaction += satisfactionDecrease * (1 - needsSatisfactionRatio);
+                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Not Met", satisfactionDecrease));
+                    // @TODO: subtract as many resources as possible
+                }
             }
         }
 
