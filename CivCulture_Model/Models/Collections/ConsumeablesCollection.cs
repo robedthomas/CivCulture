@@ -97,7 +97,7 @@ namespace CivCulture_Model.Models.Collections
         {
             foreach (KeyValuePair<Consumeable, decimal> requirement in this)
             {
-                if (!consumeables.ContainsKey(requirement.Key) || consumeables[requirement.Key] < requirement.Value )
+                if (!consumeables.ContainsKey(requirement.Key) || consumeables[requirement.Key] < requirement.Value)
                 {
                     return false;
                 }
@@ -114,6 +114,16 @@ namespace CivCulture_Model.Models.Collections
                     this[resource] = 0;
                 }
             }
+        }
+
+        public static ConsumeablesCollection Sum(IEnumerable<ConsumeablesCollection> collections)
+        {
+            ConsumeablesCollection output = new ConsumeablesCollection();
+            foreach (ConsumeablesCollection collection in collections)
+            {
+                output.Add(collection);
+            }
+            return output;
         }
         #endregion
     }

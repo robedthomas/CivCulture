@@ -23,6 +23,7 @@ namespace CivCulture_ViewModel.ViewModels
         private ObservableCollection<BuildingViewModel> buildingViewModels;
         private PopViewModel selectedPop;
         private ObservableDictionary<JobTemplate, JobGroupViewModel> allJobGroups;
+        private ConsumeablesCollection totalOutput;
         #endregion
 
         #region Events
@@ -180,6 +181,19 @@ namespace CivCulture_ViewModel.ViewModels
             }
         }
 
+        public ConsumeablesCollection TotalOutput
+        {
+            get => totalOutput;
+            set
+            {
+                if (totalOutput != value)
+                {
+                    totalOutput = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public ConsumeablesCollection StockpileResources
         {
             get => SourceSpace.OwnedResources;
@@ -195,6 +209,7 @@ namespace CivCulture_ViewModel.ViewModels
         public MapSpaceDetailsViewModel(MapSpace sourceSpace)
         {
             SourceSpace = sourceSpace;
+            TotalOutput = SourceSpace.GetTotalOutput();
         }
         #endregion
 
@@ -314,6 +329,7 @@ namespace CivCulture_ViewModel.ViewModels
                     oldJob.WorkerChanged -= Job_WorkerChanged;
                 }
             }
+            TotalOutput = SourceSpace.GetTotalOutput();
             OnPropertyChanged(nameof(FilledJobCount));
             OnPropertyChanged(nameof(TotalJobCount));
         }
@@ -338,11 +354,13 @@ namespace CivCulture_ViewModel.ViewModels
                     BuildingViewModels.Add(new BuildingViewModel(newBuilding));
                 }
             }
+            TotalOutput = SourceSpace.GetTotalOutput();
         }
 
         private void Job_WorkerChanged(object sender, ValueChangedEventArgs<Pop> e)
         {
             OnPropertyChanged(nameof(FilledJobCount));
+            TotalOutput = SourceSpace.GetTotalOutput();
         }
 
         private void SourceSpace_TerrainResources_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -52,6 +52,22 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            <ListBox ItemsSource="{Binding TotalOutput}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                            <TextBlock Text="{Binding Value}"/>
+                                            <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}" Margin="4,0,0,0"/>
+                                            <TextBlock Text="{Binding Key.Name}" Margin="2,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Grid>
                     </GroupBox>
                 </Grid>

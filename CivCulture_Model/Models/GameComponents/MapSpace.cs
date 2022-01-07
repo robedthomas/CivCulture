@@ -121,6 +121,21 @@ namespace CivCulture_Model.Models
             Buildings.CollectionChanged += Buildings_CollectionChanged;
         }
 
+        public ConsumeablesCollection GetTotalOutput()
+        {
+            ConsumeablesCollection totalOutput = ConsumeablesCollection.Sum(
+                from job in Jobs
+                where job.Worker != null
+                select job.Template.Outputs
+                );
+            totalOutput.Add(ConsumeablesCollection.Sum(
+                from building in Buildings
+                where building.IsComplete
+                select building.Template.Outputs
+                ));
+            return totalOutput;
+        }
+
         private void Buildings_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)

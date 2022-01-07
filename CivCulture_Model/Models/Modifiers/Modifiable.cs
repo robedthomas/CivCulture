@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models.Modifiers
 {
+    public enum ModificationStat
+    {
+        ShelterGainPerTurn,
+    }
+
     public abstract class Modifiable<TValue>
     {
         #region Events
