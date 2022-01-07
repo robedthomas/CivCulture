@@ -240,6 +240,8 @@ namespace CivCulture_ViewModel.ViewModels
             sourceSpace.NextPopTemplateChanged -= SourceSpace_NextPopTemplateChanged;
             sourceSpace.OwnedResourcesChanged -= SourceSpace_OwnedResourcesChanged;
             sourceSpace.MoneyChanged -= SourceSpace_MoneyChanged;
+            sourceSpace.ResourceMarket.DemandedResourcesChanged -= SourceSpace_Market_DemandedResourcesChanged;
+            sourceSpace.ResourceMarket.SuppliedResourcesChanged -= SourceSpace_Market_SuppliedResourcesChanged;
             foreach (Job job in SourceSpace.Jobs)
             {
                 job.WorkerChanged -= Job_WorkerChanged;
@@ -257,6 +259,8 @@ namespace CivCulture_ViewModel.ViewModels
             sourceSpace.NextPopTemplateChanged += SourceSpace_NextPopTemplateChanged;
             sourceSpace.OwnedResourcesChanged += SourceSpace_OwnedResourcesChanged;
             sourceSpace.MoneyChanged += SourceSpace_MoneyChanged;
+            sourceSpace.ResourceMarket.DemandedResourcesChanged += SourceSpace_Market_DemandedResourcesChanged;
+            sourceSpace.ResourceMarket.SuppliedResourcesChanged += SourceSpace_Market_SuppliedResourcesChanged;
             foreach (Job job in SourceSpace.Jobs)
             {
                 job.WorkerChanged += Job_WorkerChanged;
@@ -401,6 +405,16 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourceSpace_OwnedResourcesChanged(object sender, ValueChangedEventArgs<ConsumeablesCollection> e)
         {
             OnPropertyChanged(nameof(StockpileResources));
+        }
+
+        private void SourceSpace_Market_DemandedResourcesChanged(object sender, ValueChangedEventArgs<ConsumeablesCollection> e)
+        {
+            OnPropertyChanged(nameof(MarketDemandedResources));
+        }
+
+        private void SourceSpace_Market_SuppliedResourcesChanged(object sender, ValueChangedEventArgs<ConsumeablesCollection> e)
+        {
+            OnPropertyChanged(nameof(MarketSuppliedResources));
         }
         #endregion
     }
