@@ -5,4 +5,5 @@
     <Image x:Key="WheatIcon" Source="WheatIcon.png"/>
 
     <Image x:Key="MudHutsIcon" Source="MudHutsIcon.png"/>
+    <Image x:Key="PrimitiveFarmIcon" Source="PrimitiveFarmIcon.png"/>
 </ResourceDictionary>

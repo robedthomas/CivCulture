@@ -99,7 +99,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         private void Jobs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException(); // @TODO
+            // For now, do nothing. Might not ever do anything?
         }
 
         private void TerrainResources_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

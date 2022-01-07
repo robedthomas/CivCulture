@@ -2,6 +2,7 @@
 using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -104,6 +105,10 @@ namespace CivCulture_Model.Models
             Space = space;
             CompletionLevel = 0;
             RemainingCosts = new ConsumeablesCollection(Template.Costs);
+            foreach (JobTemplate childJobTemplate in Template.Jobs)
+            {
+                ChildJobs.Add(new Job(childJobTemplate, this));
+            }
         }
         #endregion
 

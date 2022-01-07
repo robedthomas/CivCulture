@@ -234,6 +234,10 @@ namespace CivCulture.Utilities.Converters
                 {
                     return Brushes.Brown;
                 }
+                else if (b.Template == BuildingTemplate.PrimitiveFarm)
+                {
+                    return Brushes.Green;
+                }
             }
             return null;
         }

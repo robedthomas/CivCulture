@@ -24,9 +24,9 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #region Methods
         public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Pop> allPops, out List<Job> allJobs)
         {
-            if (!TerrainResource.Initialized)
+            if (!TerrainResourceTemplate.Initialized)
             {
-                TerrainResource.InitializeTerrainResources();
+                TerrainResourceTemplate.InitializeTerrainResources();
             }
             BuildingTemplate.InitializeBuildingTemplates();
             GameMap map = new GameMap(config.Width, config.Height);
@@ -54,7 +54,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         {
             List<TerrainResource> output = new List<TerrainResource>();
             List<Tuple<int, int>> possibleNumResources;
-            List<Tuple<TerrainResource, int>> possibleResources;
+            List<Tuple<TerrainResourceTemplate, int>> possibleResources;
             if (terrain == Terrain.Grassland)
             {
                 possibleNumResources = new List<Tuple<int, int>>()
@@ -63,10 +63,10 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                     new Tuple<int, int>(2, 3), // 3/5 chance of two resources
                     new Tuple<int, int>(3, 1), // 1/5 chance of three resources
                 };
-                possibleResources = new List<Tuple<TerrainResource, int>>()
+                possibleResources = new List<Tuple<TerrainResourceTemplate, int>>()
                 {
-                    new Tuple<TerrainResource, int>(TerrainResource.Wilderness, 1), // 1/2 chance of wilderness
-                    new Tuple<TerrainResource, int>(TerrainResource.Wheat, 1),      // 1/2 chance of wheat
+                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wilderness, 1), // 1/2 chance of wilderness
+                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wheat, 1),      // 1/2 chance of wheat
                 };
             }
             else if (terrain == Terrain.Plains)
@@ -77,10 +77,10 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                     new Tuple<int, int>(2, 3), // 3/6 chance of two resources
                     new Tuple<int, int>(3, 1), // 1/6 chance of three resources
                 };
-                possibleResources = new List<Tuple<TerrainResource, int>>()
+                possibleResources = new List<Tuple<TerrainResourceTemplate, int>>()
                 {
-                    new Tuple<TerrainResource, int>(TerrainResource.Wilderness, 1), // 1/2 chance of wilderness
-                    new Tuple<TerrainResource, int>(TerrainResource.Wheat, 1),      // 1/2 chance of wheat
+                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wilderness, 1), // 1/2 chance of wilderness
+                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wheat, 1),      // 1/2 chance of wheat
                 };
             }
             else if (terrain == Terrain.Mountains)
@@ -88,7 +88,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 possibleNumResources = new List<Tuple<int, int>>()
                 {
                 };
-                possibleResources = new List<Tuple<TerrainResource, int>>()
+                possibleResources = new List<Tuple<TerrainResourceTemplate, int>>()
                 {
                 };
             }
@@ -101,7 +101,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 int numResources = possibleNumResources.PickRandomWithWeight(seed);
                 for (int i = 0; i < numResources; i++)
                 {
-                    output.Add(possibleResources.PickRandomWithWeight(seed));
+                    output.Add(new TerrainResource(possibleResources.PickRandomWithWeight(seed)));
                 }
             }
             return output;
@@ -178,7 +178,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 }
                 foreach (TerrainResource resource in space.TerrainResources)
                 {
-                    foreach (JobTemplate template in resource.ChildJobs)
+                    foreach (JobTemplate template in resource.Template.ChildJobTemplates)
                     {
                         Job newJob = new Job(template, resource);
                         newJob.Space = space;

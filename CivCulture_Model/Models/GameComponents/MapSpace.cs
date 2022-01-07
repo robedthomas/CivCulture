@@ -125,10 +125,24 @@ namespace CivCulture_Model.Models
         {
             if (e.NewItems != null)
             {
+                foreach (Building newBuilding in e.NewItems)
+                {
+                    foreach (Job newJob in newBuilding.ChildJobs)
+                    {
+                        Jobs.Add(newJob);
+                    }
+                }
                 EmptyBuildingSlotCount -= e.NewItems.Count;
             }
             if (e.OldItems != null)
             {
+                foreach (Building oldBuilding in e.OldItems)
+                {
+                    foreach (Job oldJob in oldBuilding.ChildJobs)
+                    {
+                        Jobs.Remove(oldJob);
+                    }
+                }
                 EmptyBuildingSlotCount += e.OldItems.Count;
             }
         }

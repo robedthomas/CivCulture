@@ -1,43 +1,45 @@
-﻿using System;
+﻿using CivCulture_Model.Events;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    [DebuggerDisplay("{Template.Name} TerrainResource")]
     public class TerrainResource : JobSource
     {
-        #region Static Members
-        public static bool Initialized = false;
-
-        public static TerrainResource Wilderness;
-        public static TerrainResource Wheat;
-
-        public static void InitializeTerrainResources()
-        {
-            JobTemplate.InitializeJobTemplates();
-            Wilderness = new TerrainResource() { Name = "Wilderness" };
-            Wilderness.ChildJobs.Add(JobTemplate.Gatherer_Wilderness);
-
-            Wheat = new TerrainResource() { Name = "Wheat" };
-            Wheat.ChildJobs.Add(JobTemplate.Gatherer_Wheat);
-            Wheat.ChildJobs.Add(JobTemplate.Farmer_Wheat);
-            Initialized = true;
-        }
+        #region Events
+        public event ValueChangedEventHandler<TerrainResourceTemplate> TemplateChanged;
         #endregion
 
         #region Fields
-        #endregion
-
-        #region Events
+        private TerrainResourceTemplate template;
         #endregion
 
         #region Properties
-        public string Name { get; protected set; }
+        public TerrainResourceTemplate Template
+        {
+            get => template;
+            set
+            {
+                if (template != value)
+                {
+                    TerrainResourceTemplate oldValue = template;
+                    template = value;
+                    TemplateChanged?.Invoke(this, new ValueChangedEventArgs<TerrainResourceTemplate>(oldValue, value));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
+        public TerrainResource(TerrainResourceTemplate template)
+        {
+            Template = template;
+        }
         #endregion
 
         #region Methods

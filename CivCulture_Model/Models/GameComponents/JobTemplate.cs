@@ -15,6 +15,7 @@ namespace CivCulture_Model.Models
 
         public static JobTemplate Builder;
         public static JobTemplate Gatherer_Wilderness;
+        public static JobTemplate Farmer_Wilderness;
         public static JobTemplate Gatherer_Wheat;
         public static JobTemplate Farmer_Wheat;
 
@@ -24,6 +25,7 @@ namespace CivCulture_Model.Models
             Builder = new JobTemplate("Builder", 1, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Production, 1M } });
 
             Gatherer_Wilderness = new JobTemplate("Gatherer", 0, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
+            Farmer_Wilderness = new JobTemplate("Farmer", 0, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.7M } });
 
             Gatherer_Wheat = new JobTemplate("Gatherer (Wheat)", 0, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.5M } });
             Farmer_Wheat = new JobTemplate("Farmer (Wheat)", 0, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 2M } });

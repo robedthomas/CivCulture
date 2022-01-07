@@ -10,6 +10,7 @@
     <None Remove="Resources\Icons\FoodIcon.png" />
     <None Remove="Resources\Icons\MoneyIcon.png" />
     <None Remove="Resources\Icons\MudHutsIcon.png" />
+    <None Remove="Resources\Icons\PrimitiveFarmIcon.png" />
     <None Remove="Resources\Icons\WheatIcon.png" />
   </ItemGroup>
 
@@ -17,6 +18,7 @@
     <Resource Include="Resources\Icons\FoodIcon.png" />
     <Resource Include="Resources\Icons\MoneyIcon.png" />
     <Resource Include="Resources\Icons\MudHutsIcon.png" />
+    <Resource Include="Resources\Icons\PrimitiveFarmIcon.png" />
     <Resource Include="Resources\Icons\WheatIcon.png" />
   </ItemGroup>
 
