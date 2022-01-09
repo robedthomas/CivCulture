@@ -398,13 +398,13 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 decimal needsSatisfactionRatio = SatisfyNeedsWithResources(necessities, pop.OwnedResources);
                 if (needsSatisfactionRatio == 1M)
                 {
-                    pop.Satisfaction += satisfactionIncrease;
                     pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Met", satisfactionIncrease));
+                    pop.Satisfaction += satisfactionIncrease;
                 }
                 else
                 {
-                    pop.Satisfaction += satisfactionDecrease * (1 - needsSatisfactionRatio);
                     pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Not Met", satisfactionDecrease));
+                    pop.Satisfaction += satisfactionDecrease * (1 - needsSatisfactionRatio);
                     // @TODO: subtract as many resources as possible
                 }
             }

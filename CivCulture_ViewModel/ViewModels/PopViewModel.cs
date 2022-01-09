@@ -103,6 +103,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourcePop.JobChanged -= SourcePop_JobChanged;
             SourcePop.MoneyChanged -= SourcePop_MoneyChanged;
             SourcePop.OwnedResourcesChanged -= SourcePop_OwnedResourcesChanged;
+            SourcePop.SatisfactionChanged -= SourcePop_SatisfactionChanged;
         }
 
         private void SubscribeToSourcePopEvents()
@@ -111,6 +112,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourcePop.JobChanged += SourcePop_JobChanged;
             SourcePop.MoneyChanged += SourcePop_MoneyChanged;
             SourcePop.OwnedResourcesChanged += SourcePop_OwnedResourcesChanged;
+            SourcePop.SatisfactionChanged += SourcePop_SatisfactionChanged;
         }
 
         private void SourcePop_TemplateChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<PopTemplate> e)
@@ -144,6 +146,12 @@ namespace CivCulture_ViewModel.ViewModels
         {
             OnPropertyChanged(nameof(Job));
             OnPropertyChanged(nameof(JobName));
+        }
+
+        private void SourcePop_SatisfactionChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<decimal> e)
+        {
+            OnPropertyChanged(nameof(Satisfaction));
+            OnPropertyChanged(nameof(SatisfactionChange));
         }
         #endregion
     }
