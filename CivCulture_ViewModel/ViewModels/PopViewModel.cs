@@ -102,8 +102,10 @@ namespace CivCulture_ViewModel.ViewModels
             SourcePop.TemplateChanged -= SourcePop_TemplateChanged;
             SourcePop.JobChanged -= SourcePop_JobChanged;
             SourcePop.MoneyChanged -= SourcePop_MoneyChanged;
+            SourcePop.Forecast.MoneyChange.Modifiers.CollectionChanged -= MoneyChange_CollectionChanged;
             SourcePop.OwnedResourcesChanged -= SourcePop_OwnedResourcesChanged;
             SourcePop.SatisfactionChanged -= SourcePop_SatisfactionChanged;
+            SourcePop.Forecast.SatisfactionChange.Modifiers.CollectionChanged -= SatisfactionChange_CollectionChanged;
         }
 
         private void SubscribeToSourcePopEvents()
@@ -111,8 +113,10 @@ namespace CivCulture_ViewModel.ViewModels
             SourcePop.TemplateChanged += SourcePop_TemplateChanged;
             SourcePop.JobChanged += SourcePop_JobChanged;
             SourcePop.MoneyChanged += SourcePop_MoneyChanged;
+            SourcePop.Forecast.MoneyChange.Modifiers.CollectionChanged += MoneyChange_CollectionChanged;
             SourcePop.OwnedResourcesChanged += SourcePop_OwnedResourcesChanged;
             SourcePop.SatisfactionChanged += SourcePop_SatisfactionChanged;
+            SourcePop.Forecast.SatisfactionChange.Modifiers.CollectionChanged += SatisfactionChange_CollectionChanged;
         }
 
         private void SourcePop_TemplateChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<PopTemplate> e)
@@ -142,6 +146,11 @@ namespace CivCulture_ViewModel.ViewModels
             OnPropertyChanged(nameof(Money));
         }
 
+        private void MoneyChange_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(MoneyChange));
+        }
+
         private void SourcePop_JobChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Job> e)
         {
             OnPropertyChanged(nameof(Job));
@@ -151,6 +160,10 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourcePop_SatisfactionChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<decimal> e)
         {
             OnPropertyChanged(nameof(Satisfaction));
+        }
+
+        private void SatisfactionChange_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
             OnPropertyChanged(nameof(SatisfactionChange));
         }
         #endregion
