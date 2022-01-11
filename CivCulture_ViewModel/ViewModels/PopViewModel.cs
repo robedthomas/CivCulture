@@ -43,6 +43,7 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged(nameof(JobName));
                     OnPropertyChanged(nameof(OwnedResources));
                     OnPropertyChanged(nameof(Needs));
+                    OnPropertyChanged(nameof(CultureName));
                 }
             }
         }
@@ -91,6 +92,11 @@ namespace CivCulture_ViewModel.ViewModels
         {
             get => Brushes.Green; // @TODO: link to current job
         }
+
+        public string CultureName
+        {
+            get => SourcePop.Culture.Name;
+        }
         #endregion
 
         #region Constructors
@@ -105,6 +111,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourcePop.Forecast.MoneyChange.Modifiers.CollectionChanged -= MoneyChange_CollectionChanged;
             SourcePop.OwnedResourcesChanged -= SourcePop_OwnedResourcesChanged;
             SourcePop.SatisfactionChanged -= SourcePop_SatisfactionChanged;
+            SourcePop.CultureChanged -= SourcePop_CultureChanged;
             SourcePop.Forecast.SatisfactionChange.Modifiers.CollectionChanged -= SatisfactionChange_CollectionChanged;
         }
 
@@ -116,6 +123,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourcePop.Forecast.MoneyChange.Modifiers.CollectionChanged += MoneyChange_CollectionChanged;
             SourcePop.OwnedResourcesChanged += SourcePop_OwnedResourcesChanged;
             SourcePop.SatisfactionChanged += SourcePop_SatisfactionChanged;
+            SourcePop.CultureChanged += SourcePop_CultureChanged;
             SourcePop.Forecast.SatisfactionChange.Modifiers.CollectionChanged += SatisfactionChange_CollectionChanged;
         }
 
@@ -160,6 +168,11 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourcePop_SatisfactionChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<decimal> e)
         {
             OnPropertyChanged(nameof(Satisfaction));
+        }
+
+        private void SourcePop_CultureChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Culture> e)
+        {
+            OnPropertyChanged(nameof(CultureName));
         }
 
         private void SatisfactionChange_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

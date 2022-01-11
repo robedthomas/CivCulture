@@ -99,6 +99,7 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Job" Binding="{Binding JobName}"/>
+                                        <DataGridTextColumn Header="Culture" Binding="{Binding CultureName}"/>
                                         <DataGridTemplateColumn Header="Money">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
