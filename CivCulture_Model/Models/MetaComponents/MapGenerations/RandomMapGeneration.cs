@@ -32,7 +32,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             BuildingTemplate.InitializeBuildingTemplates();
             GameMap map = new GameMap(config.Width, config.Height);
             GenerateSpaces(map, config, seed);
-            allCultures = GenerateInitialCultures(map, config, seed);
+            allCultures = GenerateInitialCultures(map, config, namesDb, seed);
             Dictionary<MapSpace, Culture> cultureLoci = AssignCultureLoci(map, allCultures, seed);
             allPops = GenerateInitialPops(map, config, cultureLoci, seed);
             allJobs = GenerateInitialJobs(map, config, seed);
@@ -110,13 +110,14 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             return output;
         }
 
-        private List<Culture> GenerateInitialCultures(GameMap map, MapConfiguration config, Random seed)
+        private List<Culture> GenerateInitialCultures(GameMap map, MapConfiguration config, NamesDatabase namesDb, Random seed)
         {
             int numCultures = seed.Next(config.MinimumNumberCultures, config.MaximumNumberCultures + 1);
             List<Culture> output = new List<Culture>(numCultures);
             for (int i = 0; i < numCultures; i++)
             {
-                output.Add(new Culture("PLACEHOLDER", null)); // @TODO: read culture names from an input file
+                CultureData newCultureData = namesDb.UnusedCultures.PickRandom(seed, removeChoice: true);
+                output.Add(new Culture(newCultureData.Name, null));
             }
             return output;
         }

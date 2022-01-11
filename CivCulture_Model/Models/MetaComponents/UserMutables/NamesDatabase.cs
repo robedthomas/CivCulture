@@ -20,15 +20,19 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
 
         #region Properties
         public List<CultureGroupData> CultureGroups { get; protected set; }
+
+        public HashSet<CultureData> UnusedCultures { get; protected set; }
         #endregion
 
         #region Constructors
         public NamesDatabase(string databaseFileLocation)
         {
+            bool endReached = false;
+            UnusedCultures = new HashSet<CultureData>();
             CultureGroups = new List<CultureGroupData>();
             using (XmlReader reader = XmlReader.Create(databaseFileLocation))
             {
-                while (reader.Read())
+                while (!endReached && reader.Read())
                 {
                     switch (reader.NodeType)
                     {
@@ -49,7 +53,8 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                             switch (reader.Name)
                             {
                                 case XML_DATABASE_ELEMENT_NAME:
-                                    return;
+                                    endReached = true;
+                                    break;
                                 case XML_GROUPS_ELEMENT_NAME:
                                     break;
                                 default:
@@ -62,6 +67,13 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                         default:
                             throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing NamesDatabase");
                     }
+                }
+            }
+            foreach (CultureGroupData group in CultureGroups)
+            {
+                foreach (CultureData culture in group.Cultures)
+                {
+                    UnusedCultures.Add(culture);
                 }
             }
         }
