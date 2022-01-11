@@ -22,7 +22,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
             if (!TerrainResourceTemplate.Initialized)
             {
@@ -31,7 +31,9 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             BuildingTemplate.InitializeBuildingTemplates();
             GameMap map = new GameMap(config.Width, config.Height);
             GenerateSpaces(map, config, seed);
-            allPops = GenerateInitialPops(map, config, seed);
+            allCultures = GenerateInitialCultures(map, config, seed);
+            Dictionary<MapSpace, Culture> cultureLoci = AssignCultureLoci(map, allCultures, seed);
+            allPops = GenerateInitialPops(map, config, cultureLoci, seed);
             allJobs = GenerateInitialJobs(map, config, seed);
             return map;
         }
@@ -107,16 +109,29 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             return output;
         }
 
-        private List<Pop> GenerateInitialPops(GameMap map, MapConfiguration config, Random seed)
+        private List<Culture> GenerateInitialCultures(GameMap map, MapConfiguration config, Random seed)
+        {
+            int numCultures = seed.Next(config.MinimumNumberCultures, config.MaximumNumberCultures + 1);
+            List<Culture> output = new List<Culture>(numCultures);
+            for (int i = 0; i < numCultures; i++)
+            {
+                output.Add(new Culture("PLACEHOLDER", null)); // @TODO: read culture names from an input file
+            }
+            return output;
+        }
+
+        private List<Pop> GenerateInitialPops(GameMap map, MapConfiguration config, Dictionary<MapSpace, Culture> cultureLoci, Random seed)
         {
             List<Pop> output = new List<Pop>();
             List<Tuple<int, int>> possibleNumPops;
             // Add minimum number of pops first
             for (int i = 0; i < config.MinimumNumberPops; i++)
             {
-                Pop newPop = new Pop(PopTemplate.HunterGatherer);
+                MapSpace targetSpace = map.Spaces.PickRandom(seed);
+                Culture closestCulture = cultureLoci[map.Spaces.GetClosestSpace(targetSpace, cultureLoci.Keys, false)];
+                Pop newPop = new Pop(PopTemplate.HunterGatherer, closestCulture);
                 // Add new pop to random space
-                newPop.Space = map.Spaces.PickRandom(seed);
+                newPop.Space = targetSpace;
                 output.Add(newPop);
             }
             // Add pops for each space
@@ -156,7 +171,8 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                     int numPops = possibleNumPops.PickRandomWithWeight(seed);
                     for (int i = 0; i < numPops; i++)
                     {
-                        Pop newPop = new Pop(PopTemplate.HunterGatherer);
+                        Culture closestCulture = cultureLoci[map.Spaces.GetClosestSpace(space, cultureLoci.Keys, false)];
+                        Pop newPop = new Pop(PopTemplate.HunterGatherer, closestCulture);
                         newPop.Space = space;
                         output.Add(newPop);
                     }
@@ -187,6 +203,17 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 }
             }
             return output;
+        }
+
+        private static Dictionary<MapSpace, Culture> AssignCultureLoci(GameMap map, List<Culture> cultures, Random seed)
+        {
+            Dictionary<MapSpace, Culture> cultureLoci = new Dictionary<MapSpace, Culture>();
+            HashSet<MapSpace> spaces = new HashSet<MapSpace>(map.Spaces);
+            foreach (Culture c in cultures)
+            {
+                cultureLoci.Add(spaces.PickRandom(seed, removeChoice: true), c);
+            }
+            return cultureLoci;
         }
         #endregion
     }

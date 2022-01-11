@@ -22,6 +22,7 @@ namespace CivCulture_Model.Models
         private PopTemplate nextPopTemplate;
         private Terrain terrain;
         private Building currentConstruction;
+        private Culture dominantCulture;
         #endregion
 
         #region Events
@@ -29,6 +30,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<PopTemplate> NextPopTemplateChanged;
         public event ValueChangedEventHandler<Terrain> TerrainChanged;
         public event ValueChangedEventHandler<Building> CurrentConstructionChanged;
+        public event ValueChangedEventHandler<Culture> DominantCultureChanged;
         #endregion
 
         #region Properties
@@ -92,6 +94,20 @@ namespace CivCulture_Model.Models
                     Building oldValue = currentConstruction;
                     currentConstruction = value;
                     CurrentConstructionChanged?.Invoke(this, new ValueChangedEventArgs<Building>(oldValue, value));
+                }
+            }
+        }
+
+        public Culture DominantCulture
+        {
+            get => dominantCulture;
+            set
+            {
+                if (dominantCulture != value)
+                {
+                    Culture oldValue = dominantCulture;
+                    dominantCulture = value;
+                    DominantCultureChanged?.Invoke(this, new ValueChangedEventArgs<Culture>(oldValue, value));
                 }
             }
         }

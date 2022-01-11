@@ -29,6 +29,16 @@ namespace GenericUtilities
             return result;
         }
 
+        public static T PickRandom<T>(this ICollection<T> collection, Random random, bool removeChoice = false)
+        {
+            T choice = PickRandom(collection as IEnumerable<T>, random);
+            if (removeChoice)
+            {
+                collection.Remove(choice);
+            }
+            return choice;
+        }
+
         public static T PickRandom<T>(this IEnumerable<T> collection, Random random)
         {
             return collection.ElementAt(random.Next(0, collection.Count()));

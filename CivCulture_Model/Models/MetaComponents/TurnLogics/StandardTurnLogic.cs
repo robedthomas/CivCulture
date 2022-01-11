@@ -454,7 +454,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 while (pop.Space.PopGrowthProgress >= 1M)
                 {
                     pop.Space.PopGrowthProgress--;
-                    Pop newPop = new Pop(pop.Space.NextPopTemplate) { Space = pop.Space };
+                    Pop newPop = new Pop(pop.Space.NextPopTemplate, pop.Space.DominantCulture) { Space = pop.Space };
                     pop.Space.NextPopTemplate = GetNextPopTemplate(pop.Space);
                     newPops.Add(newPop);
                 }

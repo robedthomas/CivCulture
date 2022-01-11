@@ -27,6 +27,16 @@ namespace CivCulture_Model.Models.MetaComponents
         {
             get => 2; // @TODO: make configurable
         }
+
+        public int MinimumNumberCultures
+        {
+            get => 2; // @TODO: make configurable
+        }
+
+        public int MaximumNumberCultures
+        {
+            get => 4; // @TODO: make configurable
+        }
         #endregion
 
         #region Constructors

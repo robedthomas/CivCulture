@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<NamesDatabase>
+	<CultureGroups>
+		<CultureGroup name="Germanic">
+			<Culture name="English">
+				<CityNameGroup>
+					<CityName name="London"/>
+					<CityName name="New York"/>
+					<CityName name="Bristol"/>
+					<CityName name="Los Angeles"/>
+					<CityName name="Chicago"/>
+				</CityNameGroup>
+			</Culture>
+			<Culture name="German">
+				<CityNameGroup>
+					<CityName name="Berlin"/>
+					<CityName name="Zurich"/>
+					<CityName name="Hamburg"/>
+					<CityName name="Munich"/>
+					<CityName name="Frankfurt"/>
+				</CityNameGroup>
+			</Culture>
+		</CultureGroup>
+		<CultureGroup name="Latin">
+			<Culture name="French">
+				<CityNameGroup>
+					<CityName name="Paris"/>
+					<CityName name="Lyon"/>
+					<CityName name="La Rochelle"/>
+					<CityName name="Brussels"/>
+					<CityName name="Dijon"/>
+				</CityNameGroup>
+			</Culture>
+			<Culture name="Spanish">
+				<CityNameGroup>
+					<CityName name="Madrid"/>
+					<CityName name="Barcelona"/>
+					<CityName name="Seville"/>
+					<CityName name="Mexico City"/>
+					<CityName name="Santiago"/>
+				</CityNameGroup>
+			</Culture>
+		</CultureGroup>
+		<CultureGroup name="Slavic">
+			<Culture name="Russian">
+				<CityNameGroup>
+					<CityName name="Moscow"/>
+					<CityName name="Petersburg"/>
+					<CityName name="Vladivostok"/>
+					<CityName name="Volgagrad"/>
+				</CityNameGroup>
+			</Culture>
+			<Culture name="Polish">
+				<CityNameGroup>
+					<CityName name="Warsaw"/>
+					<CityName name="Krakow"/>
+					<CityName name="Poznan"/>
+				</CityNameGroup>
+			</Culture>
+		</CultureGroup>
+		<CultureGroup name="Semitic">
+			<Culture name="Arabic">
+				<CityNameGroup>
+					<CityName name="Cairo"/>
+					<CityName name="Riyyad"/>
+					<CityName name="Baghdad"/>
+					<CityName name="Aleppo"/>
+				</CityNameGroup>
+			</Culture>
+			<Culture name="Hebrew">
+				<CityNameGroup>
+					<CityName name="Jerusalem"/>
+					<CityName name="Tel Aviv"/>
+				</CityNameGroup>
+			</Culture>
+		</CultureGroup>
+	</CultureGroups>
+</NamesDatabase>

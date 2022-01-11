@@ -13,6 +13,7 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         private GameMap map;
+        private ObservableCollection<Culture> allCultures;
         private ObservableCollection<Job> allJobs;
         private ObservableCollection<Pop> allPops;
         private MapGeneration mapGeneration;
@@ -23,6 +24,7 @@ namespace CivCulture_Model.Models
 
         #region Events
         public event ValueChangedEventHandler<GameMap> MapChanged;
+        public event ValueChangedEventHandler<ObservableCollection<Culture>> AllCulturesChanged;
         public event ValueChangedEventHandler<ObservableCollection<Job>> AllJobsChanged;
         public event ValueChangedEventHandler<ObservableCollection<Pop>> AllPopsChanged;
         public event ValueChangedEventHandler<MapGeneration> MapGenerationChanged;
@@ -42,6 +44,20 @@ namespace CivCulture_Model.Models
                     GameMap oldValue = map;
                     map = value;
                     MapChanged?.Invoke(this, new ValueChangedEventArgs<GameMap>(oldValue, map));
+                }
+            }
+        }
+
+        public ObservableCollection<Culture> AllCultures
+        {
+            get => allCultures;
+            protected set
+            {
+                if (allCultures != value)
+                {
+                    ObservableCollection<Culture> oldValue = allCultures;
+                    allCultures = value;
+                    AllCulturesChanged?.Invoke(this, new ValueChangedEventArgs<ObservableCollection<Culture>>(oldValue, allCultures));
                 }
             }
         }
@@ -146,9 +162,11 @@ namespace CivCulture_Model.Models
         #region Methods
         public void GenerateMap()
         {
+            List<Culture> cultures;
             List<Pop> pops;
             List<Job> jobs;
-            Map = MapGeneration.GenerateMap(MapConfig, RandomSeed, out pops, out jobs);
+            Map = MapGeneration.GenerateMap(MapConfig, RandomSeed, out cultures, out pops, out jobs);
+            AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
         }

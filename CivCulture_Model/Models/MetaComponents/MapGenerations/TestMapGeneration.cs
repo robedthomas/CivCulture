@@ -22,12 +22,13 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
             if (!TerrainResourceTemplate.Initialized)
             {
                 TerrainResourceTemplate.InitializeTerrainResources();
             }
+            allCultures = new List<Culture>();
             allPops = new List<Pop>();
             allJobs = new List<Job>();
             GameMap map = new GameMap(2, 2);
@@ -40,7 +41,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
 
             Job job = new Job(JobTemplate.Gatherer_Wilderness, new TerrainResource(TerrainResourceTemplate.Wilderness));
             allJobs.Add(job);
-            Pop pop = new Pop(PopTemplate.Laborer) { Money = 100, Job = job, Space = map.Spaces[0, 0] };
+            Pop pop = new Pop(PopTemplate.Laborer, null) { Money = 100, Job = job, Space = map.Spaces[0, 0] };
             pop.OwnedResources.Add(Resource.Wheat, 15);
             pop.OwnedResources.Add(Resource.Wood, 8);
             allPops.Add(pop);

@@ -75,7 +75,7 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Methods
-        public int GetDistance(MapSpace firstSpace, MapSpace secondSpace, bool includeDiagonals)
+        public static int GetDistance(MapSpace firstSpace, MapSpace secondSpace, bool includeDiagonals)
         {
             if (includeDiagonals)
             {
@@ -115,6 +115,18 @@ namespace CivCulture_Model.Models.Collections
             {
                 throw new ArgumentException($"Received invalid MapSpace as parameter to GetAllSpacesWithinDistance()");
             }
+        }
+
+        public MapSpace GetClosestSpace(MapSpace sourceSpace, IEnumerable<MapSpace> possibleSpaces, bool includeDiagonals)
+        {
+            return possibleSpaces.Aggregate((currentClosest, nextSpace) =>
+            {
+                if (GetDistance(sourceSpace, nextSpace, includeDiagonals) < GetDistance(sourceSpace, currentClosest, includeDiagonals)) // @TODO: improve performance by calling GetDistance() only once per space
+                {
+                    return nextSpace;
+                }
+                return currentClosest; // @NOTE: in ties, the first space checked wins
+            });
         }
 
         #region IEnumerable<>

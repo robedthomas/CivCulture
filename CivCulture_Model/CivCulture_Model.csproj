@@ -6,6 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="NamesDatabase.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="NamesDatabase.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GenericUtilities\GenericUtilities.csproj" />
   </ItemGroup>
 

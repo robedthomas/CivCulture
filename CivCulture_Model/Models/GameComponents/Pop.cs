@@ -19,6 +19,7 @@ namespace CivCulture_Model.Models
         private Job job;
         private MapSpace space;
         private decimal satisfaction;
+        private Culture culture;
         #endregion
 
         #region Events
@@ -26,6 +27,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<Job> JobChanged;
         public event ValueChangedEventHandler<MapSpace> SpaceChanged;
         public event ValueChangedEventHandler<decimal> SatisfactionChanged;
+        public event ValueChangedEventHandler<Culture> CultureChanged;
         #endregion
 
         #region Properties
@@ -94,13 +96,28 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public Culture Culture
+        {
+            get => culture;
+            set
+            {
+                if (culture != value)
+                {
+                    Culture oldValue = culture;
+                    culture = value;
+                    CultureChanged?.Invoke(this, new ValueChangedEventArgs<Culture>(oldValue, value));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
-        public Pop(PopTemplate template) : base()
+        public Pop(PopTemplate template, Culture culture) : base()
         {
             Forecast = new PopForecast(this);
             Template = template;
+            Culture = culture;
             JobChanged += This_JobChanged;
             SpaceChanged += This_SpaceChanged;
             Satisfaction = 1M;
