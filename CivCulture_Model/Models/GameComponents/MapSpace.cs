@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models.Collections;
+using GenericUtilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -140,6 +141,7 @@ namespace CivCulture_Model.Models
             EmptyBuildingSlotCount = BUILDING_SLOTS_PER_SPACE;
 
             Buildings.CollectionChanged += Buildings_CollectionChanged;
+            Pops.CollectionChanged += Pops_CollectionChanged;
         }
         #endregion
 
@@ -190,6 +192,44 @@ namespace CivCulture_Model.Models
             }
         }
 
+        private Culture DetermineDominantCulture()
+        {
+            if (Pops.Count == 0)
+            {
+                return null;
+            }
+            Dictionary<Culture, int> countOfPopsOfCultures = new Dictionary<Culture, int>();
+            foreach (Pop pop in Pops)
+            {
+                if (!countOfPopsOfCultures.ContainsKey(pop.Culture))
+                {
+                    countOfPopsOfCultures.Add(pop.Culture, 0);
+                }
+                countOfPopsOfCultures[pop.Culture]++;
+            }
+            int topCulturePopCount = countOfPopsOfCultures.Values.Max();
+            IEnumerable<Culture> tiedCultures = countOfPopsOfCultures.Keys.Where(culture => countOfPopsOfCultures[culture] == topCulturePopCount);
+            if (tiedCultures.Count() == 0)
+            {
+                return null;
+            }
+            else if (tiedCultures.Count() == 1)
+            {
+                return tiedCultures.First();
+            }
+            else
+            {
+                if (tiedCultures.Contains(DominantCulture))
+                {
+                    return DominantCulture;
+                }
+                else
+                {
+                    return tiedCultures.PickRandom(); // @TODO: use GameInstance's random seed
+                }
+            }
+        }
+
         private void Buildings_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
@@ -214,6 +254,33 @@ namespace CivCulture_Model.Models
                 }
                 EmptyBuildingSlotCount += e.OldItems.Count;
             }
+        }
+
+        private void Pops_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null || e.OldItems != null)
+            {
+                DominantCulture = DetermineDominantCulture();
+            }
+            if (e.NewItems != null)
+            {
+                foreach (Pop newPop in e.NewItems)
+                {
+                    newPop.CultureChanged += Pop_CultureChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Pop oldPop in e.OldItems)
+                {
+                    oldPop.CultureChanged -= Pop_CultureChanged;
+                }
+            }
+        }
+
+        private void Pop_CultureChanged(object sender, ValueChangedEventArgs<Culture> e)
+        {
+            DominantCulture = DetermineDominantCulture();
         }
         #endregion
     }
