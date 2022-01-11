@@ -30,7 +30,7 @@ namespace CivCulture_Model.Models
         {
             GameInstance output = new GameInstance() { MapGeneration = mapGen, MapConfig = mapConfig, TurnLogic = turnLogic };
             output.GenerateMap();
-            turnLogic.InitGameInstance(output);
+            turnLogic.InitGameInstance(output, output.NamesDB);
             return output;
         }
         #endregion

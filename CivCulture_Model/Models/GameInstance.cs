@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models.MetaComponents;
+using CivCulture_Model.Models.MetaComponents.UserMutables;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,8 @@ namespace CivCulture_Model.Models
     public class GameInstance : BaseModel
     {
         #region Fields
+        public const string DEFAULT_NAMES_DATABASE_LOCATION = "NamesDatabase.xml";
+
         private GameMap map;
         private ObservableCollection<Culture> allCultures;
         private ObservableCollection<Job> allJobs;
@@ -145,15 +148,18 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public NamesDatabase NamesDB { get; protected set; }
         #endregion
 
         #region Constructors
         public GameInstance()
         {
             RandomSeed = new Random();
+            NamesDB = new NamesDatabase(DEFAULT_NAMES_DATABASE_LOCATION);
         }
 
-        public GameInstance(int seed)
+        public GameInstance(int seed) : this()
         {
             RandomSeed = new Random(seed);
         }
@@ -165,7 +171,7 @@ namespace CivCulture_Model.Models
             List<Culture> cultures;
             List<Pop> pops;
             List<Job> jobs;
-            Map = MapGeneration.GenerateMap(MapConfig, RandomSeed, out cultures, out pops, out jobs);
+            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, RandomSeed, out cultures, out pops, out jobs);
             AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
@@ -173,7 +179,7 @@ namespace CivCulture_Model.Models
 
         public void PassTurn()
         {
-            TurnLogic.ExecuteGameTurn(this);
+            TurnLogic.ExecuteGameTurn(this, NamesDB);
         }
         #endregion
     }

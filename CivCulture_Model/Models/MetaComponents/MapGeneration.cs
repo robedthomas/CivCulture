@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models.MetaComponents.UserMutables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,6 @@ namespace CivCulture_Model.Models.MetaComponents
         /// <param name="allPops">All Pops generated during map generation</param>
         /// <param name="allJobs">All Jobs generated during map generation</param>
         /// <returns></returns>
-        public abstract GameMap GenerateMap(MapConfiguration config, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs);
+        public abstract GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs);
     }
 }

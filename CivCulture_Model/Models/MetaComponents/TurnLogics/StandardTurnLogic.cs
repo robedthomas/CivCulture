@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Models.MetaComponents.UserMutables;
 using CivCulture_Model.Models.Modifiers;
 using GenericUtilities;
 using System;
@@ -35,7 +36,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         #endregion
 
         #region Methods
-        public override void ExecuteGameTurn(GameInstance instance)
+        public override void ExecuteGameTurn(GameInstance instance, NamesDatabase namesDb)
         {
             // Clear out all non-accumulating consumeables among owned resources
             ClearNonAccumulatingResources(instance);
@@ -519,7 +520,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             return PopTemplate.HunterGatherer;
         }
 
-        public override void InitGameInstance(GameInstance instance)
+        public override void InitGameInstance(GameInstance instance, NamesDatabase namesDb)
         {
             foreach (MapSpace space in instance.Map.Spaces)
             {

@@ -1,4 +1,5 @@
-﻿using GenericUtilities;
+﻿using CivCulture_Model.Models.MetaComponents.UserMutables;
+using GenericUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
             if (!TerrainResourceTemplate.Initialized)
             {

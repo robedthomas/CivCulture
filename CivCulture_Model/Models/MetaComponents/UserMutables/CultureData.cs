@@ -72,6 +72,8 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                                 throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing CultureData");
                         }
                         break;
+                    case XmlNodeType.Whitespace:
+                        break;
                     default:
                         throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing CultureData");
                 }
@@ -84,7 +86,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
         {
             bool reachedEnd = false;
             List<string> cityNames = new List<string>();
-            do
+            while (!reachedEnd && reader.Read())
             {
                 switch (reader.NodeType)
                 {
@@ -110,10 +112,12 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                                 throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing CultureData");
                         }
                         break;
+                    case XmlNodeType.Whitespace:
+                        break;
                     default:
                         throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing CultureData");
                 }
-            } while (!reachedEnd && reader.Read());
+            }
             return cityNames;
         }
         #endregion

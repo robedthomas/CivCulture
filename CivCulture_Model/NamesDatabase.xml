@@ -3,75 +3,75 @@
 	<CultureGroups>
 		<CultureGroup name="Germanic">
 			<Culture name="English">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="London"/>
 					<CityName name="New York"/>
 					<CityName name="Bristol"/>
 					<CityName name="Los Angeles"/>
 					<CityName name="Chicago"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 			<Culture name="German">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Berlin"/>
 					<CityName name="Zurich"/>
 					<CityName name="Hamburg"/>
 					<CityName name="Munich"/>
 					<CityName name="Frankfurt"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 		</CultureGroup>
 		<CultureGroup name="Latin">
 			<Culture name="French">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Paris"/>
 					<CityName name="Lyon"/>
 					<CityName name="La Rochelle"/>
 					<CityName name="Brussels"/>
 					<CityName name="Dijon"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 			<Culture name="Spanish">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Madrid"/>
 					<CityName name="Barcelona"/>
 					<CityName name="Seville"/>
 					<CityName name="Mexico City"/>
 					<CityName name="Santiago"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 		</CultureGroup>
 		<CultureGroup name="Slavic">
 			<Culture name="Russian">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Moscow"/>
 					<CityName name="Petersburg"/>
 					<CityName name="Vladivostok"/>
 					<CityName name="Volgagrad"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 			<Culture name="Polish">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Warsaw"/>
 					<CityName name="Krakow"/>
 					<CityName name="Poznan"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 		</CultureGroup>
 		<CultureGroup name="Semitic">
 			<Culture name="Arabic">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Cairo"/>
 					<CityName name="Riyyad"/>
 					<CityName name="Baghdad"/>
 					<CityName name="Aleppo"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 			<Culture name="Hebrew">
-				<CityNameGroup>
+				<CityNames>
 					<CityName name="Jerusalem"/>
 					<CityName name="Tel Aviv"/>
-				</CityNameGroup>
+				</CityNames>
 			</Culture>
 		</CultureGroup>
 	</CultureGroups>

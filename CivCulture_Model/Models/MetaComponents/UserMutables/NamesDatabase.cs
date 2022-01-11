@@ -56,6 +56,9 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                                     throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing NamesDatabase");
                             }
                             break;
+                        case XmlNodeType.XmlDeclaration:
+                        case XmlNodeType.Whitespace:
+                            break;
                         default:
                             throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing NamesDatabase");
                     }

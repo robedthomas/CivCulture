@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models.MetaComponents.UserMutables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,9 @@ namespace CivCulture_Model.Models.MetaComponents
         #endregion
 
         #region Methods
-        public abstract void InitGameInstance(GameInstance instance);
+        public abstract void InitGameInstance(GameInstance instance, NamesDatabase namesDb);
 
-        public abstract void ExecuteGameTurn(GameInstance instance);
+        public abstract void ExecuteGameTurn(GameInstance instance, NamesDatabase namesDb);
         #endregion
     }
 }
