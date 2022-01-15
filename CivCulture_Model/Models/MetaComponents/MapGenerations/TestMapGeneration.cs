@@ -25,10 +25,6 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #region Methods
         public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
-            if (!TerrainResourceTemplate.Initialized)
-            {
-                TerrainResourceTemplate.InitializeTerrainResources();
-            }
             allCultures = new List<Culture>();
             allPops = new List<Pop>();
             allJobs = new List<Job>();

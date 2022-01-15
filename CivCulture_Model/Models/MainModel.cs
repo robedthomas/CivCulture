@@ -20,6 +20,14 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
+        static MainModel()
+        {
+            if (!TerrainResourceTemplate.Initialized)
+            {
+                TerrainResourceTemplate.InitializeTerrainResources();
+            }
+        }
+
         public MainModel()
         {
         }
