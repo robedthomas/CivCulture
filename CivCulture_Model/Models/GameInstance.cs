@@ -1,6 +1,8 @@
 ﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models.Collections;
 using CivCulture_Model.Models.MetaComponents;
 using CivCulture_Model.Models.MetaComponents.UserMutables;
+using CivCulture_Model.Models.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -157,7 +159,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public GameInstance()
         {
-            AllTechs = new ObservableCollection<Technology>();
+            AllTechs = GetStandardTechs();
             RandomSeed = new Random();
             NamesDB = new NamesDatabase(DEFAULT_NAMES_DATABASE_LOCATION);
         }
@@ -178,11 +180,26 @@ namespace CivCulture_Model.Models
             AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
+
+            /* @TEST: Delete below whenever desired */
+            foreach (Culture c in AllCultures)
+            {
+                c.ResearchedTechnologies.Add(AllTechs[0]);
+            }
         }
 
         public void PassTurn()
         {
             TurnLogic.ExecuteGameTurn(this, NamesDB);
+        }
+
+        private ObservableCollection<Technology> GetStandardTechs()
+        {
+            ObservableCollection<Technology> techs = new ObservableCollection<Technology>();
+            Technology organizedLabor1 = new Technology("Organized Labor (I)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
+            organizedLabor1.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Builder, Fundamental.Production, new Modifier<decimal>("Organized Labor (I)", 0.5M));
+            techs.Add(organizedLabor1);
+            return techs;
         }
         #endregion
     }
