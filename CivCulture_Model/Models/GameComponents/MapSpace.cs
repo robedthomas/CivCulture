@@ -151,7 +151,7 @@ namespace CivCulture_Model.Models
             ConsumeablesCollection totalOutput = ConsumeablesCollection.Sum(
                 from job in Jobs
                 where job.Worker != null
-                select job.Template.Outputs
+                select job.Outputs
                 );
             totalOutput.Add(ConsumeablesCollection.Sum(
                 from building in Buildings

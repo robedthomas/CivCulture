@@ -182,10 +182,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         /// <returns>True if the Job was successfully worked. False otherwise</returns>
         protected bool WorkJob(Job job, Pop workerPop)
         {
-            if (job.Template.Inputs.IsSatisfiedBy(workerPop.OwnedResources))
+            if (job.Inputs.IsSatisfiedBy(workerPop.OwnedResources))
             {
-                workerPop.OwnedResources.Subtract(job.Template.Inputs);
-                workerPop.OwnedResources.Add(job.Template.Outputs);
+                workerPop.OwnedResources.Subtract(job.Inputs);
+                workerPop.OwnedResources.Add(job.Outputs);
                 workerPop.Money += job.Template.BasePay;
                 workerPop.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>("Job Base Pay", job.Template.BasePay));
                 return true;
@@ -441,9 +441,9 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             if (job.Space == null)
             {
-                return job.Template.BasePay + job.Template.Outputs.BaseValue - job.Template.Inputs.BaseValue;
+                return job.Template.BasePay + job.Outputs.BaseValue - job.Inputs.BaseValue;
             }
-            return job.Template.BasePay + job.Template.Outputs.GetMarketValue(job.Space.ResourceMarket) - job.Template.Inputs.GetMarketValue(job.Space.ResourceMarket);
+            return job.Template.BasePay + job.Outputs.GetMarketValue(job.Space.ResourceMarket) - job.Inputs.GetMarketValue(job.Space.ResourceMarket);
         }
 
         protected void GrowPops (GameInstance instance)
