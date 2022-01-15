@@ -17,6 +17,7 @@ namespace CivCulture_Model.Models
         public static Fundamental Production;
         public static Fundamental Money;
         public static Fundamental Shelter;
+        public static Fundamental Progress;
         public static Fundamental Luxuries;
 
         public static void InitializeFundamentals()
@@ -25,6 +26,7 @@ namespace CivCulture_Model.Models
             Production = new Fundamental("Production", 3);
             Money = new Fundamental("Money", 1);
             Shelter = new Fundamental("Shelter", 3, accumulates: false);
+            Progress = new Fundamental("Progress", 5);
             Luxuries = new Fundamental("Luxuries", 6);
 
             PopTemplate.InitializePopTemplates();
