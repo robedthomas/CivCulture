@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class TerrainResourceTemplate : GameComponent
+    public class TerrainResourceTemplate : ComponentTemplate
     {
         #region Static Members
         public static bool Initialized = false;

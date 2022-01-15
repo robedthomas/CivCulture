@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models.Modifiers
 {
-    public enum ModificationStat
+    public enum StatModification
     {
-        ShelterGainPerTurn,
+        PopNecessities,
+        PopComforts,
+        PopLuxuries,
+        JobInputs,
+        JobOutputs,
     }
 
     public abstract class Modifiable<TValue>

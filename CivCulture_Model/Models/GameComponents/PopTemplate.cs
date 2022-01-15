@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class PopTemplate : GameComponent
+    public class PopTemplate : ComponentTemplate
     {
         #region Static Members
         public static PopTemplate HunterGatherer;

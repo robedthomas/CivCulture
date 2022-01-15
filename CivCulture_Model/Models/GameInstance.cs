@@ -93,6 +93,8 @@ namespace CivCulture_Model.Models
             }
         }
 
+        public ObservableCollection<Technology> AllTechs { get; protected set; }
+
         public MapGeneration MapGeneration
         {
             get => mapGeneration;
@@ -155,6 +157,7 @@ namespace CivCulture_Model.Models
         #region Constructors
         public GameInstance()
         {
+            AllTechs = new ObservableCollection<Technology>();
             RandomSeed = new Random();
             NamesDB = new NamesDatabase(DEFAULT_NAMES_DATABASE_LOCATION);
         }

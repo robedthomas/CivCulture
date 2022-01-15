@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class BuildingTemplate : GameComponent
+    public class BuildingTemplate : ComponentTemplate
     {
         #region Static Members
         public static BuildingTemplate MudHuts;

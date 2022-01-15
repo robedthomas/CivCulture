@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class JobTemplate : GameComponent
+    public class JobTemplate : ComponentTemplate
     {
         #region Static Members
         public const int MAX_JOB_PRIORITY = 10;

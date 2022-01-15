@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models.Collections;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace CivCulture_Model.Models
         public ObservableCollection<Pop> PopsOfCulture { get; protected set; }
 
         public ObservableCollection<MapSpace> SpacesOfCulture { get; protected set; }
+
+        public ObservableCollection<Technology> ResearchedTechnologies { get; protected set; }
+
+        public ObservableCollection<Technology> AvailableTechnologies { get; protected set; }
+
+        public TechModifierCollection TechModifiers { get; protected set; }
         #endregion
 
         #region Constructors
@@ -35,10 +42,32 @@ namespace CivCulture_Model.Models
             Children = new ObservableCollection<Culture>();
             PopsOfCulture = new ObservableCollection<Pop>();
             SpacesOfCulture = new ObservableCollection<MapSpace>();
+            ResearchedTechnologies = new ObservableCollection<Technology>();
+            AvailableTechnologies = new ObservableCollection<Technology>();
+            TechModifiers = new TechModifierCollection();
+
+            ResearchedTechnologies.CollectionChanged += ResearchedTechnologies_CollectionChanged;
         }
         #endregion
 
         #region Methods
+        private void ResearchedTechnologies_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Technology newTech in e.NewItems)
+                {
+                    TechModifiers.AddRange(newTech.Modifiers);
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Technology oldTech in e.OldItems)
+                {
+                    TechModifiers.RemoveRange(oldTech.Modifiers);
+                }
+            }
+        }
         #endregion
     }
 }
