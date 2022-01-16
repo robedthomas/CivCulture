@@ -235,15 +235,8 @@ namespace CivCulture_Model.Models
             {
                 e.NewValue.Job = this;
                 e.NewValue.CultureChanged += Worker_CultureChanged;
-                if (e.OldValue != null)
-                {
-                    Worker_CultureChanged(e.NewValue, new ValueChangedEventArgs<Culture>(e.OldValue.Culture, e.NewValue.Culture));
-                }
-                else
-                {
-                    Worker_CultureChanged(e.NewValue, new ValueChangedEventArgs<Culture>(null, e.NewValue.Culture));
-                }
             }
+            Worker_CultureChanged(this, new ValueChangedEventArgs<Culture>(e.OldValue == null ? null : e.OldValue.Culture, e.NewValue == null ? null : e.NewValue.Culture));
         }
 
         private void Worker_CultureChanged(object sender, ValueChangedEventArgs<Culture> e)
@@ -251,9 +244,11 @@ namespace CivCulture_Model.Models
             if (e.OldValue != null)
             {
                 e.OldValue.TechModifiers.CollectionChanged -= Culture_TechModifiers_CollectionChanged;
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
+                {
+                    TryRemoveTechModifierList(modifierPair);
+                }
             }
-            InputTechModifiers.Clear();
-            OutputTechModifiers.Clear();
             if (e.NewValue != null)
             {
                 e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
