@@ -313,7 +313,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 if (space.CurrentConstruction != null)
                 {
-                    ConsumeablesCollection resourcesConsumed = GetResourcesToAdvanceConstruction(space.CurrentConstruction, space.OwnedResources);
+                    ConsumeablesCollection resourcesConsumed = GetResourcesToAdvanceConstruction(space.CurrentConstruction, space.OwnedResources, space.ProductionThroughput);
                     space.OwnedResources.Subtract(resourcesConsumed);
                     space.ConsumedResources.Add(resourcesConsumed);
                     space.CurrentConstruction.RemainingCosts.Subtract(resourcesConsumed);
@@ -327,7 +327,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             }
         }
 
-        protected ConsumeablesCollection GetResourcesToAdvanceConstruction(Building construction, ConsumeablesCollection availableResources)
+        protected ConsumeablesCollection GetResourcesToAdvanceConstruction(Building construction, ConsumeablesCollection availableResources, decimal maxProductionThroughput)
         {
             ConsumeablesCollection resourcesConsumed = new ConsumeablesCollection();
             foreach (Consumeable req in construction.Template.Costs.Keys)
@@ -335,6 +335,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 if (availableResources.ContainsKey(req))
                 {
                     decimal countConsumed = Math.Min(availableResources[req], construction.Template.Costs[req]);
+                    // Limit max amount of Production than can be expended on one turn by the space's production throughput
+                    if (req == Fundamental.Production)
+                    {
+                        countConsumed = Math.Min(countConsumed, maxProductionThroughput);
+                    }
                     resourcesConsumed.Add(req, countConsumed);
                 }
             }
@@ -529,6 +534,16 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 foreach (Building completeBuilding in space.Buildings)
                 {
                     space.ResourceMarket.SuppliedResources.Add(completeBuilding.Template.Outputs); // Add each job's outputs to the supply
+                }
+                if (space.CurrentConstruction != null)
+                {
+                    ConsumeablesCollection constructionCosts = new ConsumeablesCollection(space.CurrentConstruction.RemainingCosts);
+                    // Limit Production demand by the space's production throughput
+                    if (constructionCosts.ContainsKey(Fundamental.Production))
+                    {
+                        constructionCosts[Fundamental.Production] = Math.Min(constructionCosts[Fundamental.Production], space.ProductionThroughput);
+                    }
+                    space.ResourceMarket.DemandedResources.Add(constructionCosts);
                 }
                 // @TODO: rework construction to have a capped rate of progression, and add that rate to the demand
             }

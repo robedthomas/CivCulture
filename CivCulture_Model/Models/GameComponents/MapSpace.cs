@@ -18,8 +18,10 @@ namespace CivCulture_Model.Models
         public const int BUILDING_SLOTS_PER_SPACE = 10;
         public const decimal MAX_RESOURCE_COST_MULTIPLIER = 3M;
         public const decimal MIN_RESOURCE_COST_MULTIPLIER = 0.1M;
+        public const decimal BASE_PRODUCTION_THROUGHPUT = 3M;
 
         private decimal popGrowthProgress;
+        private decimal productionThroughput;
         private PopTemplate nextPopTemplate;
         private Terrain terrain;
         private Building currentConstruction;
@@ -28,6 +30,7 @@ namespace CivCulture_Model.Models
 
         #region Events
         public event ValueChangedEventHandler<decimal> PopGrowthProgressChanged;
+        public event ValueChangedEventHandler<decimal> ProductionThroughputChanged;
         public event ValueChangedEventHandler<PopTemplate> NextPopTemplateChanged;
         public event ValueChangedEventHandler<Terrain> TerrainChanged;
         public event ValueChangedEventHandler<Building> CurrentConstructionChanged;
@@ -51,6 +54,23 @@ namespace CivCulture_Model.Models
                     decimal oldValue = popGrowthProgress;
                     popGrowthProgress = value;
                     PopGrowthProgressChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, popGrowthProgress));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The maximum amount of Production that can be used per turn to advance this space's construction
+        /// </summary>
+        public decimal ProductionThroughput
+        {
+            get => productionThroughput;
+            set
+            {
+                if (productionThroughput != value)
+                {
+                    decimal oldValue = productionThroughput;
+                    productionThroughput = value;
+                    ProductionThroughputChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, value));
                 }
             }
         }
@@ -132,6 +152,7 @@ namespace CivCulture_Model.Models
             Row = row;
             Column = column;
             Terrain = terrain;
+            ProductionThroughput = BASE_PRODUCTION_THROUGHPUT;
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
             Buildings = new ObservableCollection<Building>();
