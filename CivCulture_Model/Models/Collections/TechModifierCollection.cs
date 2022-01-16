@@ -24,6 +24,21 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Methods
+        public override void Add(Tuple<StatModification, ComponentTemplate, Consumeable> key, ObservableCollection<Modifier<decimal>> value)
+        {
+            if (ContainsKey(key))
+            {
+                foreach (Modifier<decimal> mod in value)
+                {
+                    this[key].Add(mod);
+                }
+            }
+            else
+            {
+                base.Add(key, new ObservableCollection<Modifier<decimal>>(value));
+            }
+        }
+
         public void Add(StatModification modType, ComponentTemplate templateType, Consumeable modifiedConsumeable, Modifier<decimal> modification)
         {
             Tuple<StatModification, ComponentTemplate, Consumeable> targetTuple = new Tuple<StatModification, ComponentTemplate, Consumeable>(modType, templateType, modifiedConsumeable);

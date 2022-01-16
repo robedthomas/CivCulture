@@ -150,7 +150,7 @@ namespace GenericUtilities.Observables
 
         #region public
 
-        public void Add(TKey key, TValue value)
+        public virtual void Add(TKey key, TValue value)
         {
             DoAddEntry(key, value);
         }
