@@ -1,6 +1,7 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models.Collections;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,21 +106,21 @@ namespace CivCulture_Model.Models
             }
         }
 
-        protected void OnResourcesPresentChanged(IEnumerable<Consumeable> newResources, IEnumerable<Consumeable> oldResources)
+        protected void OnResourcesPresentChanged(IList newResources, IList oldResources)
         {
             HashSet<Consumeable> changedResources = new HashSet<Consumeable>();
             if (newResources != null)
             {
-                foreach (Consumeable newResource in newResources)
+                foreach (KeyValuePair<Consumeable, decimal> newResource in newResources)
                 {
-                    changedResources.Add(newResource);
+                    changedResources.Add(newResource.Key);
                 }
             }
             if (oldResources != null)
             {
-                foreach (Consumeable oldResource in oldResources)
+                foreach (KeyValuePair<Consumeable, decimal> oldResource in oldResources)
                 {
-                    changedResources.Add(oldResource);
+                    changedResources.Add(oldResource.Key);
                 }
             }
             UpdateResourcePrices(changedResources);
@@ -127,12 +128,12 @@ namespace CivCulture_Model.Models
 
         private void SuppliedResources_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnResourcesPresentChanged(e.NewItems as IEnumerable<Consumeable>, e.OldItems as IEnumerable<Consumeable>);
+            OnResourcesPresentChanged(e.NewItems, e.OldItems);
         }
 
         private void DemandedResources_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnResourcesPresentChanged(e.NewItems as IEnumerable<Consumeable>, e.OldItems as IEnumerable<Consumeable>);
+            OnResourcesPresentChanged(e.NewItems, e.OldItems);
         }
         #endregion
     }

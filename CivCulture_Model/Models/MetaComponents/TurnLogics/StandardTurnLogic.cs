@@ -510,8 +510,27 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             foreach (MapSpace space in instance.Map.Spaces)
             {
-                space.ResourceMarket.DemandedResources = new ConsumeablesCollection(space.ConsumedResources);
-                space.ResourceMarket.SuppliedResources = new ConsumeablesCollection(space.ProducedResources);
+                // Clear out current supply and demand
+                space.ResourceMarket.SuppliedResources.Clear();
+                space.ResourceMarket.DemandedResources.Clear();
+                // Add each job's and building's output to the supply
+                foreach (Pop pop in space.Pops)
+                {
+                    foreach (NeedType need in pop.Template.Needs.Keys)
+                    {
+                        space.ResourceMarket.DemandedResources.Add(pop.Template.Needs[need]); // Add each pop's needs to the demand
+                    }
+                    if (pop.Job != null)
+                    {
+                        space.ResourceMarket.SuppliedResources.Add(pop.Job.Outputs); // Add each job's outputs to the supply
+                        space.ResourceMarket.DemandedResources.Add(pop.Job.Inputs);  // Add each job's inputs to the demand
+                    }
+                }
+                foreach (Building completeBuilding in space.Buildings)
+                {
+                    space.ResourceMarket.SuppliedResources.Add(completeBuilding.Template.Outputs); // Add each job's outputs to the supply
+                }
+                // @TODO: rework construction to have a capped rate of progression, and add that rate to the demand
             }
         }
 
