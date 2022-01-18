@@ -26,7 +26,7 @@ namespace CivCulture_Model.Models
             Production = new Fundamental("Production", 3);
             Money = new Fundamental("Money", 1);
             Shelter = new Fundamental("Shelter", 3, accumulates: false);
-            Progress = new Fundamental("Progress", 5);
+            Progress = new Fundamental("Progress", 5, cultureWide: true);
             Luxuries = new Fundamental("Luxuries", 6);
 
             PopTemplate.InitializePopTemplates();
@@ -43,7 +43,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Fundamental(string name, decimal baseValue, bool accumulates = true) : base(name, baseValue, accumulates: accumulates)
+        public Fundamental(string name, decimal baseValue, bool accumulates = true, bool cultureWide = false) : base(name, baseValue, accumulates: accumulates, cultureWide: cultureWide)
         {
             AllFundamentals.Add(this);
         }

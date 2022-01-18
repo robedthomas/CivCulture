@@ -20,14 +20,17 @@ namespace CivCulture_Model.Models
         public decimal BaseValue { get; protected set; }
 
         public bool Accumulates { get; protected set; }
+
+        public bool IsCultureWide { get; protected set; }
         #endregion
 
         #region Constructors
-        public Consumeable(string name, decimal baseValue, bool accumulates = true)
+        public Consumeable(string name, decimal baseValue, bool accumulates = true, bool cultureWide = false)
         {
             Name = name;
             BaseValue = baseValue;
             Accumulates = accumulates;
+            IsCultureWide = cultureWide;
         }
         #endregion
 

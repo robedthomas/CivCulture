@@ -62,6 +62,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             MigratePops(instance);
             // Update each space's market
             UpdateMarkets(instance);
+            // Move culture-wide resources from spaces to cultures
+            MoveResourcesToCultures(instance);
+            // @TODO: Advance technology research
+            // @TODO: Start new technology research
         }
 
         protected void ClearNonAccumulatingResources(GameInstance instance)
@@ -546,6 +550,23 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     space.ResourceMarket.DemandedResources.Add(constructionCosts);
                 }
                 // @TODO: rework construction to have a capped rate of progression, and add that rate to the demand
+            }
+        }
+
+        protected void MoveResourcesToCultures(GameInstance instance)
+        {
+            // @NOTE: Currently this gives all Progress owned by a space to that space's dominant culture. In the future, may want to give all Progress produced by a POP to that Pop's culture
+            foreach (MapSpace space in instance.Map.Spaces)
+            {
+                IEnumerable<Consumeable> cultureWideResources = space.OwnedResources.Keys.Where(c => c.IsCultureWide);
+                foreach (Consumeable c in cultureWideResources)
+                {
+                    if (space.DominantCulture != null)
+                    {
+                        space.DominantCulture.OwnedResources.Add(c, space.OwnedResources[c]);
+                    }
+                    space.OwnedResources.Remove(c);
+                }
             }
         }
 
