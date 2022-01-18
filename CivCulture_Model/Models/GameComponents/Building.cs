@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Building")]
-    public class Building : JobSource, ITemplated<BuildingTemplate>
+    public class Building : JobSource, ITemplated<BuildingTemplate>, IFulfillable<ConsumeablesCollection>
     {
         #region Events
         public ValueChangedEventHandler<BuildingTemplate> TemplateChanged;
@@ -56,10 +56,15 @@ namespace CivCulture_Model.Models
             }
         }
 
+        public ConsumeablesCollection TotalCosts
+        {
+            get => Template.Costs;
+        }
+
         public ConsumeablesCollection RemainingCosts
         {
             get => remainingCosts;
-            set
+            protected set
             {
                 if (remainingCosts != value)
                 {
