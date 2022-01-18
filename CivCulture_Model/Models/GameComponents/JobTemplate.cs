@@ -14,6 +14,7 @@ namespace CivCulture_Model.Models
         public const int UNEMPLOYED_JOB_PRIORITY = MAX_JOB_PRIORITY;
 
         public static JobTemplate Builder;
+        public static JobTemplate Elder;
         public static JobTemplate Gatherer_Wilderness;
         public static JobTemplate Farmer_Wilderness;
         public static JobTemplate Gatherer_Wheat;
@@ -23,6 +24,7 @@ namespace CivCulture_Model.Models
         {
             Resource.InitializeResources();
             Builder = new JobTemplate("Builder", 1, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Production, 1M } });
+            Elder = new JobTemplate("Elder", 2, 4, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Progress, 0.5M } });
 
             Gatherer_Wilderness = new JobTemplate("Gatherer", 0, 1, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
             Farmer_Wilderness = new JobTemplate("Farmer", 0, 3, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.7M } });
