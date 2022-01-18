@@ -180,12 +180,6 @@ namespace CivCulture_Model.Models
             AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
-
-            /* @TEST: Delete below whenever desired */
-            foreach (Culture c in AllCultures)
-            {
-                c.ResearchedTechnologies.Add(new Technology(AllTechs[0], c));
-            }
         }
 
         public void PassTurn()

@@ -606,11 +606,11 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         protected ConsumeablesCollection GetResourcesToAdvanceResearch(Technology research, ConsumeablesCollection availableResources)
         {
             ConsumeablesCollection resourcesConsumed = new ConsumeablesCollection();
-            foreach (Consumeable req in research.TotalCosts.Keys)
+            foreach (Consumeable req in research.RemainingCosts.Keys)
             {
                 if (availableResources.ContainsKey(req))
                 {
-                    decimal countConsumed = Math.Min(availableResources[req], research.TotalCosts[req]);
+                    decimal countConsumed = Math.Min(availableResources[req], research.RemainingCosts[req]);
                     resourcesConsumed.Add(req, countConsumed);
                 }
             }
@@ -624,6 +624,14 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         public override void InitGameInstance(GameInstance instance, NamesDatabase namesDb)
         {
+            IEnumerable<TechnologyTemplate> initialAvailableTechs = instance.AllTechs.Where(tech => tech.Parents.Count == 0);
+            foreach (Culture culture in instance.AllCultures)
+            {
+                foreach (TechnologyTemplate initialAvailableTech in initialAvailableTechs)
+                {
+                    culture.AvailableTechnologies.Add(new Technology(initialAvailableTech, culture));
+                }
+            }
             foreach (MapSpace space in instance.Map.Spaces)
             {
                 space.NextPopTemplate = GetNextPopTemplate(space);
