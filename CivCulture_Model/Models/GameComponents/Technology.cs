@@ -53,6 +53,11 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public bool IsComplete
+        {
+            get => CompletionLevel == 1.0M;
+        }
         #endregion
 
         #region Constructors

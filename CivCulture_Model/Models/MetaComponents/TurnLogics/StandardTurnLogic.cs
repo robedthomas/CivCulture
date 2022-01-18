@@ -64,8 +64,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             UpdateMarkets(instance);
             // Move culture-wide resources from spaces to cultures
             MoveResourcesToCultures(instance);
-            // @TODO: Advance technology research
-            // @TODO: Start new technology research
+            // Advance technology research
+            AdvanceResearches(instance);
+            // Start new technology research
+            StartNewResearches(instance);
         }
 
         protected void ClearNonAccumulatingResources(GameInstance instance)
@@ -568,6 +570,51 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                     space.OwnedResources.Remove(c);
                 }
             }
+        }
+
+        protected void AdvanceResearches(GameInstance instance)
+        {
+            foreach (Culture culture in instance.AllCultures)
+            {
+                if (culture.CurrentResearch != null)
+                {
+                    ConsumeablesCollection resourcesConsumed = GetResourcesToAdvanceResearch(culture.CurrentResearch, culture.OwnedResources);
+                    culture.OwnedResources.Subtract(resourcesConsumed);
+                    culture.ConsumedResources.Add(resourcesConsumed);
+                    culture.CurrentResearch.RemainingCosts.Subtract(resourcesConsumed);
+                    if (culture.CurrentResearch.IsComplete)
+                    {
+                        culture.ResearchedTechnologies.Add(culture.CurrentResearch);
+                        culture.CurrentResearch = null;
+                    }
+                }
+            }
+        }
+
+        protected void StartNewResearches(GameInstance instance)
+        {
+            foreach (Culture culture in instance.AllCultures)
+            {
+                if (culture.CurrentResearch is null && culture.AvailableTechnologies.Count > 0)
+                {
+                    // @TODO: implement logic for selecting next tech based off of culture's needs, as well as add player's choice
+                    culture.CurrentResearch = culture.AvailableTechnologies.PickRandom(instance.RandomSeed);
+                }
+            }
+        }
+
+        protected ConsumeablesCollection GetResourcesToAdvanceResearch(Technology research, ConsumeablesCollection availableResources)
+        {
+            ConsumeablesCollection resourcesConsumed = new ConsumeablesCollection();
+            foreach (Consumeable req in research.TotalCosts.Keys)
+            {
+                if (availableResources.ContainsKey(req))
+                {
+                    decimal countConsumed = Math.Min(availableResources[req], research.TotalCosts[req]);
+                    resourcesConsumed.Add(req, countConsumed);
+                }
+            }
+            return resourcesConsumed;
         }
 
         protected PopTemplate GetNextPopTemplate(MapSpace space)

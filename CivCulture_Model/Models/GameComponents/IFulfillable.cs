@@ -26,5 +26,10 @@ namespace CivCulture_Model.Models
         /// The amount of completion of this object's costs. 0 implies no costs have been paid, 1 implies all costs have been paid
         /// </summary>
         public decimal CompletionLevel { get; }
+
+        /// <summary>
+        /// Returns true is this has been completely fulfilled. Returns false otherwise
+        /// </summary>
+        public bool IsComplete { get; }
     }
 }
