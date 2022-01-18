@@ -57,14 +57,14 @@ namespace CivCulture_Model.Models
             {
                 foreach (Technology newTech in e.NewItems)
                 {
-                    TechModifiers.AddRange(newTech.Modifiers);
+                    TechModifiers.AddRange(newTech.Template.Modifiers);
                 }
             }
             if (e.OldItems != null)
             {
                 foreach (Technology oldTech in e.OldItems)
                 {
-                    TechModifiers.RemoveRange(oldTech.Modifiers);
+                    TechModifiers.RemoveRange(oldTech.Template.Modifiers);
                 }
             }
         }

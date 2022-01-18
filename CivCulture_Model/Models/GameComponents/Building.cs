@@ -109,7 +109,7 @@ namespace CivCulture_Model.Models
             Template = template;
             Space = space;
             CompletionLevel = 0;
-            RemainingCosts = new ConsumeablesCollection(Template.Costs);
+            RemainingCosts = new ConsumeablesCollection(TotalCosts);
             foreach (JobTemplate childJobTemplate in Template.Jobs)
             {
                 ChildJobs.Add(new Job(childJobTemplate, this));
@@ -120,7 +120,7 @@ namespace CivCulture_Model.Models
         #region Methods
         public static decimal GetCompletionLevel(Building targetBuilding)
         {
-            decimal originalCostCount = targetBuilding.Template.Costs.Values.Sum();
+            decimal originalCostCount = targetBuilding.TotalCosts.Values.Sum();
             decimal remainingCostCount = targetBuilding.RemainingCosts.Values.Sum();
             return 1M - (remainingCostCount / originalCostCount);
         }

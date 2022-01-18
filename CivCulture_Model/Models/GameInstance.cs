@@ -95,7 +95,7 @@ namespace CivCulture_Model.Models
             }
         }
 
-        public ObservableCollection<Technology> AllTechs { get; protected set; }
+        public ObservableCollection<TechnologyTemplate> AllTechs { get; protected set; }
 
         public MapGeneration MapGeneration
         {
@@ -184,7 +184,7 @@ namespace CivCulture_Model.Models
             /* @TEST: Delete below whenever desired */
             foreach (Culture c in AllCultures)
             {
-                c.ResearchedTechnologies.Add(AllTechs[0]);
+                c.ResearchedTechnologies.Add(new Technology(AllTechs[0], c));
             }
         }
 
@@ -193,10 +193,10 @@ namespace CivCulture_Model.Models
             TurnLogic.ExecuteGameTurn(this, NamesDB);
         }
 
-        private ObservableCollection<Technology> GetStandardTechs()
+        private ObservableCollection<TechnologyTemplate> GetStandardTechs()
         {
-            ObservableCollection<Technology> techs = new ObservableCollection<Technology>();
-            Technology organizedLabor1 = new Technology("Organized Labor (I)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
+            ObservableCollection<TechnologyTemplate> techs = new ObservableCollection<TechnologyTemplate>();
+            TechnologyTemplate organizedLabor1 = new TechnologyTemplate("Organized Labor (I)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
             organizedLabor1.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Builder, Fundamental.Production, new Modifier<decimal>("Organized Labor (I)", 0.5M));
             techs.Add(organizedLabor1);
             return techs;

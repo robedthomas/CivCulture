@@ -15,6 +15,6 @@ namespace CivCulture_Model.Models
         /// <summary>
         /// The template that this is an instance of
         /// </summary>
-        TTemplate Template { get; set; }
+        TTemplate Template { get; }
     }
 }
