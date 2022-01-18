@@ -21,9 +21,9 @@ namespace CivCulture_Model.Models
 
         public ConsumeablesCollection Costs { get; protected set; }
 
-        public HashSet<Technology> Parents { get; protected set; }
+        public HashSet<TechnologyTemplate> Parents { get; protected set; }
 
-        public HashSet<Technology> Children { get; protected set; }
+        public HashSet<TechnologyTemplate> Children { get; protected set; }
 
         public TechModifierCollection Modifiers { get; protected set; }
 
@@ -35,8 +35,8 @@ namespace CivCulture_Model.Models
         {
             Name = name;
             Costs = new ConsumeablesCollection(costs);
-            Parents = new HashSet<Technology>();
-            Children = new HashSet<Technology>();
+            Parents = new HashSet<TechnologyTemplate>();
+            Children = new HashSet<TechnologyTemplate>();
             Modifiers = new TechModifierCollection();
             CulturesResearchedBy = new ObservableCollection<Culture>();
         }
