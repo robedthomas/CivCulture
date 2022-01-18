@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} TerrainResource")]
-    public class TerrainResource : JobSource
+    public class TerrainResource : JobSource, ITemplated<TerrainResourceTemplate>
     {
         #region Events
         public event ValueChangedEventHandler<TerrainResourceTemplate> TemplateChanged;

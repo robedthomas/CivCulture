@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Job")]
-    public class Job : GameComponent
+    public class Job : GameComponent, ITemplated<JobTemplate>
     {
         #region Fields
         private JobTemplate template;

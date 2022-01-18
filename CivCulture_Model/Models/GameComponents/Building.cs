@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Building")]
-    public class Building : JobSource
+    public class Building : JobSource, ITemplated<BuildingTemplate>
     {
         #region Events
         public ValueChangedEventHandler<BuildingTemplate> TemplateChanged;

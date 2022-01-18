@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Pop")]
-    public class Pop : ResourceOwner 
+    public class Pop : ResourceOwner, ITemplated<PopTemplate>
     {
         #region Fields
         private PopTemplate template;
