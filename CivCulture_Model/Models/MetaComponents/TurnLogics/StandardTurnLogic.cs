@@ -231,7 +231,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             // Compile all needs for this pop into one collection
             ConsumeablesCollection allNeeds = new ConsumeablesCollection();
-            allNeeds.Add(pop.Template.Needs);
+            allNeeds.Add(pop.Needs);
             // Sell all resources that aren't needed
             ConsumeablesCollection resourcesToSell = new ConsumeablesCollection(pop.OwnedResources);
             resourcesToSell.Subtract(allNeeds);
@@ -269,7 +269,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             // Compile all needs for this pop into one collection
             ConsumeablesCollection allNeeds = new ConsumeablesCollection();
-            allNeeds.Add(pop.Template.Needs);
+            allNeeds.Add(pop.Needs);
             // Buy all needs not yet owned
             ConsumeablesCollection resourcesNeeded = new ConsumeablesCollection(allNeeds);
             resourcesNeeded.Subtract(pop.OwnedResources);
@@ -389,7 +389,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void ConsumePopNeedsOfType(NeedType typeOfNeed, Pop pop, decimal satisfactionIncrease, decimal satisfactionDecrease)
         {
-            if (pop.Template.Needs.TryGetValue(typeOfNeed, out ConsumeablesCollection necessities))
+            if (pop.Needs.TryGetValue(typeOfNeed, out ConsumeablesCollection necessities))
             {
                 string pluralNeedName;
                 switch (typeOfNeed)
@@ -527,9 +527,9 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 // Add each job's and building's output to the supply
                 foreach (Pop pop in space.Pops)
                 {
-                    foreach (NeedType need in pop.Template.Needs.Keys)
+                    foreach (NeedType need in pop.Needs.Keys)
                     {
-                        space.ResourceMarket.DemandedResources.Add(pop.Template.Needs[need]); // Add each pop's needs to the demand
+                        space.ResourceMarket.DemandedResources.Add(pop.Needs[need]); // Add each pop's needs to the demand
                     }
                     if (pop.Job != null)
                     {
