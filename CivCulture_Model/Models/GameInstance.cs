@@ -190,9 +190,17 @@ namespace CivCulture_Model.Models
         private ObservableCollection<TechnologyTemplate> GetStandardTechs()
         {
             ObservableCollection<TechnologyTemplate> techs = new ObservableCollection<TechnologyTemplate>();
+
             TechnologyTemplate organizedLabor1 = new TechnologyTemplate("Organized Labor (I)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
             organizedLabor1.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Builder, Fundamental.Production, new Modifier<decimal>("Organized Labor (I)", 0.5M));
             techs.Add(organizedLabor1);
+
+            TechnologyTemplate badTech = new TechnologyTemplate("Bad Tech", new ConsumeablesCollection() { { Fundamental.Progress, 1 } });
+            badTech.Modifiers.Add(StatModification.PopNecessities, PopTemplate.HunterGatherer, Fundamental.Food, new Modifier<decimal>("Bad Tech", 0.5M));
+            badTech.Parents.Add(organizedLabor1);
+            organizedLabor1.Children.Add(badTech);
+            techs.Add(badTech);
+
             return techs;
         }
         #endregion
