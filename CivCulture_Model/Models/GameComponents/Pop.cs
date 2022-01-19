@@ -131,6 +131,8 @@ namespace CivCulture_Model.Models
             Culture = culture;
             Satisfaction = 1M;
 
+            Culture.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
+
             TemplateChanged += This_TemplateChanged;
             JobChanged += This_JobChanged;
             SpaceChanged += This_SpaceChanged;
@@ -214,7 +216,7 @@ namespace CivCulture_Model.Models
             if (modifier.Key.Item2 == PopTemplate.ALL || modifier.Key.Item2 == Template)
             {
                 TechModifiers.Add(modifier.Key, modifier.Value);
-                TechModifiers[modifier.Key].CollectionChanged += newHandler;
+                modifier.Value.CollectionChanged += newHandler;
                 ModifiersListHandlers.Add(modifier.Key, newHandler);
                 foreach (Modifier<decimal> mod in modifier.Value)
                 {
@@ -233,7 +235,7 @@ namespace CivCulture_Model.Models
                 {
                     UnapplyModifier(modifier.Key, mod);
                 }
-                TechModifiers[modifier.Key].CollectionChanged -= ModifiersListHandlers[modifier.Key];
+                modifier.Value.CollectionChanged -= ModifiersListHandlers[modifier.Key];
                 TechModifiers.Remove(modifier.Key);
                 ModifiersListHandlers.Remove(modifier.Key);
                 return true;
