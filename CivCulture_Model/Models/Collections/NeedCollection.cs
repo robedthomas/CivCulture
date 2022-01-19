@@ -27,6 +27,15 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Constructors
+        public NeedCollection() { }
+
+        public NeedCollection(NeedCollection source)
+        {
+            foreach (NeedType need in source.Keys)
+            {
+                Add(need, new ConsumeablesCollection(source[need]));
+            }
+        }
         #endregion
 
         #region Methods
