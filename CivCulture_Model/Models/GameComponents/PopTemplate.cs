@@ -11,11 +11,13 @@ namespace CivCulture_Model.Models
     public class PopTemplate : ComponentTemplate
     {
         #region Static Members
+        public static PopTemplate ALL;
         public static PopTemplate HunterGatherer;
         public static PopTemplate Laborer;
 
         public static void InitializePopTemplates()
         {
+            ALL = new PopTemplate("ALL POPS");
             HunterGatherer = new PopTemplate("Hunter Gatherer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.75M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 0.5M } });
             Laborer = new PopTemplate("Laborer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 1M } });
         }

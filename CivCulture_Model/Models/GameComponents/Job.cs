@@ -169,7 +169,7 @@ namespace CivCulture_Model.Models
             bool success = false;
             ConsumeablesCollection targetCollection = null;
             NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifier.Key);
-            if (modifier.Key.Item2 == null || modifier.Key.Item2 == Template)
+            if (modifier.Key.Item2 == JobTemplate.ALL || modifier.Key.Item2 == Template)
             {
                 if (modifier.Key.Item1 == StatModification.JobInputs)
                 {

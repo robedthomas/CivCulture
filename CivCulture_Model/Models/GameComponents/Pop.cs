@@ -211,7 +211,7 @@ namespace CivCulture_Model.Models
         private bool TryAddTechModifierList(KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifier)
         {
             NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifier.Key);
-            if (modifier.Key.Item2 == null || modifier.Key.Item2 == Template)
+            if (modifier.Key.Item2 == PopTemplate.ALL || modifier.Key.Item2 == Template)
             {
                 TechModifiers.Add(modifier.Key, modifier.Value);
                 TechModifiers[modifier.Key].CollectionChanged += newHandler;
@@ -282,7 +282,7 @@ namespace CivCulture_Model.Models
         private void This_TemplateChanged(object sender, ValueChangedEventArgs<PopTemplate> e)
         {
             // Remove all tech modifiers tied to the previous template
-            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToRemove = TechModifiers.Where(pair => pair.Key.Item2 == null || pair.Key.Item2 == e.OldValue);
+            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToRemove = TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.OldValue);
             foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in modifierListsToRemove)
             {
                 TryRemoveTechModifierList(modifierPair);
@@ -296,7 +296,7 @@ namespace CivCulture_Model.Models
                 }
             }
             // Add all tech modifiers tied to the new template
-            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToAdd = Culture.TechModifiers.Where(pair => pair.Key.Item2 == null || pair.Key.Item2 == e.NewValue);
+            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToAdd = Culture.TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.NewValue);
             foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in modifierListsToAdd)
             {
                 TryAddTechModifierList(modifierPair);
