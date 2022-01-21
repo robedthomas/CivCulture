@@ -1,9 +1,11 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Models.Modifiers;
 using GenericUtilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("MapSpace: (X,Y)=({Column},{Row}) Terrain={Terrain.Name}")]
-    public class MapSpace : ResourceOwner
+    public class MapSpace : ResourceOwner, ITechModifiable
     {
         #region Fields
         public const int BUILDING_SLOTS_PER_SPACE = 10;
@@ -133,6 +135,15 @@ namespace CivCulture_Model.Models
             }
         }
 
+        public ITechResearcher TechSource
+        {
+            get => DominantCulture;
+        }
+
+        public TechModifierCollection TechModifiers { get; private set; }
+
+        private Dictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, NotifyCollectionChangedEventHandler> ModifiersListHandlers { get; set; }
+
         public ObservableCollection<Pop> Pops { get; protected set; }
 
         public ObservableCollection<Job> Jobs { get; protected set; }
@@ -153,6 +164,8 @@ namespace CivCulture_Model.Models
             Column = column;
             Terrain = terrain;
             ProductionThroughput = BASE_PRODUCTION_THROUGHPUT;
+            TechModifiers = new TechModifierCollection();
+            ModifiersListHandlers = new Dictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, NotifyCollectionChangedEventHandler>();
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
             Buildings = new ObservableCollection<Building>();
@@ -163,6 +176,7 @@ namespace CivCulture_Model.Models
 
             Buildings.CollectionChanged += Buildings_CollectionChanged;
             Pops.CollectionChanged += Pops_CollectionChanged;
+            DominantCultureChanged += This_DominantCultureChanged;
         }
         #endregion
 
@@ -247,6 +261,120 @@ namespace CivCulture_Model.Models
                 else
                 {
                     return tiedCultures.PickRandom(); // @TODO: use GameInstance's random seed
+                }
+            }
+        }
+
+        private void ApplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
+        {
+            switch (modifierKey.Item1)
+            {
+                case StatModification.SpaceProductionThroughput:
+                    ProductionThroughput += modifier.Modification;
+                    break;
+            }
+            // @TODO: handle other types of StatModification
+        }
+
+        private void UnapplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
+        {
+            switch (modifierKey.Item1)
+            {
+                case StatModification.SpaceProductionThroughput:
+                    ProductionThroughput -= modifier.Modification;
+                    break;
+            }
+            // @TODO: handle other types of StatModification
+        }
+
+        private NotifyCollectionChangedEventHandler GetTechModifierListChangedHandler(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey)
+        {
+            return new NotifyCollectionChangedEventHandler((sender, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (Modifier<decimal> newMod in e.NewItems)
+                    {
+                        ApplyModifier(modifierKey, newMod);
+                    }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (Modifier<decimal> oldMod in e.OldItems)
+                    {
+                        UnapplyModifier(modifierKey, oldMod);
+                    }
+                }
+            });
+        }
+
+        private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
+        {
+            NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifierKey);
+            if (modifierKey.Item1 == StatModification.SpaceProductionThroughput)
+            {
+                TechModifiers.Add(modifierKey, modifierCollection);
+                modifierCollection.CollectionChanged += newHandler;
+                ModifiersListHandlers.Add(modifierKey, newHandler);
+                foreach (Modifier<decimal> mod in modifierCollection)
+                {
+                    ApplyModifier(modifierKey, mod);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private bool TryRemoveTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
+        {
+            if (TechModifiers.ContainsKey(modifierKey) && TechModifiers[modifierKey] == modifierCollection)
+            {
+                foreach (Modifier<decimal> mod in modifierCollection)
+                {
+                    UnapplyModifier(modifierKey, mod);
+                }
+                modifierCollection.CollectionChanged -= ModifiersListHandlers[modifierKey];
+                TechModifiers.Remove(modifierKey);
+                ModifiersListHandlers.Remove(modifierKey);
+                return true;
+            }
+            return false;
+        }
+
+        private void This_DominantCultureChanged(object sender, ValueChangedEventArgs<Culture> e)
+        {
+            if (e.OldValue != null)
+            {
+                e.OldValue.TechModifiers.CollectionChanged -= Culture_TechModifiers_CollectionChanged;
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
+                {
+                    TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
+                }
+            }
+            if (e.NewValue != null)
+            {
+                e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
+                {
+                    TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
+                }
+            }
+        }
+
+        private void Culture_TechModifiers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> newPair in e.NewItems)
+                {
+                    TryAddTechModifierList(newPair.Key, newPair.Value);
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> oldPair in e.OldItems)
+                {
+                    TryRemoveTechModifierList(oldPair.Key, oldPair.Value);
                 }
             }
         }

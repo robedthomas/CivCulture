@@ -284,7 +284,7 @@ namespace CivCulture_Model.Models
             }
             if (e.NewValue != null)
             {
-                e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged; ;
+                e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
                 {
                     TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
