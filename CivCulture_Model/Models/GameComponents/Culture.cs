@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Name} Culture")]
-    public class Culture : ResourceOwner
+    public class Culture : ResourceOwner, ITechResearcher
     {
         #region Events
         public ValueChangedEventHandler<Technology> CurrentResearchChanged;

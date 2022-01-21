@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Job")]
-    public class Job : GameComponent, ITemplated<JobTemplate>
+    public class Job : GameComponent, ITemplated<JobTemplate>, ITechModifiable
     {
         #region Fields
         private JobTemplate template;
@@ -91,9 +91,12 @@ namespace CivCulture_Model.Models
 
         public ConsumeablesCollection Outputs { get; protected set; }
 
-        public TechModifierCollection InputTechModifiers { get; protected set; }
+        public ITechResearcher TechSource
+        {
+            get => Worker == null ? null : Worker.Culture;
+        }
 
-        public TechModifierCollection OutputTechModifiers { get; protected set; }
+        public TechModifierCollection TechModifiers { get; protected set; }
 
         private Dictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, NotifyCollectionChangedEventHandler> ModifiersListHandlers { get; set; }
         #endregion
@@ -105,8 +108,7 @@ namespace CivCulture_Model.Models
             Source = source;
             Inputs = new ConsumeablesCollection(Template.Inputs);
             Outputs = new ConsumeablesCollection(Template.Outputs);
-            InputTechModifiers = new TechModifierCollection();
-            OutputTechModifiers = new TechModifierCollection();
+            TechModifiers = new TechModifierCollection();
             ModifiersListHandlers = new Dictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, NotifyCollectionChangedEventHandler>();
             WorkerChanged += This_WorkerChanged;
             SpaceChanged += This_SpaceChanged;
@@ -173,19 +175,18 @@ namespace CivCulture_Model.Models
             {
                 if (modifier.Key.Item1 == StatModification.JobInputs)
                 {
-                    InputTechModifiers.Add(modifier.Key, modifier.Value);
                     targetCollection = Inputs;
                     success = true;
                 }
                 else if (modifier.Key.Item1 == StatModification.JobOutputs)
                 {
-                    OutputTechModifiers.Add(modifier.Key, modifier.Value);
                     targetCollection = Outputs;
                     success = true;
                 }
             }
             if (success)
             {
+                TechModifiers.Add(modifier.Key, modifier.Value);
                 modifier.Value.CollectionChanged += newHandler;
                 ModifiersListHandlers.Add(modifier.Key, newHandler);
                 foreach (Modifier<decimal> newMod in modifier.Value)
@@ -200,20 +201,22 @@ namespace CivCulture_Model.Models
         {
             bool success = false;
             ConsumeablesCollection targetCollection = null;
-            if (InputTechModifiers.Contains(modifier))
+            if (TechModifiers.Contains(modifier))
             {
-                InputTechModifiers.Remove(modifier.Key);
-                targetCollection = Inputs;
-                success = true;
-            }
-            else if (OutputTechModifiers.Contains(modifier))
-            {
-                OutputTechModifiers.Remove(modifier.Key);
-                targetCollection = Outputs;
-                success = true;
+                if (modifier.Key.Item1 == StatModification.JobInputs)
+                {
+                    targetCollection = Inputs;
+                    success = true;
+                }
+                else if (modifier.Key.Item1 == StatModification.JobOutputs)
+                {
+                    targetCollection = Outputs;
+                    success = true;
+                }
             }
             if (success)
             {
+                TechModifiers.Remove(modifier.Key);
                 modifier.Value.CollectionChanged -= ModifiersListHandlers[modifier.Key];
                 ModifiersListHandlers.Remove(modifier.Key);
                 foreach (Modifier<decimal> removedMod in modifier.Value)

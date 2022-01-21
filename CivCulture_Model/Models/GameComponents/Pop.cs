@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Pop")]
-    public class Pop : ResourceOwner, ITemplated<PopTemplate>
+    public class Pop : ResourceOwner, ITemplated<PopTemplate>, ITechModifiable
     {
         #region Fields
         private PopTemplate template;
@@ -134,6 +134,11 @@ namespace CivCulture_Model.Models
                 }
             }
         }
+
+        public ITechResearcher TechSource
+        {
+            get => Culture;
+        }
         #endregion
 
         #region Constructors
@@ -234,34 +239,34 @@ namespace CivCulture_Model.Models
             });
         }
 
-        private bool TryAddTechModifierList(KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifier)
+        private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
         {
-            NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifier.Key);
-            if (modifier.Key.Item2 == PopTemplate.ALL || modifier.Key.Item2 == Template)
+            NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifierKey);
+            if (modifierKey.Item2 == PopTemplate.ALL || modifierKey.Item2 == Template)
             {
-                TechModifiers.Add(modifier.Key, modifier.Value);
-                modifier.Value.CollectionChanged += newHandler;
-                ModifiersListHandlers.Add(modifier.Key, newHandler);
-                foreach (Modifier<decimal> mod in modifier.Value)
+                TechModifiers.Add(modifierKey, modifierCollection);
+                modifierCollection.CollectionChanged += newHandler;
+                ModifiersListHandlers.Add(modifierKey, newHandler);
+                foreach (Modifier<decimal> mod in modifierCollection)
                 {
-                    ApplyModifier(modifier.Key, mod);
+                    ApplyModifier(modifierKey, mod);
                 }
                 return true;
             }
             return false;
         }
 
-        private bool TryRemoveTechModifierList(KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifier)
+        private bool TryRemoveTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
         {
-            if (TechModifiers.Contains(modifier))
+            if (TechModifiers.ContainsKey(modifierKey) && TechModifiers[modifierKey] == modifierCollection)
             {
-                foreach (Modifier<decimal> mod in modifier.Value)
+                foreach (Modifier<decimal> mod in modifierCollection)
                 {
-                    UnapplyModifier(modifier.Key, mod);
+                    UnapplyModifier(modifierKey, mod);
                 }
-                modifier.Value.CollectionChanged -= ModifiersListHandlers[modifier.Key];
-                TechModifiers.Remove(modifier.Key);
-                ModifiersListHandlers.Remove(modifier.Key);
+                modifierCollection.CollectionChanged -= ModifiersListHandlers[modifierKey];
+                TechModifiers.Remove(modifierKey);
+                ModifiersListHandlers.Remove(modifierKey);
                 return true;
             }
             return false;
@@ -274,7 +279,7 @@ namespace CivCulture_Model.Models
                 e.OldValue.TechModifiers.CollectionChanged -= Culture_TechModifiers_CollectionChanged;
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
                 {
-                    TryRemoveTechModifierList(modifierPair);
+                    TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
             }
             if (e.NewValue != null)
@@ -282,7 +287,7 @@ namespace CivCulture_Model.Models
                 e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged; ;
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
                 {
-                    TryAddTechModifierList(modifierPair);
+                    TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
             }
         }
@@ -293,14 +298,14 @@ namespace CivCulture_Model.Models
             {
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> newPair in e.NewItems)
                 {
-                    TryAddTechModifierList(newPair);
+                    TryAddTechModifierList(newPair.Key, newPair.Value);
                 }
             }
             if (e.OldItems != null)
             {
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> oldPair in e.OldItems)
                 {
-                    TryRemoveTechModifierList(oldPair);
+                    TryRemoveTechModifierList(oldPair.Key, oldPair.Value);
                 }
             }
         }
@@ -311,7 +316,7 @@ namespace CivCulture_Model.Models
             IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToRemove = TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.OldValue);
             foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in modifierListsToRemove)
             {
-                TryRemoveTechModifierList(modifierPair);
+                TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
             }
             Needs.Clear();
             if (e.NewValue != null)
@@ -325,7 +330,7 @@ namespace CivCulture_Model.Models
             IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToAdd = Culture.TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.NewValue);
             foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in modifierListsToAdd)
             {
-                TryAddTechModifierList(modifierPair);
+                TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
             }
         }
 
