@@ -4,12 +4,14 @@ using CivCulture_Model.Models.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    [DebuggerDisplay("{Template.Name} Tech")]
     public class Technology : GameComponent, ITemplated<TechnologyTemplate>, IFulfillable<ConsumeablesCollection>
     {
         #region Events

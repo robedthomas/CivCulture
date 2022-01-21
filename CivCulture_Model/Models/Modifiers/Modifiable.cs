@@ -13,8 +13,11 @@ namespace CivCulture_Model.Models.Modifiers
         PopNecessities,
         PopComforts,
         PopLuxuries,
+        PopProgressFromSatisfaction,
         JobInputs,
         JobOutputs,
+        SpaceProductionThroughput,
+        BuildingUnlocked,
     }
 
     public abstract class Modifiable<TValue>

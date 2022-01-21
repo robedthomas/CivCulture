@@ -162,17 +162,20 @@ namespace CivCulture_Model.Models
         private void ApplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
         {
             NeedType? targetNeedType = null;
-            if (modifierKey.Item1 == StatModification.PopNecessities)
+            switch (modifierKey.Item1)
             {
-                targetNeedType = NeedType.Necessity;
-            }
-            else if (modifierKey.Item1 == StatModification.PopComforts)
-            {
-                targetNeedType = NeedType.Comfort;
-            }
-            else if (modifierKey.Item1 == StatModification.PopLuxuries)
-            {
-                targetNeedType = NeedType.Luxury;
+                case StatModification.PopNecessities:
+                    targetNeedType = NeedType.Necessity;
+                    break;
+                case StatModification.PopComforts:
+                    targetNeedType = NeedType.Comfort;
+                    break;
+                case StatModification.PopLuxuries:
+                    targetNeedType = NeedType.Luxury;
+                    break;
+                case StatModification.PopProgressFromSatisfaction:
+                    ProgressFromSatisfactionRatio += modifier.Modification;
+                    break;
             }
             if (targetNeedType != null)
             {
@@ -188,17 +191,20 @@ namespace CivCulture_Model.Models
         private void UnapplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
         {
             NeedType? targetNeedType = null;
-            if (modifierKey.Item1 == StatModification.PopNecessities)
+            switch (modifierKey.Item1)
             {
-                targetNeedType = NeedType.Necessity;
-            }
-            else if (modifierKey.Item1 == StatModification.PopComforts)
-            {
-                targetNeedType = NeedType.Comfort;
-            }
-            else if (modifierKey.Item1 == StatModification.PopLuxuries)
-            {
-                targetNeedType = NeedType.Luxury;
+                case StatModification.PopNecessities:
+                    targetNeedType = NeedType.Necessity;
+                    break;
+                case StatModification.PopComforts:
+                    targetNeedType = NeedType.Comfort;
+                    break;
+                case StatModification.PopLuxuries:
+                    targetNeedType = NeedType.Luxury;
+                    break;
+                case StatModification.PopProgressFromSatisfaction:
+                    ProgressFromSatisfactionRatio -= modifier.Modification;
+                    break;
             }
             if (targetNeedType != null)
             {
