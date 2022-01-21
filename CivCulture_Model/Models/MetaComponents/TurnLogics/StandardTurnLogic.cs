@@ -60,6 +60,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             GrowPops(instance);
             // Check for pop migration
             MigratePops(instance);
+            // Generate progress from pops
+            GenerateProgressFromPops(instance);
             // Update each space's market
             UpdateMarkets(instance);
             // Move culture-wide resources from spaces to cultures
@@ -515,6 +517,15 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             pop.Space = destination;
             pop.Satisfaction += POP_MIGRATION_SATISFACTION_CHANGE;
             pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Migration", POP_MIGRATION_SATISFACTION_CHANGE));
+        }
+
+        protected void GenerateProgressFromPops(GameInstance instance)
+        {
+            foreach (Pop pop in instance.AllPops)
+            {
+                decimal progressProduced = pop.Satisfaction * pop.ProgressFromSatisfactionRatio;
+                pop.Culture.OwnedResources.Add(Fundamental.Progress, progressProduced);
+            }
         }
 
         protected void UpdateMarkets(GameInstance instance)

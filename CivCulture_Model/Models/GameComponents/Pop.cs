@@ -21,6 +21,7 @@ namespace CivCulture_Model.Models
         private Job job;
         private MapSpace space;
         private decimal satisfaction;
+        private decimal progressFromSatisfactionRatio;
         private Culture culture;
         #endregion
 
@@ -29,6 +30,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<Job> JobChanged;
         public event ValueChangedEventHandler<MapSpace> SpaceChanged;
         public event ValueChangedEventHandler<decimal> SatisfactionChanged;
+        public ValueChangedEventHandler<decimal> ProgressFromSatisfactionRatioChanged;
         public event ValueChangedEventHandler<Culture> CultureChanged;
         #endregion
 
@@ -105,6 +107,20 @@ namespace CivCulture_Model.Models
             }
         }
 
+        public decimal ProgressFromSatisfactionRatio
+        {
+            get => progressFromSatisfactionRatio;
+            set
+            {
+                if (progressFromSatisfactionRatio != value)
+                {
+                    decimal oldValue = progressFromSatisfactionRatio;
+                    progressFromSatisfactionRatio = value;
+                    ProgressFromSatisfactionRatioChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, value));
+                }
+            }
+        }
+
         public Culture Culture
         {
             get => culture;
@@ -128,15 +144,17 @@ namespace CivCulture_Model.Models
             ModifiersListHandlers = new Dictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, NotifyCollectionChangedEventHandler>();
             Template = template;
             Needs = new NeedCollection(Template.Needs);
-            Culture = culture;
             Satisfaction = 1M;
-
-            Culture.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
+            ProgressFromSatisfactionRatio = Template.ProgressFromSatisfactionRatio;
 
             TemplateChanged += This_TemplateChanged;
             JobChanged += This_JobChanged;
             SpaceChanged += This_SpaceChanged;
             CultureChanged += This_CultureChanged;
+
+            // Apply culture last, so that all tech modifiers are applied at the end of construction
+            Culture = culture;
+            Culture.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
         }
         #endregion
 
