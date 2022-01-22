@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models.Collections
 {
-    public class TechModifierCollection : ObservableDictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>
+    public class TechModifierCollection : ObservableDictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>>
     {
         #region Events
         #endregion
@@ -24,27 +24,27 @@ namespace CivCulture_Model.Models.Collections
         #endregion
 
         #region Methods
-        public override void Add(Tuple<StatModification, ComponentTemplate, Consumeable> key, ObservableCollection<Modifier<decimal>> value)
+        public override void Add(Tuple<StatModification, ComponentTemplate, Consumeable> key, ObservableCollection<TechModifier<decimal>> value)
         {
             if (ContainsKey(key))
             {
-                foreach (Modifier<decimal> mod in value)
+                foreach (TechModifier<decimal> mod in value)
                 {
                     this[key].Add(mod);
                 }
             }
             else
             {
-                base.Add(key, new ObservableCollection<Modifier<decimal>>(value));
+                base.Add(key, new ObservableCollection<TechModifier<decimal>>(value));
             }
         }
 
-        public void Add(StatModification modType, ComponentTemplate templateType, Consumeable modifiedConsumeable, Modifier<decimal> modification)
+        public void Add(StatModification modType, ComponentTemplate templateType, Consumeable modifiedConsumeable, TechModifier<decimal> modification)
         {
             Tuple<StatModification, ComponentTemplate, Consumeable> targetTuple = new Tuple<StatModification, ComponentTemplate, Consumeable>(modType, templateType, modifiedConsumeable);
             if (!ContainsKey(targetTuple))
             {
-                Add(targetTuple, new ObservableCollection<Modifier<decimal>>());
+                Add(targetTuple, new ObservableCollection<TechModifier<decimal>>());
             }
             this[targetTuple].Add(modification);
         }
@@ -59,9 +59,9 @@ namespace CivCulture_Model.Models.Collections
             {
                 if (!ContainsKey(key))
                 {
-                    this[key] = new ObservableCollection<Modifier<decimal>>();
+                    this[key] = new ObservableCollection<TechModifier<decimal>>();
                 }
-                foreach (Modifier<decimal> mod in collectionToAdd[key])
+                foreach (TechModifier<decimal> mod in collectionToAdd[key])
                 {
                     this[key].Add(mod);
                 }
@@ -78,7 +78,7 @@ namespace CivCulture_Model.Models.Collections
             {
                 if (ContainsKey(key))
                 {
-                    foreach (Modifier<decimal> mod in collectionToRemove[key])
+                    foreach (TechModifier<decimal> mod in collectionToRemove[key])
                     {
                         this[key].Remove(mod);
                     }

@@ -164,7 +164,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Methods
-        private void ApplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
+        private void ApplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, TechModifier<decimal> modifier)
         {
             NeedType? targetNeedType = null;
             switch (modifierKey.Item1)
@@ -193,7 +193,7 @@ namespace CivCulture_Model.Models
             // @TODO: handle other types of StatModification
         }
 
-        private void UnapplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
+        private void UnapplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, TechModifier<decimal> modifier)
         {
             NeedType? targetNeedType = null;
             switch (modifierKey.Item1)
@@ -224,14 +224,14 @@ namespace CivCulture_Model.Models
             {
                 if (e.NewItems != null)
                 {
-                    foreach (Modifier<decimal> newMod in e.NewItems)
+                    foreach (TechModifier<decimal> newMod in e.NewItems)
                     {
                         ApplyModifier(modifierKey, newMod);
                     }
                 }
                 if (e.OldItems != null)
                 {
-                    foreach (Modifier<decimal> oldMod in e.OldItems)
+                    foreach (TechModifier<decimal> oldMod in e.OldItems)
                     {
                         UnapplyModifier(modifierKey, oldMod);
                     }
@@ -239,7 +239,7 @@ namespace CivCulture_Model.Models
             });
         }
 
-        private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
+        private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<TechModifier<decimal>> modifierCollection)
         {
             NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifierKey);
             if (modifierKey.Item2 == PopTemplate.ALL || modifierKey.Item2 == Template)
@@ -247,7 +247,7 @@ namespace CivCulture_Model.Models
                 TechModifiers.Add(modifierKey, modifierCollection);
                 modifierCollection.CollectionChanged += newHandler;
                 ModifiersListHandlers.Add(modifierKey, newHandler);
-                foreach (Modifier<decimal> mod in modifierCollection)
+                foreach (TechModifier<decimal> mod in modifierCollection)
                 {
                     ApplyModifier(modifierKey, mod);
                 }
@@ -256,11 +256,11 @@ namespace CivCulture_Model.Models
             return false;
         }
 
-        private bool TryRemoveTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
+        private bool TryRemoveTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<TechModifier<decimal>> modifierCollection)
         {
             if (TechModifiers.ContainsKey(modifierKey) && TechModifiers[modifierKey] == modifierCollection)
             {
-                foreach (Modifier<decimal> mod in modifierCollection)
+                foreach (TechModifier<decimal> mod in modifierCollection)
                 {
                     UnapplyModifier(modifierKey, mod);
                 }
@@ -277,7 +277,7 @@ namespace CivCulture_Model.Models
             if (e.OldValue != null)
             {
                 e.OldValue.TechModifiers.CollectionChanged -= Culture_TechModifiers_CollectionChanged;
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
                 {
                     TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
@@ -285,7 +285,7 @@ namespace CivCulture_Model.Models
             if (e.NewValue != null)
             {
                 e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
                 {
                     TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
@@ -296,14 +296,14 @@ namespace CivCulture_Model.Models
         {
             if (e.NewItems != null)
             {
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> newPair in e.NewItems)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> newPair in e.NewItems)
                 {
                     TryAddTechModifierList(newPair.Key, newPair.Value);
                 }
             }
             if (e.OldItems != null)
             {
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> oldPair in e.OldItems)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> oldPair in e.OldItems)
                 {
                     TryRemoveTechModifierList(oldPair.Key, oldPair.Value);
                 }
@@ -313,8 +313,8 @@ namespace CivCulture_Model.Models
         private void This_TemplateChanged(object sender, ValueChangedEventArgs<PopTemplate> e)
         {
             // Remove all tech modifiers tied to the previous template
-            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToRemove = TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.OldValue);
-            foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in modifierListsToRemove)
+            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>>> modifierListsToRemove = TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.OldValue);
+            foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in modifierListsToRemove)
             {
                 TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
             }
@@ -327,8 +327,8 @@ namespace CivCulture_Model.Models
                 }
             }
             // Add all tech modifiers tied to the new template
-            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>>> modifierListsToAdd = Culture.TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.NewValue);
-            foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in modifierListsToAdd)
+            IEnumerable<KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>>> modifierListsToAdd = Culture.TechModifiers.Where(pair => pair.Key.Item2 == PopTemplate.ALL || pair.Key.Item2 == e.NewValue);
+            foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in modifierListsToAdd)
             {
                 TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
             }

@@ -2,6 +2,7 @@
 using CivCulture_Model.Models.Collections;
 using CivCulture_Model.Models.Modifiers;
 using GenericUtilities;
+using GenericUtilities.Observables;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -148,6 +149,8 @@ namespace CivCulture_Model.Models
 
         public ObservableCollection<Job> Jobs { get; protected set; }
 
+        private ObservableDictionary<Technology, List<Job>> JobsFromTech { get; set; }
+
         public ObservableCollection<Building> Buildings { get; protected set; }
 
         public ObservableCollection<BuildingTemplate> AvailableBuildings { get; protected set; }
@@ -168,6 +171,7 @@ namespace CivCulture_Model.Models
             ModifiersListHandlers = new Dictionary<Tuple<StatModification, ComponentTemplate, Consumeable>, NotifyCollectionChangedEventHandler>();
             Pops = new ObservableCollection<Pop>();
             Jobs = new ObservableCollection<Job>();
+            JobsFromTech = new ObservableDictionary<Technology, List<Job>>();
             Buildings = new ObservableCollection<Building>();
             AvailableBuildings = new ObservableCollection<BuildingTemplate>();
             TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
@@ -176,6 +180,7 @@ namespace CivCulture_Model.Models
 
             Buildings.CollectionChanged += Buildings_CollectionChanged;
             Pops.CollectionChanged += Pops_CollectionChanged;
+            JobsFromTech.CollectionChanged += JobsFromTech_CollectionChanged;
             DominantCultureChanged += This_DominantCultureChanged;
         }
         #endregion
@@ -265,23 +270,49 @@ namespace CivCulture_Model.Models
             }
         }
 
-        private void ApplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
+        private void ApplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, TechModifier<decimal> modifier)
         {
             switch (modifierKey.Item1)
             {
                 case StatModification.SpaceProductionThroughput:
                     ProductionThroughput += modifier.Modification;
                     break;
+                case StatModification.SpaceBuilderJobs:
+                    Technology targetTech = DominantCulture.ResearchedTechnologies.First(tech => tech.Template == modifier.Technology);
+                    if (modifier.Modification > 0)
+                    {
+                        JobsFromTech.Add(targetTech, new List<Job>());
+                        for (int i = 0; i < modifier.Modification; i++)
+                        {
+                            JobsFromTech[targetTech].Add(new Job(JobTemplate.Builder, targetTech));
+                        }
+                    }
+                    else if (modifier.Modification < 0)
+                    {
+                        throw new InvalidOperationException("Cannot remove jobs from space via new technology");
+                    }
+                    break;
             }
             // @TODO: handle other types of StatModification
         }
 
-        private void UnapplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, Modifier<decimal> modifier)
+        private void UnapplyModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, TechModifier<decimal> modifier)
         {
             switch (modifierKey.Item1)
             {
                 case StatModification.SpaceProductionThroughput:
                     ProductionThroughput -= modifier.Modification;
+                    break;
+                case StatModification.SpaceBuilderJobs:
+                    Technology targetTech = DominantCulture.ResearchedTechnologies.First(tech => tech.Template == modifier.Technology);
+                    if (modifier.Modification > 0)
+                    {
+                        JobsFromTech.Remove(targetTech);
+                    }
+                    else if (modifier.Modification < 0)
+                    {
+                        throw new InvalidOperationException("Cannot remove jobs from space via new technology");
+                    }
                     break;
             }
             // @TODO: handle other types of StatModification
@@ -293,14 +324,14 @@ namespace CivCulture_Model.Models
             {
                 if (e.NewItems != null)
                 {
-                    foreach (Modifier<decimal> newMod in e.NewItems)
+                    foreach (TechModifier<decimal> newMod in e.NewItems)
                     {
                         ApplyModifier(modifierKey, newMod);
                     }
                 }
                 if (e.OldItems != null)
                 {
-                    foreach (Modifier<decimal> oldMod in e.OldItems)
+                    foreach (TechModifier<decimal> oldMod in e.OldItems)
                     {
                         UnapplyModifier(modifierKey, oldMod);
                     }
@@ -308,7 +339,7 @@ namespace CivCulture_Model.Models
             });
         }
 
-        private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
+        private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<TechModifier<decimal>> modifierCollection)
         {
             NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifierKey);
             if (modifierKey.Item1 == StatModification.SpaceProductionThroughput)
@@ -316,7 +347,7 @@ namespace CivCulture_Model.Models
                 TechModifiers.Add(modifierKey, modifierCollection);
                 modifierCollection.CollectionChanged += newHandler;
                 ModifiersListHandlers.Add(modifierKey, newHandler);
-                foreach (Modifier<decimal> mod in modifierCollection)
+                foreach (TechModifier<decimal> mod in modifierCollection)
                 {
                     ApplyModifier(modifierKey, mod);
                 }
@@ -325,11 +356,11 @@ namespace CivCulture_Model.Models
             return false;
         }
 
-        private bool TryRemoveTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<Modifier<decimal>> modifierCollection)
+        private bool TryRemoveTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<TechModifier<decimal>> modifierCollection)
         {
             if (TechModifiers.ContainsKey(modifierKey) && TechModifiers[modifierKey] == modifierCollection)
             {
-                foreach (Modifier<decimal> mod in modifierCollection)
+                foreach (TechModifier<decimal> mod in modifierCollection)
                 {
                     UnapplyModifier(modifierKey, mod);
                 }
@@ -346,7 +377,7 @@ namespace CivCulture_Model.Models
             if (e.OldValue != null)
             {
                 e.OldValue.TechModifiers.CollectionChanged -= Culture_TechModifiers_CollectionChanged;
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
                 {
                     TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
@@ -354,7 +385,7 @@ namespace CivCulture_Model.Models
             if (e.NewValue != null)
             {
                 e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
                 {
                     TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
@@ -365,14 +396,14 @@ namespace CivCulture_Model.Models
         {
             if (e.NewItems != null)
             {
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> newPair in e.NewItems)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> newPair in e.NewItems)
                 {
                     TryAddTechModifierList(newPair.Key, newPair.Value);
                 }
             }
             if (e.OldItems != null)
             {
-                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<Modifier<decimal>>> oldPair in e.OldItems)
+                foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> oldPair in e.OldItems)
                 {
                     TryRemoveTechModifierList(oldPair.Key, oldPair.Value);
                 }
@@ -430,6 +461,30 @@ namespace CivCulture_Model.Models
         private void Pop_CultureChanged(object sender, ValueChangedEventArgs<Culture> e)
         {
             DominantCulture = DetermineDominantCulture();
+        }
+
+        private void JobsFromTech_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (KeyValuePair<Technology, List<Job>> newPair in e.NewItems)
+                {
+                    foreach (Job newJob in newPair.Value)
+                    {
+                        Jobs.Add(newJob);
+                    }
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (KeyValuePair<Technology, List<Job>> oldPair in e.OldItems)
+                {
+                    foreach (Job oldJob in oldPair.Value)
+                    {
+                        Jobs.Remove(oldJob);
+                    }
+                }
+            }
         }
         #endregion
     }

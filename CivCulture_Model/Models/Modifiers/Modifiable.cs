@@ -17,6 +17,7 @@ namespace CivCulture_Model.Models.Modifiers
         JobInputs,
         JobOutputs,
         SpaceProductionThroughput,
+        SpaceBuilderJobs,
         BuildingUnlocked,
     }
 

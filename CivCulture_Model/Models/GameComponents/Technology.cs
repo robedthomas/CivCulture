@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace CivCulture_Model.Models
 {
     [DebuggerDisplay("{Template.Name} Tech")]
-    public class Technology : GameComponent, ITemplated<TechnologyTemplate>, IFulfillable<ConsumeablesCollection>
+    public class Technology : JobSource, ITemplated<TechnologyTemplate>, IFulfillable<ConsumeablesCollection>
     {
         #region Events
         public ValueChangedEventHandler<decimal> CompletionLevelChanged;
