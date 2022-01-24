@@ -277,14 +277,14 @@ namespace CivCulture_Model.Models
                 case StatModification.SpaceProductionThroughput:
                     ProductionThroughput += modifier.Modification;
                     break;
-                case StatModification.SpaceBuilderJobs:
+                case StatModification.SpaceJobs:
                     Technology targetTech = DominantCulture.ResearchedTechnologies.First(tech => tech.Template == modifier.Technology);
                     if (modifier.Modification > 0)
                     {
                         JobsFromTech.Add(targetTech, new List<Job>());
                         for (int i = 0; i < modifier.Modification; i++)
                         {
-                            JobsFromTech[targetTech].Add(new Job(JobTemplate.Builder, targetTech));
+                            JobsFromTech[targetTech].Add(new Job(modifierKey.Item2 as JobTemplate, targetTech));
                         }
                     }
                     else if (modifier.Modification < 0)
@@ -303,7 +303,7 @@ namespace CivCulture_Model.Models
                 case StatModification.SpaceProductionThroughput:
                     ProductionThroughput -= modifier.Modification;
                     break;
-                case StatModification.SpaceBuilderJobs:
+                case StatModification.SpaceJobs:
                     Technology targetTech = DominantCulture.ResearchedTechnologies.First(tech => tech.Template == modifier.Technology);
                     if (modifier.Modification > 0)
                     {

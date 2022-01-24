@@ -10,6 +10,7 @@ namespace CivCulture_Model.Models.Modifiers
 {
     public enum StatModification
     {
+        CultureEnableBuilding,
         PopNecessities,
         PopComforts,
         PopLuxuries,
@@ -18,8 +19,7 @@ namespace CivCulture_Model.Models.Modifiers
         JobInputs,
         JobOutputs,
         SpaceProductionThroughput,
-        SpaceBuilderJobs,
-        BuildingUnlocked,
+        SpaceJobs,
     }
 
     public abstract class Modifiable<TValue>
