@@ -21,6 +21,7 @@ namespace CivCulture_Model.Models
         private JobSource source;
         private Pop worker;
         private MapSpace space;
+        private decimal basePay;
         #endregion
 
         #region Events
@@ -28,6 +29,7 @@ namespace CivCulture_Model.Models
         public event ValueChangedEventHandler<MapSpace> SpaceChanged;
         public event ValueChangedEventHandler<JobTemplate> TemplateChanged;
         public event ValueChangedEventHandler<JobSource> SourceChanged;
+        public event ValueChangedEventHandler<decimal> BasePayChanged;
         #endregion
 
         #region Properties
@@ -87,6 +89,20 @@ namespace CivCulture_Model.Models
             }
         }
 
+        public decimal BasePay
+        {
+            get => basePay;
+            set
+            {
+                if (basePay != value)
+                {
+                    decimal oldValue = basePay;
+                    basePay = value;
+                    BasePayChanged?.Invoke(this, new ValueChangedEventArgs<decimal>(oldValue, value));
+                }
+            }
+        }
+
         public ConsumeablesCollection Inputs { get; protected set; }
 
         public ConsumeablesCollection Outputs { get; protected set; }
@@ -105,6 +121,7 @@ namespace CivCulture_Model.Models
         public Job(JobTemplate template, JobSource source)
         {
             Template = template;
+            BasePay = Template.BasePay;
             Source = source;
             Inputs = new ConsumeablesCollection(Template.Inputs);
             Outputs = new ConsumeablesCollection(Template.Outputs);
@@ -116,19 +133,33 @@ namespace CivCulture_Model.Models
 
         private void AddTechModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, TechModifier<decimal> modifier, ConsumeablesCollection modifiedCollection)
         {
-            if (!modifiedCollection.ContainsKey(modifierKey.Item3))
+            if (modifierKey.Item1 == StatModification.JobBasePay)
             {
-                modifiedCollection[modifierKey.Item3] = modifier.Modification;
+                BasePay += modifier.Modification;
             }
             else
             {
-                modifiedCollection[modifierKey.Item3] += modifier.Modification;
+                if (!modifiedCollection.ContainsKey(modifierKey.Item3))
+                {
+                    modifiedCollection[modifierKey.Item3] = modifier.Modification;
+                }
+                else
+                {
+                    modifiedCollection[modifierKey.Item3] += modifier.Modification;
+                }
             }
         }
 
         private void RemoveTechModifier(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, TechModifier<decimal> modifier, ConsumeablesCollection modifiedCollection)
         {
-            modifiedCollection[modifierKey.Item3] -= modifier.Modification;
+            if (modifierKey.Item1 == StatModification.JobBasePay)
+            {
+                BasePay -= modifier.Modification;
+            }
+            else
+            {
+                modifiedCollection[modifierKey.Item3] -= modifier.Modification;
+            }
         }
 
         private NotifyCollectionChangedEventHandler GetTechModifierListChangedHandler(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey)
@@ -181,6 +212,10 @@ namespace CivCulture_Model.Models
                 else if (modifier.Key.Item1 == StatModification.JobOutputs)
                 {
                     targetCollection = Outputs;
+                    success = true;
+                }
+                else if (modifier.Key.Item1 == StatModification.JobBasePay)
+                {
                     success = true;
                 }
             }

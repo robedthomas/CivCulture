@@ -14,6 +14,7 @@ namespace CivCulture_Model.Models.Modifiers
         PopComforts,
         PopLuxuries,
         PopProgressFromSatisfaction,
+        JobBasePay,
         JobInputs,
         JobOutputs,
         SpaceProductionThroughput,

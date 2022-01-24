@@ -194,8 +194,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             {
                 workerPop.OwnedResources.Subtract(job.Inputs);
                 workerPop.OwnedResources.Add(job.Outputs);
-                workerPop.Money += job.Template.BasePay;
-                workerPop.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>("Job Base Pay", job.Template.BasePay));
+                workerPop.Money += job.BasePay;
+                workerPop.Forecast.MoneyChange.Modifiers.Add(new Modifier<decimal>("Job Base Pay", job.BasePay));
                 return true;
             }
             return false;
@@ -454,9 +454,9 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             if (job.Space == null)
             {
-                return job.Template.BasePay + job.Outputs.BaseValue - job.Inputs.BaseValue;
+                return job.BasePay + job.Outputs.BaseValue - job.Inputs.BaseValue;
             }
-            return job.Template.BasePay + job.Outputs.GetMarketValue(job.Space.ResourceMarket) - job.Inputs.GetMarketValue(job.Space.ResourceMarket);
+            return job.BasePay + job.Outputs.GetMarketValue(job.Space.ResourceMarket) - job.Inputs.GetMarketValue(job.Space.ResourceMarket);
         }
 
         protected void GrowPops (GameInstance instance)
