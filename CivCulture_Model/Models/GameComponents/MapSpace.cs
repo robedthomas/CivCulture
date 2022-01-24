@@ -376,18 +376,52 @@ namespace CivCulture_Model.Models
         {
             if (e.OldValue != null)
             {
+                e.OldValue.EnabledBuildings.CollectionChanged -= DominantCulture_EnabledBuildings_CollectionChanged;
                 e.OldValue.TechModifiers.CollectionChanged -= Culture_TechModifiers_CollectionChanged;
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in e.OldValue.TechModifiers)
                 {
                     TryRemoveTechModifierList(modifierPair.Key, modifierPair.Value);
                 }
+                AvailableBuildings.Clear();
             }
             if (e.NewValue != null)
             {
+                e.NewValue.EnabledBuildings.CollectionChanged += DominantCulture_EnabledBuildings_CollectionChanged;
                 e.NewValue.TechModifiers.CollectionChanged += Culture_TechModifiers_CollectionChanged;
                 foreach (KeyValuePair<Tuple<StatModification, ComponentTemplate, Consumeable>, ObservableCollection<TechModifier<decimal>>> modifierPair in e.NewValue.TechModifiers)
                 {
                     TryAddTechModifierList(modifierPair.Key, modifierPair.Value);
+                }
+                foreach (BuildingTemplate building in e.NewValue.EnabledBuildings)
+                {
+                    if (!building.IsSpaceUnique || !Buildings.Any(b => b.Template == building))
+                    {
+                        AvailableBuildings.Add(building);
+                    }
+                }
+            }
+        }
+
+        private void DominantCulture_EnabledBuildings_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (BuildingTemplate newBuilding in e.NewItems)
+                {
+                    if (!AvailableBuildings.Contains(newBuilding))
+                    {
+                        AvailableBuildings.Add(newBuilding);
+                    }
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (BuildingTemplate oldBuilding in e.OldItems)
+                {
+                    if (AvailableBuildings.Contains(oldBuilding))
+                    {
+                        AvailableBuildings.Remove(oldBuilding);
+                    }
                 }
             }
         }

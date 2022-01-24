@@ -648,8 +648,6 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 space.NextPopTemplate = GetNextPopTemplate(space);
                 space.Money = DEFAULT_STOCKPILE_MONEY;
                 space.Buildings.CollectionChanged += Space_Buildings_CollectionChanged;
-                space.AvailableBuildings.Add(BuildingTemplate.MudHuts); // @TODO: remove this when tech is added
-                space.AvailableBuildings.Add(BuildingTemplate.PrimitiveFarm); // @TODO: remove this when tech is added
             }
         }
 
