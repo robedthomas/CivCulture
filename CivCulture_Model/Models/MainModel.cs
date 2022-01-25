@@ -25,6 +25,7 @@ namespace CivCulture_Model.Models
             if (!TerrainResourceTemplate.Initialized)
             {
                 TerrainResourceTemplate.InitializeTerrainResources();
+                BuildingTemplate.InitializeBuildingTemplates();
             }
         }
 

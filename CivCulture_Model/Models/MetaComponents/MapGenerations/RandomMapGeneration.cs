@@ -25,7 +25,6 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #region Methods
         public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
-            BuildingTemplate.InitializeBuildingTemplates();
             GameMap map = new GameMap(config.Width, config.Height);
             GenerateSpaces(map, config, seed);
             allCultures = GenerateInitialCultures(map, config, namesDb, seed);
@@ -184,12 +183,6 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             List<Job> output = new List<Job>();
             foreach (MapSpace space in map.Spaces)
             {
-                for (int i = 0; i < config.NumberBuilderJobsPerSpace; i++)
-                {
-                    Job builderJob = new Job(JobTemplate.Builder, null); // @TODO: eventually set the source of Builder jobs to a tech
-                    builderJob.Space = space;
-                    output.Add(builderJob);
-                }
                 foreach (TerrainResource resource in space.TerrainResources)
                 {
                     foreach (JobTemplate template in resource.Template.ChildJobTemplates)
