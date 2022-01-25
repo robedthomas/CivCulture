@@ -20,7 +20,10 @@ namespace CivCulture_Model.Models.Modifiers
         #endregion
 
         #region Constructors
-        public TechModifier(TechnologyTemplate tech, TValue modification) : base(tech.Name, modification) { }
+        public TechModifier(TechnologyTemplate tech, TValue modification) : base(tech.Name, modification) 
+        {
+            technology = tech;
+        }
         #endregion
 
         #region Methods
