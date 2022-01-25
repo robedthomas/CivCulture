@@ -1,4 +1,5 @@
 ﻿using CivCulture_Model.Models;
+using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace CivCulture_ViewModel.ViewModels
         #region Fields
         private Job sourceJob;
         private PopViewModel popVM;
+        private bool isExpanded;
         #endregion
 
         #region Properties
@@ -43,6 +45,8 @@ namespace CivCulture_ViewModel.ViewModels
                         PopVM = new PopViewModel() { SourcePop = sourceJob.Worker };
                     }
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(Inputs));
+                    OnPropertyChanged(nameof(Outputs));
                 }
             }
         }
@@ -58,6 +62,29 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged();
                 }
             }
+        }
+
+        public bool IsExpanded
+        {
+            get => isExpanded;
+            set
+            {
+                if (isExpanded != value)
+                {
+                    isExpanded = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ConsumeablesCollection Inputs
+        {
+            get => SourceJob.Inputs;
+        }
+
+        public ConsumeablesCollection Outputs
+        {
+            get => SourceJob.Outputs;
         }
         #endregion
 

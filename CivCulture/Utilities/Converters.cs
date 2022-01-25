@@ -26,6 +26,27 @@ namespace CivCulture.Utilities.Converters
         public abstract object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture);
     }
 
+    public class BoolToVisibilityConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool vb)
+            {
+                return vb ? Visibility.Visible : Visibility.Collapsed;
+            }
+            return null;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Visibility vis)
+            {
+                return vis == Visibility.Visible;
+            }
+            return null;
+        }
+    }
+
     public class ObjectToVisibilityConverter : ValueConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -330,7 +330,7 @@ namespace CivCulture_ViewModel.ViewModels
             }
             if (e.OldItems != null)
             {
-                foreach (Job oldJob in e.NewItems)
+                foreach (Job oldJob in e.OldItems)
                 {
                     JobViewModel targetVM = null;
                     foreach (JobViewModel jobVM in AllJobGroups[oldJob.Template].Jobs)
