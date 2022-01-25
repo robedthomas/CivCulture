@@ -35,7 +35,7 @@ namespace CivCulture_Model.Models.Collections
             }
             else
             {
-                base.Add(key, new ObservableCollection<TechModifier<decimal>>(value));
+                base.Add(key, value);
             }
         }
 

@@ -281,11 +281,12 @@ namespace CivCulture_Model.Models
                     Technology targetTech = DominantCulture.ResearchedTechnologies.First(tech => tech.Template == modifier.Technology);
                     if (modifier.Modification > 0)
                     {
-                        JobsFromTech.Add(targetTech, new List<Job>());
+                        List<Job> newJobs = new List<Job>();
                         for (int i = 0; i < modifier.Modification; i++)
                         {
-                            JobsFromTech[targetTech].Add(new Job(modifierKey.Item2 as JobTemplate, targetTech));
+                            newJobs.Add(new Job(modifierKey.Item2 as JobTemplate, targetTech));
                         }
+                        JobsFromTech.Add(targetTech, newJobs);
                     }
                     else if (modifier.Modification < 0)
                     {
@@ -304,7 +305,7 @@ namespace CivCulture_Model.Models
                     ProductionThroughput -= modifier.Modification;
                     break;
                 case StatModification.SpaceJobs:
-                    Technology targetTech = DominantCulture.ResearchedTechnologies.First(tech => tech.Template == modifier.Technology);
+                    Technology targetTech = JobsFromTech.Keys.First(tech => tech.Template == modifier.Technology);
                     if (modifier.Modification > 0)
                     {
                         JobsFromTech.Remove(targetTech);
@@ -341,9 +342,9 @@ namespace CivCulture_Model.Models
 
         private bool TryAddTechModifierList(Tuple<StatModification, ComponentTemplate, Consumeable> modifierKey, ObservableCollection<TechModifier<decimal>> modifierCollection)
         {
-            NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifierKey);
-            if (modifierKey.Item1 == StatModification.SpaceProductionThroughput)
+            if (modifierKey.Item1 == StatModification.SpaceProductionThroughput || modifierKey.Item1 == StatModification.SpaceJobs)
             {
+                NotifyCollectionChangedEventHandler newHandler = GetTechModifierListChangedHandler(modifierKey);
                 TechModifiers.Add(modifierKey, modifierCollection);
                 modifierCollection.CollectionChanged += newHandler;
                 ModifiersListHandlers.Add(modifierKey, newHandler);
