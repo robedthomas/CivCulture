@@ -14,10 +14,10 @@ namespace CivCulture_Model.Models
     public class Building : JobSource, ITemplated<BuildingTemplate>, IFulfillable<ConsumeablesCollection>
     {
         #region Events
-        public ValueChangedEventHandler<BuildingTemplate> TemplateChanged;
-        public ValueChangedEventHandler<MapSpace> SpaceChanged;
-        public ValueChangedEventHandler<ConsumeablesCollection> RemainingCostsChanged;
-        public ValueChangedEventHandler<decimal> CompletionLevelChanged;
+        public event ValueChangedEventHandler<BuildingTemplate> TemplateChanged;
+        public event ValueChangedEventHandler<MapSpace> SpaceChanged;
+        public event ValueChangedEventHandler<ConsumeablesCollection> RemainingCostsChanged;
+        public event ValueChangedEventHandler<decimal> CompletionLevelChanged;
         #endregion
 
         #region Fields

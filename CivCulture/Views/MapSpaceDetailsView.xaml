@@ -204,6 +204,30 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            <Border Grid.Row="1" Visibility="{Binding CurrentConstructionVM, Converter={conv:ObjectToVisibilityConverter}}" BorderBrush="Black" BorderThickness="1.5" Background="Gray" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                        <local:BuildingView DataContext="{Binding CurrentConstructionVM}" Margin="10"/>
+                                        <Grid Margin="10,0,5,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Value="{Binding CurrentConstructionVM.ConstructionProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" VerticalAlignment="Top" Width="120" Height="18"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding CurrentConstructionVM.Name}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentConstructionVM.ConstructionProgressLabel}" HorizontalAlignment="Right" Margin="0,0,3,0"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Resources">
