@@ -16,7 +16,7 @@ namespace CivCulture_Model.Models
 
         public static void InitializeBuildingTemplates()
         {
-            MudHuts = new BuildingTemplate("Mud Huts", new ObservableCollection<JobTemplate>() { JobTemplate.Elder }, false, new ConsumeablesCollection() { { Fundamental.Production, 10 } }, new ConsumeablesCollection() { { Fundamental.Shelter, 3 } });
+            MudHuts = new BuildingTemplate("Mud Huts", new ObservableCollection<JobTemplate>(), false, new ConsumeablesCollection() { { Fundamental.Production, 10 } }, new ConsumeablesCollection() { { Fundamental.Shelter, 3 } });
 
             PrimitiveFarm = new BuildingTemplate("Primitive Farm", new ObservableCollection<JobTemplate>() { JobTemplate.Farmer_Wilderness }, false, new ConsumeablesCollection() { { Fundamental.Production, 15 } }, new ConsumeablesCollection());
         }
