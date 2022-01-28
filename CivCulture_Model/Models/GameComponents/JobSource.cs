@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class Job : GameComponent
+    public abstract class JobSource : GameComponent
     {
         #region Fields
         #endregion
@@ -15,6 +16,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
+        public ObservableCollection<Job> ChildJobs { get; protected set; } = new ObservableCollection<Job>();
         #endregion
 
         #region Constructors

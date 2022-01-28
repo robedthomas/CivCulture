@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.Models
+namespace CivCulture_Model.Models.MetaComponents
 {
-    public abstract class GameComponent : BaseModel
+    public abstract class MetaComponent : BaseModel
     {
     }
 }

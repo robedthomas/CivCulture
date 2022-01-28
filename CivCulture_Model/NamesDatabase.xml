@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<NamesDatabase>
+	<CultureGroups>
+		<CultureGroup name="Germanic">
+			<Culture name="English">
+				<CityNames>
+					<CityName name="London"/>
+					<CityName name="New York"/>
+					<CityName name="Bristol"/>
+					<CityName name="Los Angeles"/>
+					<CityName name="Chicago"/>
+				</CityNames>
+			</Culture>
+			<Culture name="German">
+				<CityNames>
+					<CityName name="Berlin"/>
+					<CityName name="Zurich"/>
+					<CityName name="Hamburg"/>
+					<CityName name="Munich"/>
+					<CityName name="Frankfurt"/>
+				</CityNames>
+			</Culture>
+		</CultureGroup>
+		<CultureGroup name="Latin">
+			<Culture name="French">
+				<CityNames>
+					<CityName name="Paris"/>
+					<CityName name="Lyon"/>
+					<CityName name="La Rochelle"/>
+					<CityName name="Brussels"/>
+					<CityName name="Dijon"/>
+				</CityNames>
+			</Culture>
+			<Culture name="Spanish">
+				<CityNames>
+					<CityName name="Madrid"/>
+					<CityName name="Barcelona"/>
+					<CityName name="Seville"/>
+					<CityName name="Mexico City"/>
+					<CityName name="Santiago"/>
+				</CityNames>
+			</Culture>
+		</CultureGroup>
+		<CultureGroup name="Slavic">
+			<Culture name="Russian">
+				<CityNames>
+					<CityName name="Moscow"/>
+					<CityName name="Petersburg"/>
+					<CityName name="Vladivostok"/>
+					<CityName name="Volgagrad"/>
+				</CityNames>
+			</Culture>
+			<Culture name="Polish">
+				<CityNames>
+					<CityName name="Warsaw"/>
+					<CityName name="Krakow"/>
+					<CityName name="Poznan"/>
+				</CityNames>
+			</Culture>
+		</CultureGroup>
+		<CultureGroup name="Semitic">
+			<Culture name="Arabic">
+				<CityNames>
+					<CityName name="Cairo"/>
+					<CityName name="Riyyad"/>
+					<CityName name="Baghdad"/>
+					<CityName name="Aleppo"/>
+				</CityNames>
+			</Culture>
+			<Culture name="Hebrew">
+				<CityNames>
+					<CityName name="Jerusalem"/>
+					<CityName name="Tel Aviv"/>
+				</CityNames>
+			</Culture>
+		</CultureGroup>
+	</CultureGroups>
+</NamesDatabase>

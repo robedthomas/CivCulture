@@ -1,0 +1,337 @@
+﻿<UserControl x:Class="CivCulture.Views.MapSpaceDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CivCulture.Views"
+             xmlns:c="clr-namespace:CivCulture.Controls"
+             xmlns:conv="clr-namespace:CivCulture.Utilities.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/CommonResources.xaml"/>
+                <ResourceDictionary Source="/Resources/Icons/IconsDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Height="400" Width="600">
+        <Border BorderBrush="Black" BorderThickness="2" CornerRadius="4" Padding="3" Background="LightGray">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBox Text="{Binding SpaceName}" Style="{StaticResource ShadowTextBoxEffect}" Foreground="{StaticResource EditableTextBrush}"  MinWidth="50"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="X: "/>
+                    <TextBlock Text="{Binding SpaceColumn}" Foreground="{StaticResource PopulatedTextBrush}" Style="{StaticResource ShadowTextBlockEffect}" Margin="0,0,6,0"/>
+                    <TextBlock Text="Y: "/>
+                    <TextBlock Text="{Binding SpaceRow}" Foreground="{StaticResource PopulatedTextBrush}" Style="{StaticResource ShadowTextBlockEffect}" Margin="0,0,10,0"/>
+                </StackPanel>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Terrain: "/>
+                            <TextBlock Text="{Binding TerrainName}" Style="{StaticResource ShadowTextBlockEffect}" Foreground="{StaticResource PopulatedTextBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                    <GroupBox Grid.Row="1" Header="Output">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ListBox ItemsSource="{Binding TotalOutput}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                            <TextBlock Text="{Binding Value}"/>
+                                            <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}" Margin="4,0,0,0"/>
+                                            <TextBlock Text="{Binding Key.Name}" Margin="2,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+                <TabControl Grid.Row="2" TabStripPlacement="Bottom">
+                    <TabItem Header="Pops">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="Next Pop:"/>
+                                    <TextBlock Text="{Binding NextPopTemplate, Mode=OneWay, Converter={conv:PopTemplateToTemplateNameConverter}}" Margin="5,0,0,0"/>
+                                </StackPanel>
+                                <ProgressBar Grid.Row="0" Value="{Binding PopGrowthProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" HorizontalAlignment="Right" Width="120" Height="18" Margin="0,0,15,5"/>
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding PopViewModels, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPop}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Icon">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <local:PopView DataContext="{Binding}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Job" Binding="{Binding JobName}"/>
+                                        <DataGridTextColumn Header="Culture" Binding="{Binding CultureName}"/>
+                                        <DataGridTemplateColumn Header="Money">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Money, StringFormat=N}"/>
+                                                        <TextBlock Text="{Binding MoneyChange, Converter={conv:ModifiableToStringConverter}, StringFormat=N}" ToolTip="{Binding MoneyChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Satisfaction">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Satisfaction, StringFormat=N}"/>
+                                                        <TextBlock Text="{Binding SatisfactionChange, Converter={conv:ModifiableToStringConverter}}" ToolTip="{Binding SatisfactionChange, Converter={conv:ModifiableToTooltipConverter}}" Margin="6,0,0,0"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Resources">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DataGrid ItemsSource="{Binding OwnedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn Header="Resource">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                                            <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="Jobs">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="Filled Jobs:"/>
+                                <TextBlock Text="{Binding FilledJobCount}" Margin="12,0,0,0"/>
+                                <TextBlock Text="/" Margin="2,0,0,0"/>
+                                <TextBlock Text="{Binding TotalJobCount}" Margin="2,0,0,0"/>
+                            </StackPanel>
+                            <ListBox Grid.Row="1" ItemsSource="{Binding AllJobGroups}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding Value.JobName}"/>
+                                            <ListBox ItemsSource="{Binding Value.Jobs}">
+                                                <ListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ListBox.ItemsPanel>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <local:JobView DataContext="{Binding}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Buildings">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ItemsControl Grid.Row="0" ItemsSource="{Binding BuildingViewModels}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:BuildingView DataContext="{Binding}" Margin="0,0,2,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Border Grid.Row="1" Visibility="{Binding CurrentConstructionVM, Converter={conv:ObjectToVisibilityConverter}}" BorderBrush="Black" BorderThickness="1.5" Background="Gray" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                        <local:BuildingView DataContext="{Binding CurrentConstructionVM}" Margin="10"/>
+                                        <Grid Margin="10,0,5,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Value="{Binding CurrentConstructionVM.ConstructionProgress, Mode=OneWay, Converter={conv:DecimalToDoubleConverter}}" Minimum="0" Maximum="1" VerticalAlignment="Top" Width="120" Height="18"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding CurrentConstructionVM.Name}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentConstructionVM.ConstructionProgressLabel}" HorizontalAlignment="Right" Margin="0,0,3,0"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Resources">
+                        <Grid>
+                            <ItemsControl Grid.Row="0" ItemsSource="{Binding TerrainResourceVMs}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:TerrainResourceView DataContext="{Binding}" Margin="0,0,2,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Market">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                <TextBlock Text="Money:"/>
+                                <Image Source="{Binding Converter={conv:ResourceToIconConverter}, ConverterParameter=Money}" Width="16" Height="16" Margin="5,0,0,0"/>
+                                <TextBlock Text="{Binding StockpileMoney, StringFormat=N}" Margin="2,0,0,0"/>
+                            </StackPanel>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Stockpile" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding StockpileResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Label Grid.Row="1" Grid.Column="1" Content="Supply" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="1" ItemsSource="{Binding MarketSuppliedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Label Grid.Row="1" Grid.Column="2" Content="Demand" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="2" ItemsSource="{Binding MarketDemandedResources}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Count" Binding="{Binding Value, StringFormat=N}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Label Grid.Row="1" Grid.Column="3" Content="Prices" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="2" Grid.Column="3" ItemsSource="{Binding MarketResourcePrices}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Resource">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Key, Converter={conv:ResourceToIconConverter}}"/>
+                                                    <TextBlock Text="{Binding Key.Name}" Margin="4,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Price" Binding="{Binding Value, StringFormat=N}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

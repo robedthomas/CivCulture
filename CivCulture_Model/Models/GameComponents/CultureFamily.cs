@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CivCulture_Model.Models
+namespace CivCulture_Model.Models.GameComponents
 {
-    public class Pop : GameComponent 
+    public class CultureFamily : GameComponent
     {
-        #region Fields
-        #endregion
-
         #region Events
         #endregion
 
+        #region Fields
+        #endregion
+
         #region Properties
+        public Culture OriginatorCulture { get; protected set; }
         #endregion
 
         #region Constructors

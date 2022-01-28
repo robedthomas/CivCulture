@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class MapSpace : GameComponent 
+    public abstract class GameComponent : BaseModel
     {
         #region Fields
         #endregion

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
-    public class Resource : GameComponent
+    public abstract class ComponentTemplate : GameComponent
     {
-        #region Fields
+        #region Events
         #endregion
 
-        #region Events
+        #region Fields
         #endregion
 
         #region Properties

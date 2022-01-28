@@ -7,8 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
+    <None Remove="Resources\Icons\FoodIcon.png" />
+    <None Remove="Resources\Icons\MoneyIcon.png" />
+    <None Remove="Resources\Icons\MudHutsIcon.png" />
+    <None Remove="Resources\Icons\PrimitiveFarmIcon.png" />
+    <None Remove="Resources\Icons\ProductionIcon.png" />
+    <None Remove="Resources\Icons\ShelterIcon.png" />
+    <None Remove="Resources\Icons\WheatIcon.png" />
+    <None Remove="Resources\Icons\WildernessIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\FoodIcon.png" />
+    <Resource Include="Resources\Icons\MoneyIcon.png" />
+    <Resource Include="Resources\Icons\MudHutsIcon.png" />
+    <Resource Include="Resources\Icons\PrimitiveFarmIcon.png" />
+    <Resource Include="Resources\Icons\ProductionIcon.png" />
+    <Resource Include="Resources\Icons\ShelterIcon.png" />
+    <Resource Include="Resources\Icons\WheatIcon.png" />
+    <Resource Include="Resources\Icons\WildernessIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CivCulture_Model\CivCulture_Model.csproj" />
+    <ProjectReference Include="..\CivCulture_ViewModel\CivCulture_ViewModel.csproj" />
   </ItemGroup>
 
 </Project>

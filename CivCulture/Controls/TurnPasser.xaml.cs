@@ -1,4 +1,4 @@
-﻿using CivCulture_ViewModel.ViewModels;
+﻿using CivCulture_ViewModel.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,29 +14,39 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CivCulture
+namespace CivCulture.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for TurnPasser.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TurnPasser : UserControl
     {
         #region Fields
+        #region Dependency Properties
+        public static readonly DependencyProperty EndTurnCommandProperty = DependencyProperty.Register(
+            "EndTurnCommand",
+            typeof(RelayCommand),
+            typeof(TurnPasser),
+            new PropertyMetadata()
+            );
+        #endregion
         #endregion
 
         #region Events
         #endregion
 
         #region Properties
-        public MainViewModel VM { get; private set; }
+        public RelayCommand EndTurnCommand
+        {
+            get => (RelayCommand)GetValue(EndTurnCommandProperty);
+            set => SetValue(EndTurnCommandProperty, value);
+        }
         #endregion
 
         #region Constructors
-        public MainWindow()
+        public TurnPasser()
         {
             InitializeComponent();
-            VM = new MainViewModel();
-            DataContext = VM;
         }
         #endregion
 

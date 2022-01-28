@@ -1,6 +1,8 @@
 ﻿using CivCulture_Model.Events;
+using CivCulture_Model.Models.Collections;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Properties
+        public int Width { get; protected set; }
+
+        public int Height { get; protected set; }
+
         public MapSpaceCollection Spaces
         {
             get
@@ -33,18 +39,25 @@ namespace CivCulture_Model.Models
                     {
                         spaces.CollectionChanged -= Spaces_CollectionChanged;
                     }
-                    SpacesChanged?.Invoke(this, new ValueChangedEventArgs<MapSpaceCollection>(spaces, value));
+                    MapSpaceCollection oldValue = spaces;
                     spaces = value;
                     if (spaces != null)
                     {
                         spaces.CollectionChanged += Spaces_CollectionChanged;
                     }
+                    SpacesChanged?.Invoke(this, new ValueChangedEventArgs<MapSpaceCollection>(oldValue, spaces));
                 }
             }
         }
         #endregion
 
         #region Constructors
+        public GameMap(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Spaces = new MapSpaceCollection(width, height);
+        }
         #endregion
 
         #region Methods
@@ -54,14 +67,35 @@ namespace CivCulture_Model.Models
             {
                 foreach (MapSpace newSpace in e.NewItems)
                 {
-                    // @TODO
+                    newSpace.Pops.CollectionChanged += Spaces_Pops_CollectionChanged;
                 }
             }
             if (e.OldItems != null)
             {
                 foreach (MapSpace oldSpace in e.OldItems)
                 {
-                    // @TODO
+                    if (oldSpace != null)
+                    {
+                        oldSpace.Pops.CollectionChanged -= Spaces_Pops_CollectionChanged;
+                    }
+                }
+            }
+        }
+
+        private void Spaces_Pops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Pop newPop in e.NewItems)
+                {
+                    
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Pop oldPop in e.OldItems)
+                {
+                    
                 }
             }
         }

@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CivCulture"
+        xmlns:views="clr-namespace:CivCulture.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <StackPanel Orientation="Vertical" Visibility="{Binding MenuVisibility}">
+            <Button Content="New Game" Command="{Binding NewGameRC}"/>
+        </StackPanel>
+        <views:GameConfigView DataContext="{Binding GameConfigVM}" Visibility="{Binding DataContext.ConfigVisibility, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+        <views:GameInstanceView DataContext="{Binding GameInstanceVM}" Visibility="{Binding DataContext.GameVisibility, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Grid>
 </Window>
