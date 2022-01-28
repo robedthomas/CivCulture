@@ -210,6 +210,41 @@ namespace CivCulture.Utilities.Converters
         }
     }
 
+    public class TerrainResourceToIconConverter : ValueConverter
+    {
+        private static Uri iconResourcesUri = new Uri("Resources/Icons/IconsDictionary.xaml", UriKind.RelativeOrAbsolute);
+        private static ResourceDictionary iconsDictionary = new ResourceDictionary() { Source = iconResourcesUri };
+
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string resourceName;
+            if (parameter is string name)
+            {
+                resourceName = name;
+            }
+            else if (value is TerrainResource r && r != null)
+            {
+                resourceName = r.Template.Name;
+            }
+            else
+            {
+                return null;
+            }
+            string iconKey = $"{resourceName}Icon";
+            if (iconsDictionary.Contains(iconKey))
+            {
+                return (iconsDictionary[iconKey] as Image).Source;
+            }
+            // throw new ArgumentException($"Requested icon for Consumeable that lacks an icon: {resourceName}");
+            return null;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class BuildingToIconConverter : ValueConverter
     {
         private static Uri iconResourcesUri = new Uri("Resources/Icons/IconsDictionary.xaml", UriKind.RelativeOrAbsolute);

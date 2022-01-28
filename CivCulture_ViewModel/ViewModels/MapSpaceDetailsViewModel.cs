@@ -41,6 +41,7 @@ namespace CivCulture_ViewModel.ViewModels
                     AllJobGroups = GetJobGroupsFromSpace(value);
                     PopViewModels = new ObservableCollection<PopViewModel>();
                     BuildingViewModels = new ObservableCollection<BuildingViewModel>();
+                    TerrainResourceVMs = new ObservableCollection<TerrainResourceViewModel>();
                     CurrentConstructionVM = null;
                     if (sourceSpace != null)
                     {
@@ -57,6 +58,10 @@ namespace CivCulture_ViewModel.ViewModels
                         foreach (Building building in sourceSpace.Buildings)
                         {
                             BuildingViewModels.Add(new BuildingViewModel(building));
+                        }
+                        foreach (TerrainResource resource in sourceSpace.TerrainResources)
+                        {
+                            TerrainResourceVMs.Add(new TerrainResourceViewModel(resource));
                         }
                         if (sourceSpace.CurrentConstruction != null)
                         {
@@ -212,6 +217,8 @@ namespace CivCulture_ViewModel.ViewModels
                 }
             }
         }
+
+        public ObservableCollection<TerrainResourceViewModel> TerrainResourceVMs { get; protected set; }
 
         public ConsumeablesCollection StockpileResources
         {

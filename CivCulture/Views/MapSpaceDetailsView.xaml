@@ -231,7 +231,20 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="Resources">
-
+                        <Grid>
+                            <ItemsControl Grid.Row="0" ItemsSource="{Binding TerrainResourceVMs}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:TerrainResourceView DataContext="{Binding}" Margin="0,0,2,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Market">
                         <Grid>
