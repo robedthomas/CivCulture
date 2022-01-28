@@ -7,7 +7,10 @@
     <Image x:Key="ShelterIcon" Source="ShelterIcon.png"/>
     
     <!-- Resources -->
+    
+    <!-- Terrain Resources -->
     <Image x:Key="WheatIcon" Source="WheatIcon.png"/>
+    <Image x:Key="WildernessIcon" Source="WildernessIcon.png"/>
 
     <!-- Buildings -->
     <Image x:Key="MudHutsIcon" Source="MudHutsIcon.png"/>
