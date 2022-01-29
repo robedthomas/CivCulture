@@ -85,6 +85,8 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="Dominant Culture:"/>
+                                    <TextBlock Text="{Binding DominantCulture, Converter={conv:CultureToNameConverter}}" Margin="5,0,40,0"/>
                                     <TextBlock Text="Next Pop:"/>
                                     <TextBlock Text="{Binding NextPopTemplate, Mode=OneWay, Converter={conv:PopTemplateToTemplateNameConverter}}" Margin="5,0,0,0"/>
                                 </StackPanel>

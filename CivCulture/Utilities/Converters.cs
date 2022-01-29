@@ -303,4 +303,21 @@ namespace CivCulture.Utilities.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class CultureToNameConverter : ValueConverter
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Culture c && c != null)
+            {
+                return c.Name;
+            }
+            return "None";
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

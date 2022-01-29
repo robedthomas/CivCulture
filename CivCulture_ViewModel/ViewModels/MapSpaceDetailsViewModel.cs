@@ -76,6 +76,7 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged(nameof(NumPopColumns));
                     OnPropertyChanged(nameof(StockpileResources));
                     OnPropertyChanged(nameof(StockpileMoney));
+                    OnPropertyChanged(nameof(DominantCulture));
                     SpaceName = SourceSpace.Name;
                 }
             }
@@ -172,6 +173,11 @@ namespace CivCulture_ViewModel.ViewModels
             get => MAX_POPS_PER_ROW;
         }
 
+        public Culture DominantCulture
+        {
+            get => SourceSpace.DominantCulture;
+        }
+
         public decimal PopGrowthProgress
         {
             get => SourceSpace.PopGrowthProgress;
@@ -263,6 +269,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.CurrentConstructionChanged -= SourceSpace_CurrentConstructionChanged;
             SourceSpace.TerrainResources.CollectionChanged -= SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged -= SourceSpace_TerrainChanged;
+            SourceSpace.DominantCultureChanged -= SourceSpace_DominantCultureChanged;
             sourceSpace.PopGrowthProgressChanged -= SourceSpace_PopGrowthProgressChanged;
             sourceSpace.NextPopTemplateChanged -= SourceSpace_NextPopTemplateChanged;
             sourceSpace.OwnedResourcesChanged -= SourceSpace_OwnedResourcesChanged;
@@ -283,6 +290,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.CurrentConstructionChanged += SourceSpace_CurrentConstructionChanged;
             SourceSpace.TerrainResources.CollectionChanged += SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged += SourceSpace_TerrainChanged;
+            SourceSpace.DominantCultureChanged += SourceSpace_DominantCultureChanged;
             sourceSpace.PopGrowthProgressChanged += SourceSpace_PopGrowthProgressChanged;
             sourceSpace.NextPopTemplateChanged += SourceSpace_NextPopTemplateChanged;
             sourceSpace.OwnedResourcesChanged += SourceSpace_OwnedResourcesChanged;
@@ -425,6 +433,11 @@ namespace CivCulture_ViewModel.ViewModels
         private void SourceSpace_TerrainResources_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // @TODO: define when TerrainResourceViewModel is created
+        }
+
+        private void SourceSpace_DominantCultureChanged(object sender, ValueChangedEventArgs<Culture> e)
+        {
+            OnPropertyChanged(nameof(DominantCulture));
         }
 
         private void SourceSpace_NextPopTemplateChanged(object sender, ValueChangedEventArgs<PopTemplate> e)
