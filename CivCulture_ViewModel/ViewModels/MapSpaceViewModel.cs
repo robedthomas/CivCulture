@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models;
+using CivCulture_ViewModel.Utilities;
 using CivCulture_ViewModel.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,10 @@ namespace CivCulture_ViewModel.ViewModels
         #region Fields
         private MapSpace sourceSpace;
         private CultureViewModel dominantCultureVM;
+        private bool hasCultureBorderLeft;
+        private bool hasCultureBorderRight;
+        private bool hasCultureBorderUp;
+        private bool hasCultureBorderDown;
         #endregion
 
         #region Events
@@ -74,6 +79,7 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(DarkCultureColor));
                     OnPropertyChanged(nameof(LightCultureColor));
+                    OnPropertyChanged(nameof(CultureBorderColor));
                 }
             }
         }
@@ -128,6 +134,63 @@ namespace CivCulture_ViewModel.ViewModels
         public Color LightCultureColor
         {
             get => GetLightCultureColorFromDarkCultureColor(DarkCultureColor);
+        }
+
+        public Color CultureBorderColor
+        {
+            get => ColorUtilities.GetComplimentaryColor(DarkCultureColor);
+        }
+
+        public bool HasCultureBorderLeft
+        {
+            get => hasCultureBorderLeft;
+            set
+            {
+                if (hasCultureBorderLeft != value)
+                {
+                    hasCultureBorderLeft = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool HasCultureBorderRight
+        {
+            get => hasCultureBorderRight;
+            set
+            {
+                if (hasCultureBorderRight != value)
+                {
+                    hasCultureBorderRight = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool HasCultureBorderUp
+        {
+            get => hasCultureBorderUp;
+            set
+            {
+                if (hasCultureBorderUp != value)
+                {
+                    hasCultureBorderUp = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool HasCultureBorderDown
+        {
+            get => hasCultureBorderDown;
+            set
+            {
+                if (hasCultureBorderDown != value)
+                {
+                    hasCultureBorderDown = value;
+                    OnPropertyChanged();
+                }
+            }
         }
         #endregion
 

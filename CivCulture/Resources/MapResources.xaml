@@ -35,4 +35,5 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
+    <SolidColorBrush x:Key="CultureBorderBrush" Color="{Binding CultureBorderColor}"/>
 </ResourceDictionary>

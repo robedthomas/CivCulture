@@ -10,6 +10,14 @@ using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    public enum RelativeDirection
+    {
+        Left,
+        Right,
+        Up,
+        Down
+    }
+
     public class GameMap : GameComponent
     {
         #region Fields
@@ -61,6 +69,23 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Methods
+        public MapSpace GetSpaceInRelativeDirection(MapSpace sourceSpace, RelativeDirection direction)
+        {
+            if (!Spaces.Contains(sourceSpace))
+            {
+                throw new ArgumentException("Given space not present in this GameMap");
+            }
+            int rowModification = direction == RelativeDirection.Up ? -1 : direction == RelativeDirection.Down ? 1 : 0;
+            int columnModification = direction == RelativeDirection.Left ? -1 : direction == RelativeDirection.Right ? 1 : 0;
+            int targetRow = sourceSpace.Row + rowModification;
+            int targetColumn = sourceSpace.Column + columnModification;
+            if (targetRow < 0 || targetRow >= Height || targetColumn < 0 || targetColumn >= Width)
+            {
+                return null;
+            }
+            return Spaces[targetRow, targetColumn];
+        }
+
         private void Spaces_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)

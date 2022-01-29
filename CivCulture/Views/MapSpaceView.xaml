@@ -22,5 +22,23 @@
                 <TextBlock Panel.ZIndex="3" Text="{Binding PopCount}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Border>
+        <Grid Panel.ZIndex="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="0" Visibility="{Binding HasCultureBorderLeft, Converter={conv:BoolToVisibilityConverter}}"  Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Rectangle Grid.Column="2" Visibility="{Binding HasCultureBorderRight, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </Grid>
+        <Grid Panel.ZIndex="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="4"/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Row="0" Visibility="{Binding HasCultureBorderUp, Converter={conv:BoolToVisibilityConverter}}"   Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Rectangle Grid.Row="2" Visibility="{Binding HasCultureBorderDown, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </Grid>
     </Grid>
 </UserControl>

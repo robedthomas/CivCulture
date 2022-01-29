@@ -79,7 +79,24 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 if (spaceVms != value)
                 {
+                    if (spaceVms != null)
+                    {
+                        foreach (MapSpaceViewModel vm in spaceVms)
+                        {
+                            vm.SourceSpace.DominantCultureChanged -= Space_DominantCultureChanged;
+                        }
+                        spaceVms.CollectionChanged -= SpaceViewModels_CollectionChanged;
+                    }
                     spaceVms = value;
+                    if (spaceVms != null)
+                    {
+                        foreach (MapSpaceViewModel vm in spaceVms)
+                        {
+                            vm.SourceSpace.DominantCultureChanged += Space_DominantCultureChanged;
+                            UpdateCultureBordersOfSpace(vm.SourceSpace);
+                        }
+                        spaceVms.CollectionChanged += SpaceViewModels_CollectionChanged;
+                    }
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(CuratedSpaceViewModels));
                 }
@@ -157,6 +174,130 @@ namespace CivCulture_ViewModel.ViewModels
                 }
             }
             return curated;
+        }
+
+        private void SpaceViewModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (MapSpaceViewModel vm in e.NewItems)
+                {
+                    vm.SourceSpace.DominantCultureChanged += Space_DominantCultureChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (MapSpaceViewModel vm in e.OldItems)
+                {
+                    vm.SourceSpace.DominantCultureChanged -= Space_DominantCultureChanged;
+                }
+            }
+        }
+
+        private void Space_DominantCultureChanged(object sender, ValueChangedEventArgs<Culture> e)
+        {
+            MapSpace changedSpace = sender as MapSpace;
+            UpdateCultureBordersOfSpace(changedSpace);
+        }
+
+        private void UpdateCultureBordersOfSpace(MapSpace changedSpace)
+        {
+            // Find spaces to the left, right, up, and down of the changed space
+            MapSpace leftSpace = SourceMap.GetSpaceInRelativeDirection(changedSpace, RelativeDirection.Left);
+            MapSpace rightSpace = SourceMap.GetSpaceInRelativeDirection(changedSpace, RelativeDirection.Right);
+            MapSpace upSpace = SourceMap.GetSpaceInRelativeDirection(changedSpace, RelativeDirection.Up);
+            MapSpace downSpace = SourceMap.GetSpaceInRelativeDirection(changedSpace, RelativeDirection.Down);
+            // Update border settings between the changed space and each of its adjacent spaces
+            UpdateCultureBorderBetweenSpaces(changedSpace, leftSpace, RelativeDirection.Left);
+            UpdateCultureBorderBetweenSpaces(changedSpace, rightSpace, RelativeDirection.Right);
+            UpdateCultureBorderBetweenSpaces(changedSpace, upSpace, RelativeDirection.Up);
+            UpdateCultureBorderBetweenSpaces(changedSpace, downSpace, RelativeDirection.Down);
+        }
+
+        private void UpdateCultureBorderBetweenSpaces(MapSpace sourceSpace, MapSpace targetSpace, RelativeDirection directionFromSource)
+        {
+            MapSpaceViewModel sourceSpaceVm = SpaceViewModels.First(vm => vm.SourceSpace == sourceSpace);
+            MapSpaceViewModel targetSpaceVm = targetSpace is null ? null : SpaceViewModels.First(vm => vm.SourceSpace == targetSpace);
+            if (targetSpace != null && sourceSpace.DominantCulture == targetSpace.DominantCulture)
+            {
+                RemoveCultureBorderBetweenSpaces(sourceSpaceVm, targetSpaceVm, directionFromSource);
+            }
+            else
+            {
+                AddCultureBorderBetweenSpaces(sourceSpaceVm, targetSpaceVm, directionFromSource);
+            }
+        }
+
+        private void AddCultureBorderBetweenSpaces(MapSpaceViewModel sourceSpace, MapSpaceViewModel targetSpace, RelativeDirection directionFromSource)
+        {
+            bool addBorderToSource = sourceSpace.SourceSpace.DominantCulture != null;
+            bool addBorderToTarget = targetSpace is null ? false : targetSpace.SourceSpace.DominantCulture != null;
+            switch (directionFromSource)
+            {
+                case RelativeDirection.Left:
+                    sourceSpace.HasCultureBorderLeft = addBorderToSource;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderRight = addBorderToTarget;
+                    }
+                    break;
+                case RelativeDirection.Right:
+                    sourceSpace.HasCultureBorderRight = addBorderToSource;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderLeft = addBorderToTarget;
+                    }
+                    break;
+                case RelativeDirection.Up:
+                    sourceSpace.HasCultureBorderUp = addBorderToSource;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderDown = addBorderToTarget;
+                    }
+                    break;
+                case RelativeDirection.Down:
+                    sourceSpace.HasCultureBorderDown = addBorderToSource;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderUp = addBorderToTarget;
+                    }
+                    break;
+            }
+        }
+
+        private void RemoveCultureBorderBetweenSpaces(MapSpaceViewModel sourceSpace, MapSpaceViewModel targetSpace, RelativeDirection directionFromSource)
+        {
+            switch (directionFromSource)
+            {
+                case RelativeDirection.Left:
+                    sourceSpace.HasCultureBorderLeft = false;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderRight = false;
+                    }
+                    break;
+                case RelativeDirection.Right:
+                    sourceSpace.HasCultureBorderRight = false;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderLeft = false;
+                    }
+                    break;
+                case RelativeDirection.Up:
+                    sourceSpace.HasCultureBorderUp = false;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderDown = false;
+                    }
+                    break;
+                case RelativeDirection.Down:
+                    sourceSpace.HasCultureBorderDown = false;
+                    if (targetSpace != null)
+                    {
+                        targetSpace.HasCultureBorderUp = false;
+                    }
+                    break;
+            }
         }
         #endregion
     }
