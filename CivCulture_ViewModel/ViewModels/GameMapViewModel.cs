@@ -14,15 +14,19 @@ namespace CivCulture_ViewModel.ViewModels
     public class GameMapViewModel : BaseViewModel
     {
         #region Fields
+        public const MapMode DEFAULT_MAP_MODE = MapMode.Culture;
+
         private GameMap sourceMap;
         private int numRows, numColumns;
         private ObservableCollection<MapSpaceViewModel> spaceVms;
         private MapSpaceViewModel selectedSpace;
         private MapSpaceDetailsViewModel selectedSpaceDetails;
+        private MapMode selectedMapMode;
         #endregion
 
         #region Events
         public ValueChangedEventHandler<MapSpaceViewModel> SelectedSpaceChanged;
+        public ValueChangedEventHandler<MapMode> SelectedMapModeChanged;
         #endregion
 
         #region Properties
@@ -42,13 +46,15 @@ namespace CivCulture_ViewModel.ViewModels
                     {
                         foreach (MapSpace space in SourceMap.Spaces)
                         {
-                            vms.Add(new MapSpaceViewModel(space));
+                            vms.Add(new MapSpaceViewModel(space, this));
                         }
                     }
                     SpaceViewModels = vms;
                 }
             }
         }
+
+        public GameInstanceViewModel Parent { get; protected set; }
 
         public int NumRows
         {
@@ -99,13 +105,29 @@ namespace CivCulture_ViewModel.ViewModels
                 }
             }
         }
+
+        public MapMode SelectedMapMode
+        {
+            get => selectedMapMode;
+            set
+            {
+                if (selectedMapMode != value)
+                {
+                    MapMode oldValue = selectedMapMode;
+                    selectedMapMode = value;
+                    OnPropertyChanged();
+                    SelectedMapModeChanged?.Invoke(this, new ValueChangedEventArgs<MapMode>(oldValue, value));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
-        public GameMapViewModel(GameMap sourceMap)
+        public GameMapViewModel(GameMap sourceMap, GameInstanceViewModel parent)
         {
+            Parent = parent;
             SourceMap = sourceMap;
-            // @TODO: read in whole map
+            SelectedMapMode = MapMode.Culture;
         }
         #endregion
 

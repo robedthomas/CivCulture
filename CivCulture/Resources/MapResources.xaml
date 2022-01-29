@@ -1,7 +1,38 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Terrain Brushes -->
     <SolidColorBrush x:Key="InvalidTerrainBrush" Color="Black"/>
     <SolidColorBrush x:Key="GrasslandTerrainBrush" Color="Green"/>
     <SolidColorBrush x:Key="PlainsTerrainBrush" Color="Goldenrod"/>
     <SolidColorBrush x:Key="MountainsTerrainBrush" Color="SaddleBrown"/>
+    
+    <!-- Overlay Brushes -->
+    <DrawingBrush x:Key="CultureOverlayBrush" TileMode="Tile" Viewport="0,0,0.25,0.25">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="{Binding DarkCultureColor}"/>
+                    </GeometryDrawing.Brush>
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,4,4"/>
+                            <RectangleGeometry Rect="4,4,4,4"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="{Binding LightCultureColor}"/>
+                    </GeometryDrawing.Brush>
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="4,0,4,4"/>
+                            <RectangleGeometry Rect="0,4,4,4"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
 </ResourceDictionary>

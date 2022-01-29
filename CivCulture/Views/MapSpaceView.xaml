@@ -7,9 +7,20 @@
              xmlns:local="clr-namespace:CivCulture.Views"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="40">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/MapResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
-        <Border Background="{Binding SourceSpace, Converter={conv:MapSpaceToTerrainBrushConverter}}" BorderBrush="Black" BorderThickness="1" Width="40" Height="40">
-            <TextBlock Text="{Binding PopCount}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Border BorderBrush="Black" BorderThickness="1" Width="40" Height="40">
+            <Grid>
+                <Rectangle Visibility="{Binding IsTerrainOverlayVisible, Converter={conv:BoolToVisibilityConverter}}" Fill="{Binding SourceSpace, Converter={conv:MapSpaceToTerrainBrushConverter}}"/>
+                <Rectangle Visibility="{Binding IsCultureOverlayVisible, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureOverlayBrush}" Opacity="0.8"/>
+                <TextBlock Text="{Binding PopCount}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
