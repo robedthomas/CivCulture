@@ -15,7 +15,7 @@ namespace CivCulture_ViewModel.ViewModels
     public class GameInstanceViewModel : BaseViewModel
     {
         #region Fields
-        public readonly static HashSet<Color> STANDARD_CULTURE_COLORS = new HashSet<Color>() { Colors.Red, Colors.Blue, Colors.Green, Colors.Purple, Colors.LightCyan, Colors.Orange };
+        public readonly static HashSet<Color> STANDARD_CULTURE_COLORS = new HashSet<Color>() { Colors.Red, Colors.Blue, Colors.DarkGreen, Colors.Purple, Colors.LightCyan, Colors.Orange };
 
         private GameInstance sourceInstance;
         private GameMapViewModel mapVM;

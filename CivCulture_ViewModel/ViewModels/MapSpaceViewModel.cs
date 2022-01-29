@@ -56,6 +56,7 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged(nameof(Column));
                     OnPropertyChanged(nameof(PopCount));
                     OnPropertyChanged(nameof(BackgroundBrush));
+                    OnPropertyChanged(nameof(IsCultureOverlayVisible));
                 }
             }
         }
@@ -121,7 +122,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public Color DarkCultureColor
         {
-            get => DominantCultureVM is null ? Colors.White : DominantCultureVM.CultureColor;
+            get => DominantCultureVM is null ? Colors.Black : DominantCultureVM.CultureColor;
         }
 
         public Color LightCultureColor

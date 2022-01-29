@@ -17,9 +17,9 @@
     <Grid>
         <Border BorderBrush="Black" BorderThickness="1" Width="40" Height="40">
             <Grid>
-                <Rectangle Visibility="{Binding IsTerrainOverlayVisible, Converter={conv:BoolToVisibilityConverter}}" Fill="{Binding SourceSpace, Converter={conv:MapSpaceToTerrainBrushConverter}}"/>
-                <Rectangle Visibility="{Binding IsCultureOverlayVisible, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureOverlayBrush}" Opacity="0.8"/>
-                <TextBlock Text="{Binding PopCount}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Rectangle Panel.ZIndex="1" Visibility="{Binding IsTerrainOverlayVisible, Converter={conv:BoolToVisibilityConverter}}" Fill="{Binding SourceSpace, Converter={conv:MapSpaceToTerrainBrushConverter}}"/>
+                <Rectangle Panel.ZIndex="2" Visibility="{Binding IsCultureOverlayVisible, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureOverlayBrush}" Opacity="0.8"/>
+                <TextBlock Panel.ZIndex="3" Text="{Binding PopCount}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Border>
     </Grid>
