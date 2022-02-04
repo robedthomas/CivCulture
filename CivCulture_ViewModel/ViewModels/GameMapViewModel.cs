@@ -123,6 +123,8 @@ namespace CivCulture_ViewModel.ViewModels
             }
         }
 
+        public HashSet<MapMode> AvailableMapModes { get; protected set; } = new HashSet<MapMode>() { MapMode.Terrain, MapMode.Culture };
+
         public MapMode SelectedMapMode
         {
             get => selectedMapMode;
