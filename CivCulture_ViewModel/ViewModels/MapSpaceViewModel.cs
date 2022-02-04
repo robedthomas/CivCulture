@@ -150,6 +150,7 @@ namespace CivCulture_ViewModel.ViewModels
                 {
                     hasCultureBorderLeft = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(DisplayCultureBorderLeft));
                 }
             }
         }
@@ -163,6 +164,7 @@ namespace CivCulture_ViewModel.ViewModels
                 {
                     hasCultureBorderRight = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(DisplayCultureBorderRight));
                 }
             }
         }
@@ -176,6 +178,7 @@ namespace CivCulture_ViewModel.ViewModels
                 {
                     hasCultureBorderUp = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(DisplayCultureBorderUp));
                 }
             }
         }
@@ -189,8 +192,29 @@ namespace CivCulture_ViewModel.ViewModels
                 {
                     hasCultureBorderDown = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(DisplayCultureBorderDown));
                 }
             }
+        }
+
+        public bool DisplayCultureBorderLeft
+        {
+            get => HasCultureBorderLeft && IsCultureOverlayVisible;
+        }
+
+        public bool DisplayCultureBorderRight
+        {
+            get => HasCultureBorderRight && IsCultureOverlayVisible;
+        }
+
+        public bool DisplayCultureBorderUp
+        {
+            get => HasCultureBorderUp && IsCultureOverlayVisible;
+        }
+
+        public bool DisplayCultureBorderDown
+        {
+            get => HasCultureBorderDown && IsCultureOverlayVisible;
         }
         #endregion
 
@@ -214,6 +238,10 @@ namespace CivCulture_ViewModel.ViewModels
             OnPropertyChanged(nameof(CurrentMapMode));
             OnPropertyChanged(nameof(IsTerrainOverlayVisible));
             OnPropertyChanged(nameof(IsCultureOverlayVisible));
+            OnPropertyChanged(nameof(DisplayCultureBorderLeft));
+            OnPropertyChanged(nameof(DisplayCultureBorderRight));
+            OnPropertyChanged(nameof(DisplayCultureBorderUp));
+            OnPropertyChanged(nameof(DisplayCultureBorderDown));
         }
 
         private void Pops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -250,6 +278,10 @@ namespace CivCulture_ViewModel.ViewModels
                 DominantCultureVM = Parent.Parent.CultureVMs.First(cvm => cvm.SourceCulture == e.NewValue);
             }
             OnPropertyChanged(nameof(IsCultureOverlayVisible));
+            OnPropertyChanged(nameof(DisplayCultureBorderLeft));
+            OnPropertyChanged(nameof(DisplayCultureBorderRight));
+            OnPropertyChanged(nameof(DisplayCultureBorderUp));
+            OnPropertyChanged(nameof(DisplayCultureBorderDown));
         }
         #endregion
     }

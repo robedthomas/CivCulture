@@ -28,8 +28,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="4"/>
             </Grid.ColumnDefinitions>
-            <Rectangle Grid.Column="0" Visibility="{Binding HasCultureBorderLeft, Converter={conv:BoolToVisibilityConverter}}"  Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-            <Rectangle Grid.Column="2" Visibility="{Binding HasCultureBorderRight, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Rectangle Grid.Column="0" Visibility="{Binding DisplayCultureBorderLeft, Converter={conv:BoolToVisibilityConverter}}"  Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Rectangle Grid.Column="2" Visibility="{Binding DisplayCultureBorderRight, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </Grid>
         <Grid Panel.ZIndex="3">
             <Grid.RowDefinitions>
@@ -37,8 +37,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="4"/>
             </Grid.RowDefinitions>
-            <Rectangle Grid.Row="0" Visibility="{Binding HasCultureBorderUp, Converter={conv:BoolToVisibilityConverter}}"   Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-            <Rectangle Grid.Row="2" Visibility="{Binding HasCultureBorderDown, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Rectangle Grid.Row="0" Visibility="{Binding DisplayCultureBorderUp, Converter={conv:BoolToVisibilityConverter}}"   Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Rectangle Grid.Row="2" Visibility="{Binding DisplayCultureBorderDown, Converter={conv:BoolToVisibilityConverter}}" Fill="{StaticResource CultureBorderBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </Grid>
     </Grid>
 </UserControl>
