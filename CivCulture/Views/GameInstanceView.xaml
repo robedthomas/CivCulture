@@ -14,6 +14,22 @@
             <Border BorderThickness="1" BorderBrush="Black" Background="LightGray">
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton VerticalAlignment="Stretch">
+                        <ToggleButton.Triggers>
+                            <EventTrigger RoutedEvent="ToggleButton.Checked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="mapmodeSelector" Storyboard.TargetProperty="Width" From="0" To="120" Duration="0:0:0.5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="mapmodeSelector" Storyboard.TargetProperty="Width" From="120" To="0" Duration="0:0:0.5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ToggleButton.Triggers>
                         <ToggleButton.Style>
                             <Style TargetType="{x:Type ToggleButton}">
                                 <Style.Triggers>
@@ -35,7 +51,7 @@
                             </Style>
                         </ToggleButton.Style>
                     </ToggleButton>
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel x:Name="mapmodeSelector" Orientation="Vertical">
                         <TextBlock Text="Mapmode"/>
                         <ListBox ItemsSource="{Binding MapVM.AvailableMapModes}" SelectedItem="{Binding MapVM.SelectedMapMode}">
                             <ListBox.ItemsPanel>
