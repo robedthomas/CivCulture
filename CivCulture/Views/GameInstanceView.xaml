@@ -14,10 +14,16 @@
             <Border BorderThickness="1" BorderBrush="Black" Background="LightGray">
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton VerticalAlignment="Stretch">
-                        <Polygon Points="0,8 8,16 8,0" Fill="Black" VerticalAlignment="Center" Margin="0,0,2,0"/>
                         <ToggleButton.Style>
                             <Style TargetType="{x:Type ToggleButton}">
                                 <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="False">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Polygon Points="0,8 8,16 8,0" Fill="Black" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
                                     <Trigger Property="IsChecked" Value="True">
                                         <Setter Property="Content">
                                             <Setter.Value>
