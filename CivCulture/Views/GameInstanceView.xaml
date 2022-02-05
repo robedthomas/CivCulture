@@ -12,20 +12,38 @@
         <local:GameMapView x:Name="MapView" DataContext="{Binding MapVM}"/>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Border BorderThickness="1" BorderBrush="Black" Background="LightGray">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Mapmode"/>
-                    <ListBox ItemsSource="{Binding MapVM.AvailableMapModes}" SelectedItem="{Binding MapVM.SelectedMapMode}">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <RadioButton Content="{Binding}" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Focusable="False" IsHitTestVisible="False"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton VerticalAlignment="Stretch">
+                        <Polygon Points="0,8 8,16 8,0" Fill="Black" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                        <ToggleButton.Style>
+                            <Style TargetType="{x:Type ToggleButton}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Polygon Points="0,0 0,16 8,8" Fill="Black" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Mapmode"/>
+                        <ListBox ItemsSource="{Binding MapVM.AvailableMapModes}" SelectedItem="{Binding MapVM.SelectedMapMode}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <RadioButton Content="{Binding}" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Focusable="False" IsHitTestVisible="False"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
                 </StackPanel>
             </Border>
             <local:MapSpaceDetailsView DataContext="{Binding SelectedSpaceDetails}" Visibility="{Binding SourceSpace, Converter={cnv:ObjectToVisibilityConverter}, ConverterParameter=True}"/>
