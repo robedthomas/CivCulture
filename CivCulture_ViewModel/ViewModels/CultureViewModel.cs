@@ -28,7 +28,16 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 if (sourceCulture != value)
                 {
+                    if (sourceCulture != null)
+                    {
+                        UnsubscribeFromModelEvents(sourceCulture);
+                    }
                     sourceCulture = value;
+                    if (sourceCulture != null)
+                    {
+                        SubscribeToModelEvents(sourceCulture);
+                    }
+                    OnPropertyChanged(nameof(Name));
                     OnPropertyChanged();
                 }
             }
@@ -48,6 +57,16 @@ namespace CivCulture_ViewModel.ViewModels
                 }
             }
         }
+
+        public string Name
+        {
+            get => SourceCulture.Name;
+            set
+            {
+                SourceCulture.Name = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region Constructors
@@ -59,6 +78,20 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Methods
+        private void UnsubscribeFromModelEvents(Culture model)
+        {
+            model.NameChanged -= Culture_NameChanged;
+        }
+
+        private void SubscribeToModelEvents(Culture model)
+        {
+            model.NameChanged += Culture_NameChanged;
+        }
+
+        private void Culture_NameChanged(object sender, ValueChangedEventArgs<string> e)
+        {
+            OnPropertyChanged(nameof(Name));
+        }
         #endregion
     }
 }

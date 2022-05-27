@@ -16,15 +16,29 @@ namespace CivCulture_Model.Models
     public class Culture : ResourceOwner, ITechResearcher, ITechModifiable
     {
         #region Events
-        public ValueChangedEventHandler<Technology> CurrentResearchChanged;
+        public event ValueChangedEventHandler<string> NameChanged;
+        public event ValueChangedEventHandler<Technology> CurrentResearchChanged;
         #endregion
 
         #region Fields
+        private string name;
         private Technology currentResearch;
         #endregion
 
         #region Properties
-        public string Name { get; protected set; }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (name != value)
+                {
+                    string oldValue = name;
+                    name = value;
+                    NameChanged?.Invoke(this, new ValueChangedEventArgs<string>(oldValue, value));
+                }
+            }
+        }
 
         public Culture Parent { get; protected set; }
 
