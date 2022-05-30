@@ -20,6 +20,7 @@ namespace CivCulture_ViewModel.ViewModels
         private GameInstance sourceInstance;
         private GameMapViewModel mapVM;
         private MapSpaceDetailsViewModel selectedSpaceDetails;
+        private CultureViewModel selectedCultureVM;
         private RelayCommand endTurnRC;
         #endregion
 
@@ -82,6 +83,19 @@ namespace CivCulture_ViewModel.ViewModels
 
         public ObservableCollection<CultureViewModel> CultureVMs { get; protected set; }
 
+        public CultureViewModel CurrentSelectedCulture
+        {
+            get => selectedCultureVM;
+            set
+            {
+                if (selectedCultureVM != value)
+                {
+                    selectedCultureVM = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public MapSpaceDetailsViewModel SelectedSpaceDetails
         {
             get => selectedSpaceDetails;
@@ -130,7 +144,7 @@ namespace CivCulture_ViewModel.ViewModels
             }
             else
             {
-                SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace);
+                SelectedSpaceDetails = new MapSpaceDetailsViewModel(e.NewValue.SourceSpace, this);
             }
         }
 

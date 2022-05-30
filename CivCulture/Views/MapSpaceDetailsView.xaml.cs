@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_ViewModel.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace CivCulture.Views
         public MapSpaceDetailsView()
         {
             InitializeComponent();
+        }
+
+        private void OpenDominantCulture_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            (DataContext as MapSpaceDetailsViewModel).OpenDominantCultureView();
         }
     }
 }

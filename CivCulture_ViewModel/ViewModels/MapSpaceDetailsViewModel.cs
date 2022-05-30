@@ -1,6 +1,7 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models;
 using CivCulture_Model.Models.Collections;
+using CivCulture_ViewModel.Utilities;
 using GenericUtilities.Observables;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Properties
+        public GameInstanceViewModel GameInstanceVM { get; protected set; }
+
         public MapSpace SourceSpace
         {
             get => sourceSpace;
@@ -253,10 +256,11 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Constructors
-        public MapSpaceDetailsViewModel(MapSpace sourceSpace)
+        public MapSpaceDetailsViewModel(MapSpace sourceSpace, GameInstanceViewModel gameInstanceVM)
         {
             SourceSpace = sourceSpace;
             TotalOutput = SourceSpace.GetTotalOutput();
+            GameInstanceVM = gameInstanceVM;
         }
         #endregion
 
@@ -319,6 +323,16 @@ namespace CivCulture_ViewModel.ViewModels
                 output[job.Template].Jobs.Add(new JobViewModel(job));
             }
             return output;
+        }
+
+        public void OpenDominantCultureView()
+        {
+            OpenCultureView(DominantCulture);
+        }
+
+        private void OpenCultureView(Culture cultureToSelect)
+        {
+            GameInstanceVM.CurrentSelectedCulture = GameInstanceVM.CultureVMs.First(cvm => cvm.SourceCulture == cultureToSelect);
         }
 
         private void SourceSpace_TerrainChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<Terrain> e)

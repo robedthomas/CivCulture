@@ -18,4 +18,8 @@
         </Setter>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
+    <Style x:Key="ClickableText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Blue"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+    </Style>
 </ResourceDictionary>
