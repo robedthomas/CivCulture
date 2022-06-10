@@ -19,9 +19,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         private const decimal POP_NECESSITIES_COMFORTS_DECREASE = -0.05M;
         private const decimal POP_NECESSITIES_LUXURIES_INCREASE = 0.3M;
         private const decimal POP_NECESSITIES_LUXURIES_DECREASE = -0.01M;
+        private const decimal POP_GROWTH_SATISFACTION_OFFSET = 0.25M;
         private const decimal POP_GROWTH_FACTOR = 0.2M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
-        private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.1M;
+        private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.5M;
         private const decimal DEFAULT_STOCKPILE_MONEY = 100M;
         private const decimal STOCKPILE_PURCHASE_VALUE_MODIFIER = 1.05M;
         #endregion
@@ -461,10 +462,20 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void GrowPops (GameInstance instance)
         {
+            List<Pop> expiredPops = new List<Pop>();
             List<Pop> newPops = new List<Pop>();
             foreach (Pop pop in instance.AllPops)
             {
-                pop.Space.PopGrowthProgress += pop.Satisfaction * POP_GROWTH_FACTOR;
+                pop.Space.PopGrowthProgress += (pop.Satisfaction - POP_GROWTH_SATISFACTION_OFFSET) * POP_GROWTH_FACTOR;
+                // Expire pops
+                while (pop.Space.PopGrowthProgress < 0M)
+                {
+                    pop.Space.PopGrowthProgress++;
+                    Pop popToExpire = pop;
+                    pop.Space.Pops.Remove(popToExpire);
+                    expiredPops.Add(popToExpire);
+                }
+                // Add new pops
                 while (pop.Space.PopGrowthProgress >= 1M)
                 {
                     pop.Space.PopGrowthProgress--;
@@ -476,6 +487,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (Pop newPop in newPops)
             {
                 instance.AllPops.Add(newPop);
+            }
+            foreach (Pop expiredPop in expiredPops)
+            {
+                instance.AllPops.Remove(expiredPop);
             }
         }
 
