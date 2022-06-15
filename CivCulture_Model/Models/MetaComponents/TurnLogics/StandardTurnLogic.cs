@@ -13,16 +13,12 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
     public class StandardTurnLogic : TurnLogic
     {
         #region Fields
-        private const decimal POP_NECESSITIES_SATISFACTION_INCREASE = 0.1M;
-        private const decimal POP_NECESSITIES_SATISFACTION_DECREASE = -0.3M;
-        private const decimal POP_NECESSITIES_COMFORTS_INCREASE = 0.2M;
-        private const decimal POP_NECESSITIES_COMFORTS_DECREASE = -0.05M;
-        private const decimal POP_NECESSITIES_LUXURIES_INCREASE = 0.3M;
-        private const decimal POP_NECESSITIES_LUXURIES_DECREASE = -0.01M;
-        private const decimal POP_GROWTH_SATISFACTION_OFFSET = 0.25M;
+        private const decimal POP_NECESSITIES_SATISFACTION_INCREASE = 0.6M;
+        private const decimal POP_NECESSITIES_COMFORTS_INCREASE = 0.25M;
+        private const decimal POP_NECESSITIES_LUXURIES_INCREASE = 0.15M;
+        private const decimal POP_GROWTH_SATISFACTION_OFFSET = 0.5M;
         private const decimal POP_GROWTH_FACTOR = 0.2M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
-        private const decimal POP_MIGRATION_SATISFACTION_CHANGE = 0.5M;
         private const decimal DEFAULT_STOCKPILE_MONEY = 100M;
         private const decimal STOCKPILE_PURCHASE_VALUE_MODIFIER = 1.05M;
         #endregion
@@ -384,14 +380,14 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (Pop pop in instance.AllPops)
             {
                 // For each need type, consume those resources if the Pop deems it worth it
-                ConsumePopNeedsOfType(NeedType.Necessity, pop, POP_NECESSITIES_SATISFACTION_INCREASE, POP_NECESSITIES_SATISFACTION_DECREASE);
-                ConsumePopNeedsOfType(NeedType.Comfort, pop, POP_NECESSITIES_COMFORTS_INCREASE, POP_NECESSITIES_COMFORTS_DECREASE);
-                ConsumePopNeedsOfType(NeedType.Luxury, pop, POP_NECESSITIES_LUXURIES_INCREASE, POP_NECESSITIES_LUXURIES_DECREASE);
-                pop.Satisfaction += pop.Forecast.SatisfactionChange.Value;
+                ConsumePopNeedsOfType(NeedType.Necessity, pop, POP_NECESSITIES_SATISFACTION_INCREASE);
+                ConsumePopNeedsOfType(NeedType.Comfort, pop, POP_NECESSITIES_COMFORTS_INCREASE);
+                ConsumePopNeedsOfType(NeedType.Luxury, pop, POP_NECESSITIES_LUXURIES_INCREASE);
+                pop.Satisfaction = pop.Forecast.SatisfactionChange.Value;
             }
         }
 
-        protected void ConsumePopNeedsOfType(NeedType typeOfNeed, Pop pop, decimal satisfactionIncrease, decimal satisfactionDecrease)
+        protected void ConsumePopNeedsOfType(NeedType typeOfNeed, Pop pop, decimal satisfactionIncrease)
         {
             if (pop.Needs.TryGetValue(typeOfNeed, out ConsumeablesCollection necessities))
             {
@@ -412,14 +408,9 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                         break;
                 }
                 decimal needsSatisfactionRatio = SatisfyNeedsWithResources(necessities, pop.OwnedResources);
-                if (needsSatisfactionRatio == 1M)
+                if (needsSatisfactionRatio > 0M)
                 {
-                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Met", satisfactionIncrease));
-                }
-                else
-                {
-                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Not Met", satisfactionDecrease * (1 - needsSatisfactionRatio)));
-                    // @TODO: subtract as many resources as possible
+                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Met ({needsSatisfactionRatio * 100}%)", satisfactionIncrease));
                 }
             }
         }
@@ -529,8 +520,6 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 pop.Job = null;
             }
             pop.Space = destination;
-            pop.Satisfaction += POP_MIGRATION_SATISFACTION_CHANGE;
-            pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>("Migration", POP_MIGRATION_SATISFACTION_CHANGE));
         }
 
         protected void GenerateProgressFromPops(GameInstance instance)
