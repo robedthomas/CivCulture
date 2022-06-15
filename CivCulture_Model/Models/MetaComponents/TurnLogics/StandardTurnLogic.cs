@@ -387,6 +387,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 ConsumePopNeedsOfType(NeedType.Necessity, pop, POP_NECESSITIES_SATISFACTION_INCREASE, POP_NECESSITIES_SATISFACTION_DECREASE);
                 ConsumePopNeedsOfType(NeedType.Comfort, pop, POP_NECESSITIES_COMFORTS_INCREASE, POP_NECESSITIES_COMFORTS_DECREASE);
                 ConsumePopNeedsOfType(NeedType.Luxury, pop, POP_NECESSITIES_LUXURIES_INCREASE, POP_NECESSITIES_LUXURIES_DECREASE);
+                pop.Satisfaction += pop.Forecast.SatisfactionChange.Value;
             }
         }
 
@@ -414,12 +415,10 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 if (needsSatisfactionRatio == 1M)
                 {
                     pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Met", satisfactionIncrease));
-                    pop.Satisfaction += satisfactionIncrease;
                 }
                 else
                 {
-                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Not Met", satisfactionDecrease));
-                    pop.Satisfaction += satisfactionDecrease * (1 - needsSatisfactionRatio);
+                    pop.Forecast.SatisfactionChange.Modifiers.Add(new Modifier<decimal>($"{pluralNeedName} Not Met", satisfactionDecrease * (1 - needsSatisfactionRatio)));
                     // @TODO: subtract as many resources as possible
                 }
             }
