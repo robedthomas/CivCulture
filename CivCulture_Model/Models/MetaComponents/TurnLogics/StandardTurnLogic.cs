@@ -497,8 +497,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             foreach (Pop pop in instance.AllPops)
             {
-                // Unemployed or very dissatisfied pops migrate
-                if (pop.Job == null || pop.Satisfaction <= POP_MIGRATION_SATISFACTION_THRESHOLD)
+                // Very dissatisfied pops migrate
+                if (pop.Satisfaction <= POP_MIGRATION_SATISFACTION_THRESHOLD)
                 {
                     MigratePop(pop, instance);
                 }
