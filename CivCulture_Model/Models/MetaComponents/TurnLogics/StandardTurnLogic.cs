@@ -103,25 +103,28 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         {
             foreach (MapSpace space in instance.Map.Spaces)
             {
-                Stack<Job> emptyJobs = new Stack<Job>(space.Jobs.Where(job => job.Worker == null));
-                while(emptyJobs.Count > 0)
+                if (space.Pops.Count > 0)
                 {
-                    Job emptyJob = emptyJobs.Pop();
-                    // Find all pops in the same space as the empty job and order them by current pay, high to low
-                    List<Pop> popsInSpaceByPay = space.Pops.OrderByDescending(pop => { return pop.Job == null ? 0 : GetEstimatedNetPay(pop.Job); }).ToList();
-                    // Filter out pops whose base pay is already equal to or above the empty job's
-                    // @TODO: improve performance by doing only one lookup
-                    popsInSpaceByPay = popsInSpaceByPay.Where(pop => pop.Job == null ? true : GetEstimatedNetPay(pop.Job) < GetEstimatedNetPay(emptyJob)).ToList();
-                    Pop targetPop = popsInSpaceByPay.Count > 0 ? popsInSpaceByPay.First() : null;
-                    if (targetPop != null)
+                    Stack<Job> emptyJobs = new Stack<Job>(space.Jobs.Where(job => job.Worker == null));
+                    while (emptyJobs.Count > 0)
                     {
-                        Job oldJob = targetPop.Job;
-                        targetPop.Job = emptyJob;
-                        emptyJob.Worker = targetPop;
-                        if (oldJob != null)
+                        Job emptyJob = emptyJobs.Pop();
+                        // Find all pops in the same space as the empty job and order them by priority, low to high
+                        List<Pop> popsInSpaceByPriority = space.Pops.OrderBy(pop => { return pop.Job == null ? -1 : pop.Job.Template.Priority; }).ToList();
+                        // Filter out pops whose pay is already equal to or above the empty job's and whose job priority is already the same or lower
+                        // @TODO: improve performance by doing only one lookup
+                        popsInSpaceByPriority = popsInSpaceByPriority.Where(pop => pop.Job == null ? true : pop.Job.Template.Priority > emptyJob.Template.Priority || (pop.Job.Template.Priority == emptyJob.Template.Priority && (GetEstimatedNetPay(pop.Job) < GetEstimatedNetPay(emptyJob)))).ToList();
+                        Pop targetPop = popsInSpaceByPriority.Count > 0 ? popsInSpaceByPriority.First() : null;
+                        if (targetPop != null)
                         {
-                            oldJob.Worker = null;
-                            emptyJobs.Push(oldJob);
+                            Job oldJob = targetPop.Job;
+                            targetPop.Job = emptyJob;
+                            emptyJob.Worker = targetPop;
+                            if (oldJob != null)
+                            {
+                                oldJob.Worker = null;
+                                emptyJobs.Push(oldJob);
+                            }
                         }
                     }
                 }
