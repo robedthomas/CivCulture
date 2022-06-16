@@ -64,6 +64,10 @@ namespace CivCulture_Model.Models
                 {
                     Job oldValue = job;
                     job = value;
+                    if (job != null)
+                    {
+                        Template = job.Template.WorkerTemplate;
+                    }
                     JobChanged?.Invoke(this, new ValueChangedEventArgs<Job>(oldValue, job));
                 }
             }

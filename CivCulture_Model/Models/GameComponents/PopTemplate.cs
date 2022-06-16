@@ -14,12 +14,14 @@ namespace CivCulture_Model.Models
         public static PopTemplate ALL;
         public static PopTemplate HunterGatherer;
         public static PopTemplate Laborer;
+        public static PopTemplate Elite;
 
         public static void InitializePopTemplates()
         {
             ALL = new PopTemplate("ALL POPS");
             HunterGatherer = new PopTemplate("Hunter Gatherer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 0.75M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 0.5M } });
-            Laborer = new PopTemplate("Laborer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 1M } });
+            Laborer = new PopTemplate("Laborer", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1M }, { Fundamental.Shelter, 0.5M } }, comforts: new ConsumeablesCollection() { { Fundamental.Shelter, 0.5M } });
+            Elite = new PopTemplate("Elite", necessities: new ConsumeablesCollection() { { Fundamental.Food, 1.5M }, { Fundamental.Shelter, 2M } }, comforts: new ConsumeablesCollection() { { Fundamental.Luxuries, 1M } });
         }
         #endregion
 

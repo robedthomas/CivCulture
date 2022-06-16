@@ -137,6 +137,7 @@ namespace CivCulture_ViewModel.ViewModels
             {
                 e.NewValue.NeedsChanged += SourcePop_Template_NeedsChanged;
             }
+            OnPropertyChanged(nameof(Needs));
         }
 
         private void SourcePop_Template_NeedsChanged(object sender, CivCulture_Model.Events.ValueChangedEventArgs<CivCulture_Model.Models.Collections.NeedCollection> e)
