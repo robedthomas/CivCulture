@@ -1,5 +1,6 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models;
+using CivCulture_ViewModel.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace CivCulture_ViewModel.ViewModels
     {
         #region Events
         public event ValueChangedEventHandler<Color> CultureColorChanged;
+        public event EventHandler WindowClosed;
         #endregion
 
         #region Fields
         private Culture sourceCulture;
         private Color cultureColor;
+        private RelayCommand closeWindowRC;
         #endregion
 
         #region Properties
@@ -63,8 +66,34 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourceCulture.Name;
             set
             {
-                SourceCulture.Name = value;
-                OnPropertyChanged();
+                if (SourceCulture.Name != value)
+                {
+                    SourceCulture.Name = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public int PopCount
+        {
+            get => SourceCulture.PopsOfCulture.Count;
+        }
+
+        public int TechCount
+        {
+            get => SourceCulture.ResearchedTechnologies.Count;
+        }
+
+        public RelayCommand CloseWindowRC
+        {
+            get => closeWindowRC;
+            set
+            {
+                if (closeWindowRC != value)
+                {
+                    closeWindowRC = value;
+                    OnPropertyChanged();
+                }
             }
         }
         #endregion
@@ -74,10 +103,16 @@ namespace CivCulture_ViewModel.ViewModels
         {
             SourceCulture = sourceCulture;
             CultureColor = cultureColor;
+            CloseWindowRC = new RelayCommand((param) => OnWindowClosed());
         }
         #endregion
 
         #region Methods
+        private void OnWindowClosed()
+        {
+            WindowClosed?.Invoke(this, new EventArgs());
+        }
+
         private void UnsubscribeFromModelEvents(Culture model)
         {
             model.NameChanged -= Culture_NameChanged;

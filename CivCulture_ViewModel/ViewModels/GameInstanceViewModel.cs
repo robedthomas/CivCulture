@@ -130,6 +130,7 @@ namespace CivCulture_ViewModel.ViewModels
         {
             RemainingCultureColors = new HashSet<Color>(STANDARD_CULTURE_COLORS);
             CultureVMs = new ObservableCollection<CultureViewModel>();
+            CultureVMs.CollectionChanged += CultureVMs_CollectionChanged;
             SourceInstance = sourceInstance;
             EndTurnRC = new RelayCommand(EndTurn, CanEndTurn);
         }
@@ -179,6 +180,29 @@ namespace CivCulture_ViewModel.ViewModels
                     CultureVMs.Remove(CultureVMs.First(cvm => cvm.SourceCulture == oldCulture));
                 }
             }
+        }
+
+        private void CultureVMs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (CultureViewModel vm in e.NewItems)
+                {
+                    vm.WindowClosed += CultureVM_WindowClosed;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (CultureViewModel vm in e.OldItems)
+                {
+                    vm.WindowClosed -= CultureVM_WindowClosed;
+                }
+            }
+        }
+
+        private void CultureVM_WindowClosed(object sender, EventArgs e)
+        {
+            CurrentSelectedCulture = null;
         }
         #endregion
     }
