@@ -17,7 +17,8 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
         private const decimal POP_NECESSITIES_COMFORTS_INCREASE = 0.25M;
         private const decimal POP_NECESSITIES_LUXURIES_INCREASE = 0.15M;
         private const decimal POP_GROWTH_SATISFACTION_OFFSET = 0.5M;
-        private const decimal POP_GROWTH_FACTOR = 0.2M;
+        private const decimal POP_POSITIVE_GROWTH_FACTOR = 0.2M;
+        private const decimal POP_NEGATIVE_GROWTH_FACTOR = 0.4M;
         private const decimal POP_MIGRATION_SATISFACTION_THRESHOLD = 0.25M;
         private const decimal DEFAULT_STOCKPILE_MONEY = 100M;
         private const decimal STOCKPILE_PURCHASE_VALUE_MODIFIER = 1.05M;
@@ -459,7 +460,17 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             List<Pop> newPops = new List<Pop>();
             foreach (Pop pop in instance.AllPops)
             {
-                pop.Space.PopGrowthProgress += (pop.Satisfaction - POP_GROWTH_SATISFACTION_OFFSET) * POP_GROWTH_FACTOR;
+                decimal growthImpact;
+                if (pop.Satisfaction >= POP_GROWTH_SATISFACTION_OFFSET)
+                {
+                    growthImpact  = (pop.Satisfaction - POP_GROWTH_SATISFACTION_OFFSET) * POP_POSITIVE_GROWTH_FACTOR;
+                }
+                else
+                {
+                    // Dissatisfied pops have a disproportionately negative impact on growth. This helps balance growth rates when many dissatisfied pops are present
+                    growthImpact  = (pop.Satisfaction - POP_GROWTH_SATISFACTION_OFFSET) * POP_NEGATIVE_GROWTH_FACTOR;
+                }
+                pop.Space.PopGrowthProgress += growthImpact;
                 // Expire pops
                 while (pop.Space.PopGrowthProgress < 0M)
                 {
