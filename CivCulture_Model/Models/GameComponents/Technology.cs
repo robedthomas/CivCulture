@@ -1,21 +1,34 @@
 ﻿using CivCulture_Model.Events;
 using CivCulture_Model.Models.Collections;
-using CivCulture_Model.Models.Modifiers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models
 {
+    public enum ResearchState
+    {
+        UnavailableForResearch,
+        AvailableForResearch,
+        BeingResearched,
+        QueuedForResearch,
+        Researched
+    }
+
+    public enum TechnologyCategory
+    {
+        Agricultural,
+        Cultural,
+        Scientific,
+        Infrastructure,
+        Mercantile,
+        Military
+    }
+
     [DebuggerDisplay("{Template.Name} Tech")]
     public class Technology : JobSource, ITemplated<TechnologyTemplate>, IFulfillable<ConsumeablesCollection>
     {
         #region Events
-        public ValueChangedEventHandler<decimal> CompletionLevelChanged;
+        public event ValueChangedEventHandler<decimal> CompletionLevelChanged;
         #endregion
 
         #region Fields

@@ -23,11 +23,11 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, IEnumerable<TechnologyTemplate> allTechs, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
             GameMap map = new GameMap(config.Width, config.Height);
             GenerateSpaces(map, config, seed);
-            allCultures = GenerateInitialCultures(map, config, namesDb, seed);
+            allCultures = GenerateInitialCultures(map, config, namesDb, allTechs, seed);
             Dictionary<MapSpace, Culture> cultureLoci = AssignCultureLoci(map, allCultures, seed);
             allPops = GenerateInitialPops(map, config, cultureLoci, seed);
             allJobs = GenerateInitialJobs(map, config, seed);
@@ -105,14 +105,14 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             return output;
         }
 
-        private List<Culture> GenerateInitialCultures(GameMap map, MapConfiguration config, NamesDatabase namesDb, Random seed)
+        private List<Culture> GenerateInitialCultures(GameMap map, MapConfiguration config, NamesDatabase namesDb, IEnumerable<TechnologyTemplate> allTechs, Random seed)
         {
             int numCultures = seed.Next(config.MinimumNumberCultures, config.MaximumNumberCultures + 1);
             List<Culture> output = new List<Culture>(numCultures);
             for (int i = 0; i < numCultures; i++)
             {
                 CultureData newCultureData = namesDb.UnusedCultures.PickRandom(seed, removeChoice: true);
-                output.Add(new Culture(newCultureData.Name, null));
+                output.Add(new Culture(newCultureData.Name, null, allTechs));
             }
             return output;
         }

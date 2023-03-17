@@ -22,6 +22,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -44,6 +45,7 @@
                     <TextBox Text="{Binding TechCount, Mode=OneWay}" IsEnabled="False" Style="{StaticResource BlendInTextBox}"/>
                     <TextBlock Text="Techs" Margin="3,0,0,0"/>
                 </StackPanel>
+                <local:TechTreeView Grid.Row="2" DataContext="{Binding TechTreeVM}" />
             </Grid>
         </Border>
     </Grid>

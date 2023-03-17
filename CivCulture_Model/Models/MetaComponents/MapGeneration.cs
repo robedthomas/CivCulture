@@ -13,11 +13,12 @@ namespace CivCulture_Model.Models.MetaComponents
         /// Generates a new GameMap from the given configuration
         /// </summary>
         /// <param name="config">Configuration parameters for map generation</param>
+        /// <param name="allTechs">All technologies that may be researched during the game</param>
         /// <param name="seed">Random number generator to use for generation</param>
         /// <param name="allCultures">All Cultures generated during map generation</param>
         /// <param name="allPops">All Pops generated during map generation</param>
         /// <param name="allJobs">All Jobs generated during map generation</param>
         /// <returns></returns>
-        public abstract GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs);
+        public abstract GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, IEnumerable<TechnologyTemplate> allTechs, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs);
     }
 }

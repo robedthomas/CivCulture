@@ -652,14 +652,6 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         public override void InitGameInstance(GameInstance instance, NamesDatabase namesDb)
         {
-            IEnumerable<TechnologyTemplate> initialAvailableTechs = instance.AllTechs.Where(tech => tech.Parents.Count == 0);
-            foreach (Culture culture in instance.AllCultures)
-            {
-                foreach (TechnologyTemplate initialAvailableTech in initialAvailableTechs)
-                {
-                    culture.AvailableTechnologies.Add(new Technology(initialAvailableTech, culture));
-                }
-            }
             foreach (MapSpace space in instance.Map.Spaces)
             {
                 space.NextPopTemplate = GetNextPopTemplate(space);

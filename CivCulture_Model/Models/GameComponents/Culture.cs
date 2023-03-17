@@ -50,6 +50,8 @@ namespace CivCulture_Model.Models
 
         public ObservableCollection<BuildingTemplate> EnabledBuildings { get; protected set; }
 
+        public Dictionary<TechnologyTemplate, Technology> AllPossibleTechs { get; protected set; }
+
         public ObservableCollection<Technology> ResearchedTechnologies { get; protected set; }
 
         public ObservableCollection<Technology> AvailableTechnologies { get; protected set; }
@@ -76,7 +78,7 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Culture(string name, Culture parent)
+        public Culture(string name, Culture parent, IEnumerable<TechnologyTemplate> allPossibleTechTemplates)
         {
             Name = name;
             Parent = parent;
@@ -84,6 +86,7 @@ namespace CivCulture_Model.Models
             PopsOfCulture = new ObservableCollection<Pop>();
             SpacesOfCulture = new ObservableCollection<MapSpace>();
             EnabledBuildings = new ObservableCollection<BuildingTemplate>();
+            AllPossibleTechs = new Dictionary<TechnologyTemplate, Technology>();
             ResearchedTechnologies = new ObservableCollection<Technology>();
             AvailableTechnologies = new ObservableCollection<Technology>();
             TechModifiers = new TechModifierCollection();
@@ -91,6 +94,16 @@ namespace CivCulture_Model.Models
 
             TechModifiers.CollectionChanged += TechModifiers_CollectionChanged;
             ResearchedTechnologies.CollectionChanged += ResearchedTechnologies_CollectionChanged;
+
+            foreach (TechnologyTemplate template in allPossibleTechTemplates)
+            {
+                AllPossibleTechs.Add(template, new Technology(template, this));
+            }
+            IEnumerable<TechnologyTemplate> initialAvailableTechs = allPossibleTechTemplates.Where(tech => tech.Parents.Count == 0);
+            foreach (TechnologyTemplate initialAvailableTech in initialAvailableTechs)
+            {
+                AvailableTechnologies.Add(AllPossibleTechs[initialAvailableTech]);
+            }
         }
         #endregion
 
@@ -155,7 +168,7 @@ namespace CivCulture_Model.Models
                 // If ALL of a tech's parent techs have been researched by this culture, add it to the available techs
                 if (IsTechAvailable(childTech))
                 {
-                    AvailableTechnologies.Add(new Technology(childTech, this));
+                    AvailableTechnologies.Add(AllPossibleTechs[childTech]);
                 }
             }
         }

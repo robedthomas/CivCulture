@@ -176,7 +176,7 @@ namespace CivCulture_Model.Models
             List<Culture> cultures;
             List<Pop> pops;
             List<Job> jobs;
-            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, RandomSeed, out cultures, out pops, out jobs);
+            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, AllTechs, RandomSeed, out cultures, out pops, out jobs);
             AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
@@ -191,7 +191,7 @@ namespace CivCulture_Model.Models
         {
             ObservableCollection<TechnologyTemplate> techs = new ObservableCollection<TechnologyTemplate>();
 
-            TechnologyTemplate permanentSettlement1 = new TechnologyTemplate("Permanent Settlement (I)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
+            TechnologyTemplate permanentSettlement1 = new TechnologyTemplate("Permanent Settlement (I)", TechnologyCategory.Infrastructure, new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
             permanentSettlement1.Modifiers.Add(StatModification.CultureEnableBuilding, BuildingTemplate.MudHuts, null, null);
             permanentSettlement1.Modifiers.Add(StatModification.SpaceJobs, JobTemplate.Builder, null, new TechModifier<decimal>(permanentSettlement1, 1));
             techs.Add(permanentSettlement1);
@@ -199,23 +199,23 @@ namespace CivCulture_Model.Models
             //TechnologyTemplate permanentSettlement2 = new TechnologyTemplate("Permanent Settlement (II)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
             //permanentSettlement2.Modifiers.Add(StatModification.)
 
-            TechnologyTemplate agriculture1 = new TechnologyTemplate("Agriculture (I)", new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
+            TechnologyTemplate agriculture1 = new TechnologyTemplate("Agriculture (I)", TechnologyCategory.Agricultural, new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
             agriculture1.Modifiers.Add(StatModification.CultureEnableBuilding, BuildingTemplate.PrimitiveFarm, null, null);
             agriculture1.Parents.Add(permanentSettlement1);
             permanentSettlement1.Children.Add(agriculture1);
             techs.Add(agriculture1);
 
-            TechnologyTemplate organizedLabor1 = new TechnologyTemplate("Organized Labor (I)", new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
+            TechnologyTemplate organizedLabor1 = new TechnologyTemplate("Organized Labor (I)", TechnologyCategory.Infrastructure, new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
             organizedLabor1.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Builder, Fundamental.Production, new TechModifier<decimal>(organizedLabor1, 0.5M));
             organizedLabor1.Parents.Add(permanentSettlement1);
             permanentSettlement1.Children.Add(organizedLabor1);
             techs.Add(organizedLabor1);
 
-            TechnologyTemplate elderReverence1 = new TechnologyTemplate("Elder Reverence (I)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
+            TechnologyTemplate elderReverence1 = new TechnologyTemplate("Elder Reverence (I)", TechnologyCategory.Cultural, new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
             elderReverence1.Modifiers.Add(StatModification.SpaceJobs, JobTemplate.Elder, null, new TechModifier<decimal>(elderReverence1, 1));
             techs.Add(elderReverence1);
 
-            TechnologyTemplate elderReverence2 = new TechnologyTemplate("Elder Reverence (II)", new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
+            TechnologyTemplate elderReverence2 = new TechnologyTemplate("Elder Reverence (II)", TechnologyCategory.Cultural, new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
             elderReverence2.Modifiers.Add(StatModification.JobInputs, JobTemplate.Elder, Fundamental.Food, new TechModifier<decimal>(elderReverence2, 0.5M));
             elderReverence2.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Elder, Fundamental.Progress, new TechModifier<decimal>(elderReverence2, 0.5M));
             elderReverence2.Parents.Add(elderReverence1);

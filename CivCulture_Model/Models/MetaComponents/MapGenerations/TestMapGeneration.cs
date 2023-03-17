@@ -23,7 +23,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, IEnumerable<TechnologyTemplate> allTechs, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
             allCultures = new List<Culture>();
             allPops = new List<Pop>();

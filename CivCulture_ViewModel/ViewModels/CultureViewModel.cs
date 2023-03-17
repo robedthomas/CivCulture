@@ -84,6 +84,8 @@ namespace CivCulture_ViewModel.ViewModels
             get => SourceCulture.ResearchedTechnologies.Count;
         }
 
+        public TechTreeViewModel TechTreeVM { get; }
+
         public RelayCommand CloseWindowRC
         {
             get => closeWindowRC;
@@ -103,6 +105,7 @@ namespace CivCulture_ViewModel.ViewModels
         {
             SourceCulture = sourceCulture;
             CultureColor = cultureColor;
+            TechTreeVM = new TechTreeViewModel(SourceCulture);
             CloseWindowRC = new RelayCommand((param) => OnWindowClosed());
         }
         #endregion
