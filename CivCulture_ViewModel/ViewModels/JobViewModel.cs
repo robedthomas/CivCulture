@@ -45,6 +45,7 @@ namespace CivCulture_ViewModel.ViewModels
                         PopVM = new PopViewModel() { SourcePop = sourceJob.Worker };
                     }
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(Name));
                     OnPropertyChanged(nameof(Inputs));
                     OnPropertyChanged(nameof(Outputs));
                 }
@@ -62,6 +63,11 @@ namespace CivCulture_ViewModel.ViewModels
                     OnPropertyChanged();
                 }
             }
+        }
+
+        public string Name
+        {
+            get => SourceJob.Template.Name;
         }
 
         public bool IsExpanded

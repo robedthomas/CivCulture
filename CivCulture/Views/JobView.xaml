@@ -30,7 +30,7 @@
                             </Border>
                         </ToggleButton.Content>
                     </ToggleButton>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Visibility="{Binding IsExpanded, Converter={conv:BoolToVisibilityConverter}}" FontWeight="Bold" FontStyle="Italic"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" Visibility="{Binding IsExpanded, Converter={conv:BoolToVisibilityConverter}}" FontWeight="Bold" FontStyle="Italic"/>
                 </Grid>
                 <Grid Grid.Row="1" Margin="15,0,0,0" Visibility="{Binding IsExpanded, Converter={conv:BoolToVisibilityConverter}}">
                     <Grid.RowDefinitions>
