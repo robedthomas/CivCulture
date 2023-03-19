@@ -62,7 +62,7 @@ namespace CivCulture_ViewModel.ViewModels
                         {
                             BuildingViewModels.Add(new BuildingViewModel(building));
                         }
-                        foreach (TerrainResource resource in sourceSpace.TerrainResources)
+                        foreach (BuildingSlot resource in sourceSpace.TerrainResources)
                         {
                             TerrainResourceVMs.Add(new TerrainResourceViewModel(resource));
                         }

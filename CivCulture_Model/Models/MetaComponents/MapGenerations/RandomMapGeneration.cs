@@ -42,17 +42,17 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 for (int col = 0; col < map.Width; col++)
                 {
                     Terrain nextTerrain = allTerrains.PickRandom(seed);
-                    List<TerrainResource> nextTerrainResources = GenerateTerrainResources(nextTerrain, config, seed);
+                    List<BuildingSlot> nextTerrainResources = GenerateTerrainResources(nextTerrain, config, seed);
                     map.Spaces[row, col] = new MapSpace(row, col, nextTerrain, nextTerrainResources.ToArray());
                 }
             }
         }
 
-        private List<TerrainResource> GenerateTerrainResources(Terrain terrain, MapConfiguration config, Random seed)
+        private List<BuildingSlot> GenerateTerrainResources(Terrain terrain, MapConfiguration config, Random seed)
         {
-            List<TerrainResource> output = new List<TerrainResource>();
+            List<BuildingSlot> output = new List<BuildingSlot>();
             List<Tuple<int, int>> possibleNumResources;
-            List<Tuple<TerrainResourceTemplate, int>> possibleResources;
+            List<Tuple<BuildingSlotTemplate, int>> possibleResources;
             if (terrain == Terrain.Grassland)
             {
                 possibleNumResources = new List<Tuple<int, int>>()
@@ -61,10 +61,10 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                     new Tuple<int, int>(2, 3), // 3/5 chance of two resources
                     new Tuple<int, int>(3, 1), // 1/5 chance of three resources
                 };
-                possibleResources = new List<Tuple<TerrainResourceTemplate, int>>()
+                possibleResources = new List<Tuple<BuildingSlotTemplate, int>>()
                 {
-                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wilderness, 1), // 1/2 chance of wilderness
-                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wheat, 1),      // 1/2 chance of wheat
+                    new Tuple<BuildingSlotTemplate, int>(BuildingSlotTemplate.Wilderness, 1), // 1/2 chance of wilderness
+                    new Tuple<BuildingSlotTemplate, int>(BuildingSlotTemplate.Wheat, 1),      // 1/2 chance of wheat
                 };
             }
             else if (terrain == Terrain.Plains)
@@ -75,10 +75,10 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                     new Tuple<int, int>(2, 3), // 3/6 chance of two resources
                     new Tuple<int, int>(3, 1), // 1/6 chance of three resources
                 };
-                possibleResources = new List<Tuple<TerrainResourceTemplate, int>>()
+                possibleResources = new List<Tuple<BuildingSlotTemplate, int>>()
                 {
-                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wilderness, 1), // 1/2 chance of wilderness
-                    new Tuple<TerrainResourceTemplate, int>(TerrainResourceTemplate.Wheat, 1),      // 1/2 chance of wheat
+                    new Tuple<BuildingSlotTemplate, int>(BuildingSlotTemplate.Wilderness, 1), // 1/2 chance of wilderness
+                    new Tuple<BuildingSlotTemplate, int>(BuildingSlotTemplate.Wheat, 1),      // 1/2 chance of wheat
                 };
             }
             else if (terrain == Terrain.Mountains)
@@ -86,7 +86,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 possibleNumResources = new List<Tuple<int, int>>()
                 {
                 };
-                possibleResources = new List<Tuple<TerrainResourceTemplate, int>>()
+                possibleResources = new List<Tuple<BuildingSlotTemplate, int>>()
                 {
                 };
             }
@@ -99,7 +99,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
                 int numResources = possibleNumResources.PickRandomWithWeight(seed);
                 for (int i = 0; i < numResources; i++)
                 {
-                    output.Add(new TerrainResource(possibleResources.PickRandomWithWeight(seed)));
+                    output.Add(new BuildingSlot(possibleResources.PickRandomWithWeight(seed)));
                 }
             }
             return output;
@@ -183,7 +183,7 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
             List<Job> output = new List<Job>();
             foreach (MapSpace space in map.Spaces)
             {
-                foreach (TerrainResource resource in space.TerrainResources)
+                foreach (BuildingSlot resource in space.TerrainResources)
                 {
                     foreach (JobTemplate template in resource.Template.ChildJobTemplates)
                     {

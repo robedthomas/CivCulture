@@ -22,9 +22,9 @@ namespace CivCulture_Model.Models
         #region Constructors
         static MainModel()
         {
-            if (!TerrainResourceTemplate.Initialized)
+            if (!BuildingSlotTemplate.Initialized)
             {
-                TerrainResourceTemplate.InitializeTerrainResources();
+                BuildingSlotTemplate.InitializeBuildingSlotTemplates();
                 BuildingTemplate.InitializeBuildingTemplates();
             }
         }

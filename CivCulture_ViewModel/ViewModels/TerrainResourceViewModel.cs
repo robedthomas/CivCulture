@@ -13,11 +13,11 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Fields
-        private TerrainResource sourceResource;
+        private BuildingSlot sourceResource;
         #endregion
 
         #region Properties
-        public TerrainResource SourceResource
+        public BuildingSlot SourceResource
         {
             get => sourceResource;
             set
@@ -38,7 +38,7 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Constructors
-        public TerrainResourceViewModel(TerrainResource sourceResource)
+        public TerrainResourceViewModel(BuildingSlot sourceResource)
         {
             SourceResource = sourceResource;
         }

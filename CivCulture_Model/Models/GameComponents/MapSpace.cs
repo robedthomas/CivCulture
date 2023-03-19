@@ -18,7 +18,7 @@ namespace CivCulture_Model.Models
     public class MapSpace : ResourceOwner, ITechModifiable
     {
         #region Fields
-        public const int BUILDING_SLOTS_PER_SPACE = 10;
+        public const int BUILDING_SLOTS_PER_SPACE = 3;
         public const decimal MAX_RESOURCE_COST_MULTIPLIER = 3M;
         public const decimal MIN_RESOURCE_COST_MULTIPLIER = 0.1M;
         public const decimal BASE_PRODUCTION_THROUGHPUT = 3M;
@@ -155,13 +155,13 @@ namespace CivCulture_Model.Models
 
         public ObservableCollection<BuildingTemplate> AvailableBuildings { get; protected set; }
 
-        public ObservableCollection<TerrainResource> TerrainResources { get; protected set; }
+        public ObservableCollection<BuildingSlot> TerrainResources { get; protected set; }
 
         public Market ResourceMarket { get; protected set; }
         #endregion
 
         #region Constructors
-        public MapSpace(int row, int column, Terrain terrain, params TerrainResource[] terrainResources) : base()
+        public MapSpace(int row, int column, Terrain terrain, params BuildingSlot[] terrainResources) : base()
         {
             Row = row;
             Column = column;
@@ -174,7 +174,7 @@ namespace CivCulture_Model.Models
             JobsFromTech = new ObservableDictionary<Technology, List<Job>>();
             Buildings = new ObservableCollection<Building>();
             AvailableBuildings = new ObservableCollection<BuildingTemplate>();
-            TerrainResources = new ObservableCollection<TerrainResource>(terrainResources);
+            TerrainResources = new ObservableCollection<BuildingSlot>(terrainResources);
             ResourceMarket = new Market(CalculateResourcePrice);
             EmptyBuildingSlotCount = BUILDING_SLOTS_PER_SPACE;
 

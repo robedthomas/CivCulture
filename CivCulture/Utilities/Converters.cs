@@ -222,7 +222,7 @@ namespace CivCulture.Utilities.Converters
             {
                 resourceName = name;
             }
-            else if (value is TerrainResource r && r != null)
+            else if (value is BuildingSlot r && r != null)
             {
                 resourceName = r.Template.Name;
             }
