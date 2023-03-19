@@ -360,7 +360,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             foreach (MapSpace space in instance.Map.Spaces)
             {
                 // Only start new constructions for spaces that don't have a current construction
-                if (space.CurrentConstruction is null)
+                if (space.CurrentConstruction is null && space.EmptyBuildingSlotCount > 0)
                 {
                     space.CurrentConstruction = GenerateNewConstructionForSpace(space, instance);
                 }
