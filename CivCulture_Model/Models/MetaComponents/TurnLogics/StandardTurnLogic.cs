@@ -355,26 +355,57 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void StartNewConstructions(GameInstance instance)
         {
+            BuildingSlot consumedSlot;
             foreach (MapSpace space in instance.Map.Spaces)
             {
                 // Only start new constructions for spaces that don't have a current construction
                 if (space.CurrentConstruction is null && space.EmptyBuildingSlotCount > 0)
                 {
-                    space.CurrentConstruction = GenerateNewConstructionForSpace(space, instance);
+                    space.CurrentConstruction = GenerateNewConstructionForSpace(space, instance, out consumedSlot);
+                    if (consumedSlot != null)
+                    {
+                        consumedSlot.OccupyingBuilding = space.CurrentConstruction;
+                    }
                 }
             }
         }
 
-        protected Building GenerateNewConstructionForSpace(MapSpace space, GameInstance instance)
+        protected Building GenerateNewConstructionForSpace(MapSpace space, GameInstance instance, out BuildingSlot slotConsumed)
         {
             if (space.AvailableBuildings.Count > 0)
             {
                 // For now, just select any of the available building templates for this space
                 // @TODO: base selection off of space's resources in demand
-                BuildingTemplate targetTemplate = space.AvailableBuildings.PickRandom(instance.RandomSeed);
-                return new Building(targetTemplate, space);
+                // Only select from buildings that this space actually has slots to support
+                List<Tuple<BuildingTemplate, BuildingSlot>> possibleConstructions = GetPossibleConstructionsForSpace(space);
+                if (possibleConstructions.Count > 0)
+                {
+                    Tuple<BuildingTemplate, BuildingSlot> selectedConstruction = possibleConstructions.PickRandom(instance.RandomSeed);
+                    slotConsumed = selectedConstruction.Item2;
+                    return new Building(selectedConstruction.Item1, space, slotConsumed);
+                }
             }
+            slotConsumed = null;
             return null;
+        }
+
+        protected List<Tuple<BuildingTemplate, BuildingSlot>> GetPossibleConstructionsForSpace(MapSpace space)
+        {
+            List<Tuple<BuildingTemplate, BuildingSlot>> possibleConstructions = new List<Tuple<BuildingTemplate, BuildingSlot>>();
+            foreach (BuildingSlot slot in space.BuildingSlots)
+            {
+                if (slot.OccupyingBuilding == null)
+                {
+                    foreach (BuildingTemplate possibleBuilding in space.AvailableBuildings)
+                    {
+                        if (possibleBuilding.RequisitBuildingSlots.Contains(slot.Template))
+                        {
+                            possibleConstructions.Add(new Tuple<BuildingTemplate, BuildingSlot>(possibleBuilding, slot));
+                        }
+                    }
+                }
+            }
+            return possibleConstructions;
         }
 
         protected void ConsumePopNeeds(GameInstance instance)

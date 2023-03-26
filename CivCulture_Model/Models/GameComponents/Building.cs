@@ -16,6 +16,7 @@ namespace CivCulture_Model.Models
         #region Events
         public event ValueChangedEventHandler<BuildingTemplate> TemplateChanged;
         public event ValueChangedEventHandler<MapSpace> SpaceChanged;
+        public event ValueChangedEventHandler<BuildingSlot> ParentSlotChanged;
         public event ValueChangedEventHandler<ConsumeablesCollection> RemainingCostsChanged;
         public event ValueChangedEventHandler<decimal> CompletionLevelChanged;
         #endregion
@@ -23,6 +24,7 @@ namespace CivCulture_Model.Models
         #region Fields
         private BuildingTemplate template;
         private MapSpace space;
+        private BuildingSlot parentSlot;
         private ConsumeablesCollection remainingCosts;
         private decimal completionLevel;
         #endregion
@@ -52,6 +54,20 @@ namespace CivCulture_Model.Models
                     MapSpace oldValue = space;
                     space = value;
                     SpaceChanged?.Invoke(this, new ValueChangedEventArgs<MapSpace>(oldValue, value));
+                }
+            }
+        }
+
+        public BuildingSlot ParentSlot
+        {
+            get => parentSlot;
+            set
+            {
+                if (parentSlot != value)
+                {
+                    BuildingSlot oldValue = parentSlot;
+                    parentSlot = value;
+                    ParentSlotChanged?.Invoke(this, new ValueChangedEventArgs<BuildingSlot>(oldValue, value));
                 }
             }
         }
@@ -104,10 +120,11 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public Building(BuildingTemplate template, MapSpace space)
+        public Building(BuildingTemplate template, MapSpace space, BuildingSlot parentSlot)
         {
             Template = template;
             Space = space;
+            ParentSlot = parentSlot;
             CompletionLevel = 0;
             RemainingCosts = new ConsumeablesCollection(TotalCosts);
             foreach (JobTemplate childJobTemplate in Template.Jobs)

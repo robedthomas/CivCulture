@@ -48,7 +48,7 @@
 			</Outputs>
 		</JobTemplate>
 
-		<JobTemplate name="Gatherer_Wilderness" displayName="Gatherer" priority="0" basePay="1" popTemplate="Hunter Gatherer">
+		<JobTemplate name="Gatherer_Wilderness" displayName="Gatherer (Wilderness)" priority="0" basePay="1" popTemplate="Hunter Gatherer">
 			<Inputs>
 			</Inputs>
 			<Outputs>
@@ -101,6 +101,7 @@
 			</Jobs>
 			<RequisitBuildingSlots>
 				<BuildingSlotTemplate name="Grassland" />
+				<BuildingSlotTemplate name="Plains" />
 			</RequisitBuildingSlots>
 		</BuildingTemplate>
 
