@@ -193,9 +193,22 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <ItemsControl Grid.Row="0" ItemsSource="{Binding BuildingViewModels}">
+                            <ItemsControl Grid.Row="0" ItemsSource="{Binding BuildingSlotVMs}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:BuildingSlotView DataContext="{Binding}" Margin="0,0,2,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding BuildingViewModels}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
@@ -207,7 +220,7 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <Border Grid.Row="1" Visibility="{Binding CurrentConstructionVM, Converter={conv:ObjectToVisibilityConverter}}" BorderBrush="Black" BorderThickness="1.5" Background="Gray" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                            <Border Grid.Row="2" Visibility="{Binding CurrentConstructionVM, Converter={conv:ObjectToVisibilityConverter}}" BorderBrush="Black" BorderThickness="1.5" Background="Gray" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -231,22 +244,6 @@
                                     </StackPanel>
                                 </Grid>
                             </Border>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Resources">
-                        <Grid>
-                            <ItemsControl Grid.Row="0" ItemsSource="{Binding TerrainResourceVMs}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <local:TerrainResourceView DataContext="{Binding}" Margin="0,0,2,0"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Market">

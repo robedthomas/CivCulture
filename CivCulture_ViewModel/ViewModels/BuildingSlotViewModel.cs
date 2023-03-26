@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CivCulture_ViewModel.ViewModels
 {
-    public class TerrainResourceViewModel : BaseViewModel
+    public class BuildingSlotViewModel : BaseViewModel
     {
         #region Events
         #endregion
@@ -17,7 +17,7 @@ namespace CivCulture_ViewModel.ViewModels
         #endregion
 
         #region Properties
-        public BuildingSlot SourceResource
+        public BuildingSlot SourceSlot
         {
             get => sourceResource;
             set
@@ -33,14 +33,14 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string Name
         {
-            get => SourceResource.Template.Name;
+            get => SourceSlot.Template.Name;
         }
         #endregion
 
         #region Constructors
-        public TerrainResourceViewModel(BuildingSlot sourceResource)
+        public BuildingSlotViewModel(BuildingSlot sourceSlot)
         {
-            SourceResource = sourceResource;
+            SourceSlot = sourceSlot;
         }
         #endregion
 

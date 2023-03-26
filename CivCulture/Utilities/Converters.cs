@@ -210,27 +210,27 @@ namespace CivCulture.Utilities.Converters
         }
     }
 
-    public class TerrainResourceToIconConverter : ValueConverter
+    public class BuildingSlotToIconConverter : ValueConverter
     {
         private static Uri iconResourcesUri = new Uri("Resources/Icons/IconsDictionary.xaml", UriKind.RelativeOrAbsolute);
         private static ResourceDictionary iconsDictionary = new ResourceDictionary() { Source = iconResourcesUri };
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string resourceName;
+            string slotName;
             if (parameter is string name)
             {
-                resourceName = name;
+                slotName = name;
             }
             else if (value is BuildingSlot r && r != null)
             {
-                resourceName = r.Template.Name;
+                slotName = r.Template.Name;
             }
             else
             {
                 return null;
             }
-            string iconKey = $"{resourceName}Icon";
+            string iconKey = $"{slotName}Icon";
             if (iconsDictionary.Contains(iconKey))
             {
                 return (iconsDictionary[iconKey] as Image).Source;

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CivCulture.Views.TerrainResourceView"
+﻿<UserControl x:Class="CivCulture.Views.BuildingSlotView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,6 +14,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="{Binding Name}" HorizontalAlignment="Center"/>
-        <Image Grid.Row="1" Source="{Binding SourceResource, Converter={conv:TerrainResourceToIconConverter}}" Stretch="None" HorizontalAlignment="Center"/>
+        <Image Grid.Row="1" Source="{Binding SourceSlot, Converter={conv:BuildingSlotToIconConverter}}" Stretch="None" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

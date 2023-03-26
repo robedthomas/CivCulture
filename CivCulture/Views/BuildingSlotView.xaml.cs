@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CivCulture.Views
 {
     /// <summary>
-    /// Interaction logic for TerrainResourceView.xaml
+    /// Interaction logic for BuildingSlotView.xaml
     /// </summary>
-    public partial class TerrainResourceView : UserControl
+    public partial class BuildingSlotView : UserControl
     {
-        public TerrainResourceView()
+        public BuildingSlotView()
         {
             InitializeComponent();
         }
