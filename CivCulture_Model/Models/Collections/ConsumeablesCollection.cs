@@ -34,10 +34,15 @@ namespace CivCulture_Model.Models.Collections
         #region Constructors
         public ConsumeablesCollection() { }
 
-        public ConsumeablesCollection(ConsumeablesCollection copyFrom) : base(copyFrom) { }
+        public ConsumeablesCollection(IDictionary<Consumeable, decimal> copyFrom) : base(copyFrom) { }
         #endregion
 
         #region Methods
+        public bool IsEmpty()
+        {
+            return Count <= 0;
+        }
+
         public new void Add(Consumeable consumeable, decimal count)
         {
             if (ContainsKey(consumeable))

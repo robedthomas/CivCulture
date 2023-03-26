@@ -155,13 +155,13 @@ namespace CivCulture_Model.Models
 
         public ObservableCollection<BuildingTemplate> AvailableBuildings { get; protected set; }
 
-        public ObservableCollection<BuildingSlot> TerrainResources { get; protected set; }
+        public ObservableCollection<BuildingSlot> BuildingSlots { get; protected set; }
 
         public Market ResourceMarket { get; protected set; }
         #endregion
 
         #region Constructors
-        public MapSpace(int row, int column, Terrain terrain, params BuildingSlot[] terrainResources) : base()
+        public MapSpace(int row, int column, Terrain terrain) : base()
         {
             Row = row;
             Column = column;
@@ -174,7 +174,7 @@ namespace CivCulture_Model.Models
             JobsFromTech = new ObservableDictionary<Technology, List<Job>>();
             Buildings = new ObservableCollection<Building>();
             AvailableBuildings = new ObservableCollection<BuildingTemplate>();
-            TerrainResources = new ObservableCollection<BuildingSlot>(terrainResources);
+            BuildingSlots = new ObservableCollection<BuildingSlot>();
             ResourceMarket = new Market(CalculateResourcePrice);
             EmptyBuildingSlotCount = BUILDING_SLOTS_PER_SPACE;
 

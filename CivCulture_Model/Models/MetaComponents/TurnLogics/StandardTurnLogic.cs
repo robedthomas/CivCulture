@@ -5,8 +5,6 @@ using GenericUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 {
@@ -393,7 +391,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
 
         protected void ConsumePopNeedsOfType(NeedType typeOfNeed, Pop pop, decimal satisfactionIncrease)
         {
-            if (pop.Needs.TryGetValue(typeOfNeed, out ConsumeablesCollection necessities))
+            if (pop.Needs.TryGetValue(typeOfNeed, out ConsumeablesCollection necessities) && !necessities.IsEmpty())
             {
                 string pluralNeedName;
                 switch (typeOfNeed)
@@ -484,7 +482,7 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
                 {
                     pop.Space.PopGrowthProgress--;
                     Pop newPop = new Pop(pop.Space.NextPopTemplate, pop.Space.DominantCulture) { Space = pop.Space };
-                    pop.Space.NextPopTemplate = GetNextPopTemplate(pop.Space);
+                    pop.Space.NextPopTemplate = GetNextPopTemplate(pop.Space, instance.TemplatesDB);
                     newPops.Add(newPop);
                 }
             }
@@ -645,16 +643,16 @@ namespace CivCulture_Model.Models.MetaComponents.TurnLogics
             return resourcesConsumed;
         }
 
-        protected PopTemplate GetNextPopTemplate(MapSpace space)
+        protected PopTemplate GetNextPopTemplate(MapSpace space, TemplatesDatabase templates)
         {
-            return PopTemplate.HunterGatherer;
+            return templates.GetPopTemplate("Hunter Gatherer");
         }
 
         public override void InitGameInstance(GameInstance instance, NamesDatabase namesDb)
         {
             foreach (MapSpace space in instance.Map.Spaces)
             {
-                space.NextPopTemplate = GetNextPopTemplate(space);
+                space.NextPopTemplate = GetNextPopTemplate(space, instance.TemplatesDB);
                 space.Money = DEFAULT_STOCKPILE_MONEY;
                 space.Buildings.CollectionChanged += Space_Buildings_CollectionChanged;
             }

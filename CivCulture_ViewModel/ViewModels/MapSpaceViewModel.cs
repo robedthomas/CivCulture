@@ -38,7 +38,7 @@ namespace CivCulture_ViewModel.ViewModels
                     {
                         sourceSpace.Pops.CollectionChanged -= Pops_CollectionChanged;
                         sourceSpace.Jobs.CollectionChanged -= Jobs_CollectionChanged;
-                        sourceSpace.TerrainResources.CollectionChanged -= TerrainResources_CollectionChanged;
+                        sourceSpace.BuildingSlots.CollectionChanged -= TerrainResources_CollectionChanged;
                         sourceSpace.TerrainChanged -= Terrain_Changed;
                         sourceSpace.DominantCultureChanged -= SourceSpace_DominantCultureChanged;
                         DominantCultureVM = null;
@@ -48,7 +48,7 @@ namespace CivCulture_ViewModel.ViewModels
                     {
                         sourceSpace.Pops.CollectionChanged += Pops_CollectionChanged;
                         sourceSpace.Jobs.CollectionChanged += Jobs_CollectionChanged;
-                        sourceSpace.TerrainResources.CollectionChanged += TerrainResources_CollectionChanged;
+                        sourceSpace.BuildingSlots.CollectionChanged += TerrainResources_CollectionChanged;
                         sourceSpace.TerrainChanged += Terrain_Changed;
                         sourceSpace.DominantCultureChanged += SourceSpace_DominantCultureChanged;
                         if (sourceSpace.DominantCulture != null)

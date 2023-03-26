@@ -9,6 +9,7 @@ namespace CivCulture_Model.Models
     public class Terrain : GameComponent
     {
         #region Static Members
+        public static HashSet<Terrain> AllTerrains = new HashSet<Terrain>();
         public static Terrain Grassland;
         public static Terrain Plains;
         public static Terrain Mountains;
@@ -35,6 +36,7 @@ namespace CivCulture_Model.Models
         public Terrain(string name)
         {
             Name = name;
+            AllTerrains.Add(this);
         }
         #endregion
 

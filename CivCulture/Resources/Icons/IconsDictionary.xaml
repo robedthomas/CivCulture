@@ -15,4 +15,8 @@
     <!-- Buildings -->
     <Image x:Key="MudHutsIcon" Source="MudHutsIcon.png"/>
     <Image x:Key="PrimitiveFarmIcon" Source="PrimitiveFarmIcon.png"/>
+    
+    <!-- Building Backgrounds -->
+    <SolidColorBrush x:Key="MudHutsBackground" Color="Brown" />
+    <SolidColorBrush x:Key="PrimitiveFarmBackground" Color="Green" />
 </ResourceDictionary>

@@ -16,6 +16,7 @@ namespace CivCulture_Model.Models
     {
         #region Fields
         public const string DEFAULT_NAMES_DATABASE_LOCATION = "NamesDatabase.xml";
+        public const string DEFAULT_TEMPLATES_DATABASE_LOCATION = "TemplateDefinitions.xml";
 
         private GameMap map;
         private ObservableCollection<Culture> allCultures;
@@ -154,14 +155,17 @@ namespace CivCulture_Model.Models
         }
 
         public NamesDatabase NamesDB { get; protected set; }
+
+        public TemplatesDatabase TemplatesDB { get; protected set; }
         #endregion
 
         #region Constructors
         public GameInstance()
         {
-            AllTechs = GetStandardTechs();
             RandomSeed = new Random();
             NamesDB = new NamesDatabase(DEFAULT_NAMES_DATABASE_LOCATION);
+            TemplatesDB = new TemplatesDatabase(DEFAULT_TEMPLATES_DATABASE_LOCATION);
+            AllTechs = GetStandardTechs(TemplatesDB);
         }
 
         public GameInstance(int seed) : this()
@@ -176,7 +180,7 @@ namespace CivCulture_Model.Models
             List<Culture> cultures;
             List<Pop> pops;
             List<Job> jobs;
-            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, AllTechs, RandomSeed, out cultures, out pops, out jobs);
+            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, TemplatesDB, AllTechs, RandomSeed, out cultures, out pops, out jobs);
             AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);
@@ -187,37 +191,37 @@ namespace CivCulture_Model.Models
             TurnLogic.ExecuteGameTurn(this, NamesDB);
         }
 
-        private ObservableCollection<TechnologyTemplate> GetStandardTechs()
+        private ObservableCollection<TechnologyTemplate> GetStandardTechs(TemplatesDatabase templates)
         {
             ObservableCollection<TechnologyTemplate> techs = new ObservableCollection<TechnologyTemplate>();
 
             TechnologyTemplate permanentSettlement1 = new TechnologyTemplate("Permanent Settlement (I)", TechnologyCategory.Infrastructure, new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
-            permanentSettlement1.Modifiers.Add(StatModification.CultureEnableBuilding, BuildingTemplate.MudHuts, null, null);
-            permanentSettlement1.Modifiers.Add(StatModification.SpaceJobs, JobTemplate.Builder, null, new TechModifier<decimal>(permanentSettlement1, 1));
+            permanentSettlement1.Modifiers.Add(StatModification.CultureEnableBuilding, TemplatesDB.GetBuildingTemplate("Mud Huts"), null, null);
+            permanentSettlement1.Modifiers.Add(StatModification.SpaceJobs, templates.GetJobTemplate("Builder"), null, new TechModifier<decimal>(permanentSettlement1, 1));
             techs.Add(permanentSettlement1);
 
             //TechnologyTemplate permanentSettlement2 = new TechnologyTemplate("Permanent Settlement (II)", new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
             //permanentSettlement2.Modifiers.Add(StatModification.)
 
             TechnologyTemplate agriculture1 = new TechnologyTemplate("Agriculture (I)", TechnologyCategory.Agricultural, new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
-            agriculture1.Modifiers.Add(StatModification.CultureEnableBuilding, BuildingTemplate.PrimitiveFarm, null, null);
+            agriculture1.Modifiers.Add(StatModification.CultureEnableBuilding, TemplatesDB.GetBuildingTemplate("PrimitiveFarm_Grassland"), null, null);
             agriculture1.Parents.Add(permanentSettlement1);
             permanentSettlement1.Children.Add(agriculture1);
             techs.Add(agriculture1);
 
             TechnologyTemplate organizedLabor1 = new TechnologyTemplate("Organized Labor (I)", TechnologyCategory.Infrastructure, new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
-            organizedLabor1.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Builder, Fundamental.Production, new TechModifier<decimal>(organizedLabor1, 0.5M));
+            organizedLabor1.Modifiers.Add(StatModification.JobOutputs, templates.GetJobTemplate("Builder"), Fundamental.Production, new TechModifier<decimal>(organizedLabor1, 0.5M));
             organizedLabor1.Parents.Add(permanentSettlement1);
             permanentSettlement1.Children.Add(organizedLabor1);
             techs.Add(organizedLabor1);
 
             TechnologyTemplate elderReverence1 = new TechnologyTemplate("Elder Reverence (I)", TechnologyCategory.Cultural, new ConsumeablesCollection() { { Fundamental.Progress, 5 } });
-            elderReverence1.Modifiers.Add(StatModification.SpaceJobs, JobTemplate.Elder, null, new TechModifier<decimal>(elderReverence1, 1));
+            elderReverence1.Modifiers.Add(StatModification.SpaceJobs, templates.GetJobTemplate("Elder"), null, new TechModifier<decimal>(elderReverence1, 1));
             techs.Add(elderReverence1);
 
             TechnologyTemplate elderReverence2 = new TechnologyTemplate("Elder Reverence (II)", TechnologyCategory.Cultural, new ConsumeablesCollection() { { Fundamental.Progress, 10 } });
-            elderReverence2.Modifiers.Add(StatModification.JobInputs, JobTemplate.Elder, Fundamental.Food, new TechModifier<decimal>(elderReverence2, 0.5M));
-            elderReverence2.Modifiers.Add(StatModification.JobOutputs, JobTemplate.Elder, Fundamental.Progress, new TechModifier<decimal>(elderReverence2, 0.5M));
+            elderReverence2.Modifiers.Add(StatModification.JobInputs, templates.GetJobTemplate("Elder"), Fundamental.Food, new TechModifier<decimal>(elderReverence2, 0.5M));
+            elderReverence2.Modifiers.Add(StatModification.JobOutputs, templates.GetJobTemplate("Elder"), Fundamental.Progress, new TechModifier<decimal>(elderReverence2, 0.5M));
             elderReverence2.Parents.Add(elderReverence1);
             elderReverence1.Children.Add(elderReverence2);
             techs.Add(elderReverence2);

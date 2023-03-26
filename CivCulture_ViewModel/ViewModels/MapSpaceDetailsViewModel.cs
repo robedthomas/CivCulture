@@ -62,7 +62,7 @@ namespace CivCulture_ViewModel.ViewModels
                         {
                             BuildingViewModels.Add(new BuildingViewModel(building));
                         }
-                        foreach (BuildingSlot resource in sourceSpace.TerrainResources)
+                        foreach (BuildingSlot resource in sourceSpace.BuildingSlots)
                         {
                             TerrainResourceVMs.Add(new TerrainResourceViewModel(resource));
                         }
@@ -271,7 +271,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.Jobs.CollectionChanged -= SourceSpace_Jobs_CollectionChanged;
             SourceSpace.Buildings.CollectionChanged -= SourceSpace_Buildings_CollectionChanged;
             SourceSpace.CurrentConstructionChanged -= SourceSpace_CurrentConstructionChanged;
-            SourceSpace.TerrainResources.CollectionChanged -= SourceSpace_TerrainResources_CollectionChanged;
+            SourceSpace.BuildingSlots.CollectionChanged -= SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged -= SourceSpace_TerrainChanged;
             SourceSpace.DominantCultureChanged -= SourceSpace_DominantCultureChanged;
             sourceSpace.PopGrowthProgressChanged -= SourceSpace_PopGrowthProgressChanged;
@@ -292,7 +292,7 @@ namespace CivCulture_ViewModel.ViewModels
             SourceSpace.Jobs.CollectionChanged += SourceSpace_Jobs_CollectionChanged;
             SourceSpace.Buildings.CollectionChanged += SourceSpace_Buildings_CollectionChanged;
             SourceSpace.CurrentConstructionChanged += SourceSpace_CurrentConstructionChanged;
-            SourceSpace.TerrainResources.CollectionChanged += SourceSpace_TerrainResources_CollectionChanged;
+            SourceSpace.BuildingSlots.CollectionChanged += SourceSpace_TerrainResources_CollectionChanged;
             SourceSpace.TerrainChanged += SourceSpace_TerrainChanged;
             SourceSpace.DominantCultureChanged += SourceSpace_DominantCultureChanged;
             sourceSpace.PopGrowthProgressChanged += SourceSpace_PopGrowthProgressChanged;

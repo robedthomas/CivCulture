@@ -282,19 +282,30 @@ namespace CivCulture.Utilities.Converters
 
     public class BuildingToBackgroundConverter : ValueConverter
     {
+        private static Uri iconResourcesUri = new Uri("Resources/Icons/IconsDictionary.xaml", UriKind.RelativeOrAbsolute);
+        private static ResourceDictionary iconsDictionary = new ResourceDictionary() { Source = iconResourcesUri };
+
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Building b)
+            string resourceName;
+            if (parameter is string name)
             {
-                if (b.Template == BuildingTemplate.MudHuts)
-                {
-                    return Brushes.Brown;
-                }
-                else if (b.Template == BuildingTemplate.PrimitiveFarm)
-                {
-                    return Brushes.Green;
-                }
+                resourceName = name;
             }
+            else if (value is Building b && b != null)
+            {
+                resourceName = b.Template.Name.Replace(" ", string.Empty);
+            }
+            else
+            {
+                return null;
+            }
+            string backgroundKey = $"{resourceName}Background";
+            if (iconsDictionary.Contains(backgroundKey))
+            {
+                return (iconsDictionary[backgroundKey] as Brush);
+            }
+            // throw new ArgumentException($"Requested icon for Consumeable that lacks an icon: {resourceName}");
             return null;
         }
 

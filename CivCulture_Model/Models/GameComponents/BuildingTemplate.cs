@@ -11,15 +11,6 @@ namespace CivCulture_Model.Models
     public class BuildingTemplate : ComponentTemplate
     {
         #region Static Members
-        public static BuildingTemplate MudHuts;
-        public static BuildingTemplate PrimitiveFarm;
-
-        public static void InitializeBuildingTemplates()
-        {
-            MudHuts = new BuildingTemplate("Mud Huts", new ObservableCollection<JobTemplate>(), false, new ConsumeablesCollection() { { Fundamental.Production, 10 } }, new ConsumeablesCollection() { { Fundamental.Shelter, 3 } });
-
-            PrimitiveFarm = new BuildingTemplate("Primitive Farm", new ObservableCollection<JobTemplate>() { JobTemplate.Farmer_Wilderness }, false, new ConsumeablesCollection() { { Fundamental.Production, 15 } }, new ConsumeablesCollection());
-        }
         #endregion
 
         #region Events
@@ -38,15 +29,18 @@ namespace CivCulture_Model.Models
         public ConsumeablesCollection Outputs { get; protected set; }
 
         public ObservableCollection<JobTemplate> Jobs { get; protected set; }
+
+        public ObservableCollection<BuildingSlotTemplate> RequisitBuildingSlots { get; protected set; }
         #endregion
 
         #region Constructors
-        public BuildingTemplate(string name, IEnumerable<JobTemplate> jobs, bool isSpaceUnique = false, ConsumeablesCollection costs = null, ConsumeablesCollection outputs = null)
+        public BuildingTemplate(string name, IEnumerable<JobTemplate> jobs, IEnumerable<BuildingSlotTemplate> requisitBuildingSlots, bool isSpaceUnique = false, ConsumeablesCollection costs = null, ConsumeablesCollection outputs = null)
         {
             Name = name;
             Costs = new ConsumeablesCollection(costs);
             Outputs = new ConsumeablesCollection(outputs);
             Jobs = new ObservableCollection<JobTemplate>(jobs);
+            RequisitBuildingSlots = new ObservableCollection<BuildingSlotTemplate>(requisitBuildingSlots);
         }
         #endregion
 

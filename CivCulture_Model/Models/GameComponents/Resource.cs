@@ -12,13 +12,7 @@ namespace CivCulture_Model.Models
         public static HashSet<Resource> AllResources = new HashSet<Resource>();
 
         public static Resource Wheat;
-        public static Resource Wood;
-
-        public static void InitializeResources()
-        {
-            Fundamental.InitializeFundamentals();
-            Wood = new Resource("Wood", 1);
-        }
+        public static Resource Wood = new Resource("Wood", 1);
         #endregion
 
         #region Fields

@@ -14,27 +14,6 @@ namespace CivCulture_Model.Models
         public const int UNEMPLOYED_JOB_PRIORITY = MAX_JOB_PRIORITY;
 
         public static JobTemplate ALL;
-        public static JobTemplate Builder;
-        public static JobTemplate Elder;
-        public static JobTemplate Gatherer_Wilderness;
-        public static JobTemplate Farmer_Wilderness;
-        public static JobTemplate Gatherer_Wheat;
-        public static JobTemplate Farmer_Wheat;
-
-        public static void InitializeJobTemplates()
-        {
-            Resource.InitializeResources();
-            ALL = new JobTemplate("ALL JOBS", 0, 0, null);
-
-            Builder = new JobTemplate("Builder", 1, 1, PopTemplate.Laborer, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Production, 1M } });
-            Elder = new JobTemplate("Elder", 2, 4, PopTemplate.Elite, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Progress, 0.5M } });
-
-            Gatherer_Wilderness = new JobTemplate("Gatherer", 0, 1, PopTemplate.HunterGatherer, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.2M } });
-            Farmer_Wilderness = new JobTemplate("Farmer", 0, 3, PopTemplate.Laborer, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.7M } });
-
-            Gatherer_Wheat = new JobTemplate("Gatherer (Wheat)", 0, 1, PopTemplate.HunterGatherer, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 1.5M } });
-            Farmer_Wheat = new JobTemplate("Farmer (Wheat)", 0, 3, PopTemplate.Laborer, new ConsumeablesCollection() { }, new ConsumeablesCollection() { { Fundamental.Food, 2M } });
-        }
         #endregion
 
         #region Fields

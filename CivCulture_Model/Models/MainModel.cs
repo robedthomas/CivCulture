@@ -20,15 +20,6 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        static MainModel()
-        {
-            if (!BuildingSlotTemplate.Initialized)
-            {
-                BuildingSlotTemplate.InitializeBuildingSlotTemplates();
-                BuildingTemplate.InitializeBuildingTemplates();
-            }
-        }
-
         public MainModel()
         {
         }

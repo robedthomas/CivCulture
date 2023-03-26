@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Templates>
+	<PopTemplates>
+		<PopTemplate name="Hunter Gatherer" progressFromSatisfactionRatio="0.1">
+			<Necessities>
+				<Resource name="Food" quantity="0.75" />
+			</Necessities>
+			<Comforts>
+				<Resource name="Shelter" quantity="0.5" />
+			</Comforts>
+		</PopTemplate>
+		
+		<PopTemplate name="Laborer" progressFromSatisfactionRatio="0.1">
+			<Necessities>
+				<Resource name="Food" quantity="1" />
+				<Resource name="Shelter" quantity="0.5" />
+			</Necessities>
+			<Comforts>
+				<Resource name="Shelter" quantity="0.5" />
+			</Comforts>
+		</PopTemplate>
+		
+		<PopTemplate name="Elite" progressFromSatisfactionRatio="1.0">
+			<Necessities>
+				<Resource name="Food" quantity="1.5" />
+				<Resource name="Shelter" quantity="2" />
+			</Necessities>
+			<Comforts>
+				<Resource name="Luxuries" quantity="1" />
+			</Comforts>
+		</PopTemplate>
+	</PopTemplates>
+	
+	<JobTemplates>
+		<JobTemplate name="Builder" priority="1" basePay="1" popTemplate="Laborer">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Production" quantity="1" />
+			</Outputs>
+		</JobTemplate>
+		
+		<JobTemplate name="Elder" priority="2" basePay="4" popTemplate="Elite">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Progress" quantity="0.5" />
+			</Outputs>
+		</JobTemplate>
+
+		<JobTemplate name="Gatherer_Wilderness" displayName="Gatherer" priority="0" basePay="1" popTemplate="Hunter Gatherer">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Food" quantity="1.2" />
+			</Outputs>
+		</JobTemplate>
+
+		<JobTemplate name="Gatherer_Grassland" displayName="Gatherer" priority="0" basePay="1" popTemplate="Hunter Gatherer">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Food" quantity="0.75" />
+			</Outputs>
+		</JobTemplate>
+
+		<JobTemplate name="Gatherer_Wheat" displayName="Gatherer (Wheat)" priority="0" basePay="1.5" popTemplate="Hunter Gatherer">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Food" quantity="1.5" />
+			</Outputs>
+		</JobTemplate>
+
+		<JobTemplate name="Farmer_Grassland" displayName="Farmer" priority="0" basePay="3" popTemplate="Laborer">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Food" quantity="1.75" />
+			</Outputs>
+		</JobTemplate>
+
+		<JobTemplate name="Farmer_Wheat" displayName="Farmer (Wheat)" priority="0" basePay="3" popTemplate="Laborer">
+			<Inputs>
+			</Inputs>
+			<Outputs>
+				<Resource name="Food" quantity="2" />
+			</Outputs>
+		</JobTemplate>
+	</JobTemplates>
+
+	<BuildingTemplates>
+		<BuildingTemplate name="Mud Huts" isSpaceUnique="false">
+			<ConstructionCosts>
+				<Resource name="Production" quantity="10" />
+			</ConstructionCosts>
+			<Outputs>
+				<Resource name="Shelter" quantity="3" />
+			</Outputs>
+			<Jobs>
+			</Jobs>
+			<RequisitBuildingSlots>
+				<BuildingSlotTemplate name="Grassland" />
+			</RequisitBuildingSlots>
+		</BuildingTemplate>
+
+		<BuildingTemplate name="PrimitiveFarm_Grassland" displayName="Primitive Farm (Grassland)" isSpaceUnique="false">
+			<ConstructionCosts>
+				<Resource name="Production" quantity="15" />
+			</ConstructionCosts>
+			<Outputs>
+			</Outputs>
+			<Jobs>
+				<JobTemplate name="Farmer_Grassland" />
+			</Jobs>
+			<RequisitBuildingSlots>
+				<BuildingSlotTemplate name="Grassland" />
+			</RequisitBuildingSlots>
+		</BuildingTemplate>
+
+		<BuildingTemplate name="PrimitiveFarm_Wheat" displayName="Primitive Farm (Wheat)" isSpaceUnique="false">
+			<ConstructionCosts>
+				<Resource name="Production" quantity="15" />
+			</ConstructionCosts>
+			<Outputs>
+			</Outputs>
+			<Jobs>
+				<JobTemplate name="Farmer_Wheat" />
+			</Jobs>
+			<RequisitBuildingSlots>
+				<BuildingSlotTemplate name="Wheat" />
+			</RequisitBuildingSlots>
+		</BuildingTemplate>
+	</BuildingTemplates>
+	
+	<BuildingSlotTemplates>
+		<BuildingSlotTemplate name="Grassland">
+			<PossibleTerrainTypes>
+				<Terrain name="Grassland" likelihood="6" />
+			</PossibleTerrainTypes>
+			<ChildJobs>
+				<JobTemplate name="Gatherer_Grassland" />
+			</ChildJobs>
+			<ResourcesUponRemoval>
+			</ResourcesUponRemoval>
+
+		</BuildingSlotTemplate>
+
+		<BuildingSlotTemplate name="Plains">
+			<PossibleTerrainTypes>
+				<Terrain name="Plains" likelihood="9" />
+			</PossibleTerrainTypes>
+			<ChildJobs>
+				<JobTemplate name="Gatherer_Grassland" />
+			</ChildJobs>
+			<ResourcesUponRemoval>
+			</ResourcesUponRemoval>
+		</BuildingSlotTemplate>
+		
+		<BuildingSlotTemplate name="Wilderness">
+			<PossibleTerrainTypes>
+				<Terrain name="Grassland" likelihood="3" underlyingBuildingSlot="Grassland" />
+			</PossibleTerrainTypes>
+			<ChildJobs>
+				<JobTemplate name="Gatherer_Wilderness" />
+			</ChildJobs>
+			<ResourcesUponRemoval>
+				<Resource name="Food" quantity="20" />
+			</ResourcesUponRemoval>
+		</BuildingSlotTemplate>
+		
+		<BuildingSlotTemplate name="Wheat">
+			<PossibleTerrainTypes>
+				<Terrain name="Grassland" likelihood="1" underlyingBuildingSlot="Grassland" />
+				<Terrain name="Plains" likelihood="1" underlyingBuildingSlot="Plains" />
+			</PossibleTerrainTypes>
+			<ChildJobs>
+				<JobTemplate name="Gatherer_Wheat" />
+			</ChildJobs>
+			<ResourcesUponRemoval>
+				<Resource name="Food" quantity="40" />
+			</ResourcesUponRemoval>
+		</BuildingSlotTemplate>
+	</BuildingSlotTemplates>
+	
+	<TechnologyTemplates>
+		
+	</TechnologyTemplates>
+</Templates>

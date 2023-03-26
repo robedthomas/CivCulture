@@ -77,6 +77,62 @@ namespace GenericUtilities
             throw new InvalidOperationException("Iterated through list without finding item to randomly select. This should not be possible!");
         }
 
+        public static T PickRandomWithWeight<T>(this IEnumerable<Tuple<T, decimal>> collectionWithWeights, Random random)
+        {
+            if (collectionWithWeights.Count() == 0)
+            {
+                throw new ArgumentException("Received empty collection");
+            }
+            decimal totalWeight = 0;
+            foreach (Tuple<T, decimal> itemWithWeight in collectionWithWeights)
+            {
+                if (itemWithWeight.Item2 < 0)
+                {
+                    throw new ArgumentOutOfRangeException($"Item weight must be non-negative, got {itemWithWeight.Item2}");
+                }
+                totalWeight += itemWithWeight.Item2;
+            }
+            decimal weightSelected = (decimal)random.NextDouble() * totalWeight;
+            decimal currentWeight = 0;
+            foreach (Tuple<T, decimal> itemWithWeight in collectionWithWeights)
+            {
+                if (weightSelected >= currentWeight && weightSelected < currentWeight + itemWithWeight.Item2)
+                {
+                    return itemWithWeight.Item1;
+                }
+                currentWeight += itemWithWeight.Item2;
+            }
+            throw new InvalidOperationException("Iterated through list without finding item to randomly select. This should not be possible!");
+        }
+
+        public static T PickRandomWithWeight<T>(this IEnumerable<KeyValuePair<T, decimal>> collectionWithWeights, Random random)
+        {
+            if (collectionWithWeights.Count() == 0)
+            {
+                throw new ArgumentException("Received empty collection");
+            }
+            decimal totalWeight = 0;
+            foreach (KeyValuePair<T, decimal> itemWithWeight in collectionWithWeights)
+            {
+                if (itemWithWeight.Value < 0)
+                {
+                    throw new ArgumentOutOfRangeException($"Item weight must be non-negative, got {itemWithWeight.Value}");
+                }
+                totalWeight += itemWithWeight.Value;
+            }
+            decimal weightSelected = (decimal)random.NextDouble() * totalWeight;
+            decimal currentWeight = 0;
+            foreach (KeyValuePair<T, decimal> itemWithWeight in collectionWithWeights)
+            {
+                if (weightSelected >= currentWeight && weightSelected < currentWeight + itemWithWeight.Value)
+                {
+                    return itemWithWeight.Key;
+                }
+                currentWeight += itemWithWeight.Value;
+            }
+            throw new InvalidOperationException("Iterated through list without finding item to randomly select. This should not be possible!");
+        }
+
         public static bool TryFindIndex<T>(this T[,] array, T targetItem, out int firstIndex, out int secondIndex)
         {
             firstIndex = -1;

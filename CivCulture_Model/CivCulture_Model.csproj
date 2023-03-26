@@ -7,10 +7,14 @@
 
   <ItemGroup>
     <None Remove="NamesDatabase.xml" />
+    <None Remove="TemplateDefinitions.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="NamesDatabase.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TemplateDefinitions.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

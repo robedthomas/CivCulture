@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivCulture_Model.Models.Collections;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,22 +11,6 @@ namespace CivCulture_Model.Models
     public class BuildingSlotTemplate : ComponentTemplate
     {
         #region Static Members
-        public static bool Initialized = false;
-
-        public static BuildingSlotTemplate Grassland;
-        public static BuildingSlotTemplate Wilderness;
-        public static BuildingSlotTemplate Wheat;
-
-        public static void InitializeBuildingSlotTemplates()
-        {
-            JobTemplate.InitializeJobTemplates();
-            Wilderness = new BuildingSlotTemplate(new Dictionary<Consumeable, decimal>() { { Fundamental.Food, 20 } }) { Name = "Wilderness" };
-            Wilderness.ChildJobTemplates.Add(JobTemplate.Gatherer_Wilderness);
-
-            Wheat = new BuildingSlotTemplate(new Dictionary<Consumeable, decimal>() { { Fundamental.Food, 40 } }) { Name = "Wheat" };
-            Wheat.ChildJobTemplates.Add(JobTemplate.Gatherer_Wheat);
-            Initialized = true;
-        }
         #endregion
 
         #region Fields
@@ -37,15 +22,23 @@ namespace CivCulture_Model.Models
         #region Properties
         public string Name { get; protected set; }
 
-        public ObservableCollection<JobTemplate> ChildJobTemplates { get; protected set; } = new ObservableCollection<JobTemplate>();
+        public ObservableCollection<JobTemplate> ChildJobTemplates { get; protected set; }
 
-        public ReadOnlyDictionary<Consumeable, decimal> ResourcesUponRemoval { get; protected set; }
+        public ConsumeablesCollection ResourcesUponRemoval { get; protected set; }
+
+        public Dictionary<Terrain, decimal> ProbabilityWeightPerTerrainType { get; protected set; }
+
+        public Dictionary<Terrain, BuildingSlotTemplate> UnderlyingSlotType { get; protected set; }
         #endregion
 
         #region Constructors
-        public BuildingSlotTemplate(IDictionary<Consumeable, decimal> resourcesUponRemoval)
+        public BuildingSlotTemplate(string name, IEnumerable<JobTemplate> childJobTemplates, IDictionary<Consumeable, decimal> resourcesUponRemoval, IDictionary<Terrain, decimal> probabilityWeightPerTerrainType)
         {
-            ResourcesUponRemoval = new ReadOnlyDictionary<Resource, decimal>(resourcesUponRemoval);
+            Name = name;
+            ChildJobTemplates = new ObservableCollection<JobTemplate>(childJobTemplates);
+            ResourcesUponRemoval = new ConsumeablesCollection(resourcesUponRemoval);
+            ProbabilityWeightPerTerrainType = new Dictionary<Terrain, decimal>(probabilityWeightPerTerrainType);
+            UnderlyingSlotType = new Dictionary<Terrain, BuildingSlotTemplate>();
         }
         #endregion
 
