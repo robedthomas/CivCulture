@@ -11,35 +11,23 @@ namespace CivCulture_Model.Models
     public class PopTemplate : ComponentTemplate
     {
         #region Static Members
-        public static PopTemplate ALL = new PopTemplate("ALL");
+        public static PopTemplate ALL = new PopTemplate("ALL", null);
         #endregion
 
         #region Fields
-        private string name;
         private decimal progressFromSatisfactionRatio;
         private NeedCollection needs;
         #endregion
 
         #region Events
-        public ValueChangedEventHandler<string> NameChanged;
         public ValueChangedEventHandler<decimal> ProgressFromSatisfactionRatioChanged;
         public ValueChangedEventHandler<NeedCollection> NeedsChanged;
         #endregion
 
         #region Properties
-        public string Name
-        {
-            get => name;
-            set
-            {
-                if (name != value)
-                {
-                    string oldValue = name;
-                    name = value;
-                    NameChanged?.Invoke(this, new ValueChangedEventArgs<string>(oldValue, value));
-                }
-            }
-        }
+        public string Name { get; protected set; }
+
+        public string DisplayName { get; protected set; }
 
         public decimal ProgressFromSatisfactionRatio
         {
@@ -71,9 +59,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public PopTemplate(string name, ConsumeablesCollection necessities = null, ConsumeablesCollection comforts = null, ConsumeablesCollection luxuries = null)
+        public PopTemplate(string name, string displayName, ConsumeablesCollection necessities = null, ConsumeablesCollection comforts = null, ConsumeablesCollection luxuries = null)
         {
             Name = name;
+            DisplayName = string.IsNullOrWhiteSpace(displayName) ? name : displayName;
             ProgressFromSatisfactionRatio = 0.1M; 
             Needs = new NeedCollection();
             if (necessities != null)

@@ -75,7 +75,7 @@ namespace CivCulture.Utilities.Converters
             {
                 return "NULL";
             }
-            return (value as PopTemplate).Name;
+            return (value as PopTemplate).DisplayName;
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

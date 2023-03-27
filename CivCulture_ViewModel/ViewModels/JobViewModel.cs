@@ -67,7 +67,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string Name
         {
-            get => SourceJob.Template.Name;
+            get => SourceJob.Template.DisplayName;
         }
 
         public bool IsExpanded

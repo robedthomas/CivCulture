@@ -129,7 +129,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                 ConsumeablesCollection necessities = InterpretResourcesIntoCollection(pop.necessities);
                 ConsumeablesCollection comforts = InterpretResourcesIntoCollection(pop.comforts);
                 ConsumeablesCollection luxuries = InterpretResourcesIntoCollection(pop.luxuries);
-                PopTemplate newPop = new PopTemplate(string.IsNullOrEmpty(pop.displayName) ? pop.name : pop.displayName, necessities, comforts, luxuries);
+                PopTemplate newPop = new PopTemplate(pop.name, pop.displayName, necessities, comforts, luxuries);
                 PopTemplatesByName.Add(pop.name, newPop);
             }
 
@@ -140,7 +140,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                     ConsumeablesCollection inputs = InterpretResourcesIntoCollection(job.inputs);
                     ConsumeablesCollection outputs = InterpretResourcesIntoCollection(job.outputs);
                     PopTemplate popType = PopTemplatesByName[job.popTemplateName];
-                    JobTemplate newJob = new JobTemplate(string.IsNullOrEmpty(job.displayName) ? job.name : job.displayName, (int)job.priority, (int)job.basePay, popType, inputs, outputs);
+                    JobTemplate newJob = new JobTemplate(job.name, job.displayName, (int)job.priority, (int)job.basePay, popType, inputs, outputs);
                     JobTemplatesByName.Add(job.name, newJob);
                 }
                 else
@@ -170,7 +170,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                     Terrain terrainType = Terrain.AllTerrains.FirstOrDefault(t => t.Name == terrainName);
                     likelihoodPerTerrainType.Add(terrainType, buildingSlot.likelihoodPerTerrainType[terrainName].Item1);
                 }
-                BuildingSlotTemplate newBuildingSlot = new BuildingSlotTemplate(string.IsNullOrEmpty(buildingSlot.displayName) ? buildingSlot.name : buildingSlot.displayName, childJobs, resourcesUponRemoval, likelihoodPerTerrainType);
+                BuildingSlotTemplate newBuildingSlot = new BuildingSlotTemplate(buildingSlot.name, buildingSlot.displayName, childJobs, resourcesUponRemoval, likelihoodPerTerrainType);
                 BuildingSlotTemplatesByName.Add(buildingSlot.name, newBuildingSlot);
             }
             // After initializing each BuildingSlotTemplate, iterate through once more to connect them together
@@ -241,7 +241,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                         throw new InvalidDataException($"While constructing building templates, building template with name {building.name} references unrecognized building slot template with name {buildingSlotName}");
                     }
                 }
-                BuildingTemplate newBuilding = new BuildingTemplate(string.IsNullOrEmpty(building.displayName) ? building.name : building.displayName, childJobs, requisitBuildingSlots, building.isSpaceUnique, costs, outputs);
+                BuildingTemplate newBuilding = new BuildingTemplate(building.name, building.displayName, childJobs, requisitBuildingSlots, building.isSpaceUnique, costs, outputs);
                 BuildingTemplatesByName.Add(building.name, newBuilding);
             }
         }

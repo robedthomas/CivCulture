@@ -35,7 +35,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string JobName
         {
-            get => template != null ? template.Name : string.Empty;
+            get => template != null ? template.DisplayName : string.Empty;
         }
 
         public ObservableCollection<JobViewModel> Jobs

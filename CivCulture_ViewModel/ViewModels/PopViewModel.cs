@@ -75,7 +75,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string JobName
         {
-            get => SourcePop.Job == null ? "Unemployed" : SourcePop.Job.Template.Name;
+            get => SourcePop.Job == null ? "Unemployed" : SourcePop.Job.Template.DisplayName;
         }
 
         public ConsumeablesCollection OwnedResources

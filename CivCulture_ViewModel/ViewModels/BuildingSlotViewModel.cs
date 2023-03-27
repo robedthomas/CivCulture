@@ -33,7 +33,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string Name
         {
-            get => SourceSlot.Template.Name;
+            get => SourceSlot.Template.DisplayName;
         }
         #endregion
 

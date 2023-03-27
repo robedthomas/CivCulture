@@ -13,7 +13,7 @@ namespace CivCulture_Model.Models
         public const int MAX_JOB_PRIORITY = 10;
         public const int UNEMPLOYED_JOB_PRIORITY = MAX_JOB_PRIORITY;
 
-        public static JobTemplate ALL;
+        public static JobTemplate ALL = new JobTemplate("ALL", null, -1, -1, null);
         #endregion
 
         #region Fields
@@ -24,6 +24,8 @@ namespace CivCulture_Model.Models
 
         #region Properties
         public string Name { get; protected set; }
+
+        public string DisplayName { get; protected set; }
 
         public int Priority { get; protected set; }
 
@@ -37,9 +39,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public JobTemplate(string name, int priority, int basePay, PopTemplate workerTemplate, ConsumeablesCollection inputs = null, ConsumeablesCollection outputs = null)
+        public JobTemplate(string name, string displayName, int priority, int basePay, PopTemplate workerTemplate, ConsumeablesCollection inputs = null, ConsumeablesCollection outputs = null)
         {
             Name = name;
+            DisplayName = string.IsNullOrWhiteSpace(displayName) ? name : displayName;
             Priority = priority;
             BasePay = basePay;
             if (inputs is null)

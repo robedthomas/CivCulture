@@ -22,6 +22,8 @@ namespace CivCulture_Model.Models
         #region Properties
         public string Name { get; protected set; }
 
+        public string DisplayName { get; protected set; }
+
         public ObservableCollection<JobTemplate> ChildJobTemplates { get; protected set; }
 
         public ConsumeablesCollection ResourcesUponRemoval { get; protected set; }
@@ -32,9 +34,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public BuildingSlotTemplate(string name, IEnumerable<JobTemplate> childJobTemplates, IDictionary<Consumeable, decimal> resourcesUponRemoval, IDictionary<Terrain, decimal> probabilityWeightPerTerrainType)
+        public BuildingSlotTemplate(string name, string displayName, IEnumerable<JobTemplate> childJobTemplates, IDictionary<Consumeable, decimal> resourcesUponRemoval, IDictionary<Terrain, decimal> probabilityWeightPerTerrainType)
         {
             Name = name;
+            DisplayName = string.IsNullOrWhiteSpace(displayName) ? name : displayName;
             ChildJobTemplates = new ObservableCollection<JobTemplate>(childJobTemplates);
             ResourcesUponRemoval = new ConsumeablesCollection(resourcesUponRemoval);
             ProbabilityWeightPerTerrainType = new Dictionary<Terrain, decimal>(probabilityWeightPerTerrainType);

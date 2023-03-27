@@ -22,6 +22,8 @@ namespace CivCulture_Model.Models
         #region Properties
         public string Name { get; protected set; }
 
+        public string DisplayName { get; protected set; }
+
         public bool IsSpaceUnique { get; protected set; }
 
         public ConsumeablesCollection Costs { get; protected set; }
@@ -34,9 +36,10 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public BuildingTemplate(string name, IEnumerable<JobTemplate> jobs, IEnumerable<BuildingSlotTemplate> requisitBuildingSlots, bool isSpaceUnique = false, ConsumeablesCollection costs = null, ConsumeablesCollection outputs = null)
+        public BuildingTemplate(string name, string displayName, IEnumerable<JobTemplate> jobs, IEnumerable<BuildingSlotTemplate> requisitBuildingSlots, bool isSpaceUnique = false, ConsumeablesCollection costs = null, ConsumeablesCollection outputs = null)
         {
             Name = name;
+            DisplayName = string.IsNullOrWhiteSpace(displayName) ? name : displayName;
             Costs = new ConsumeablesCollection(costs);
             Outputs = new ConsumeablesCollection(outputs);
             Jobs = new ObservableCollection<JobTemplate>(jobs);

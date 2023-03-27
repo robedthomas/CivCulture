@@ -43,7 +43,7 @@ namespace CivCulture_ViewModel.ViewModels
 
         public string Name
         {
-            get => SourceBuilding.Template.Name;
+            get => SourceBuilding.Template.DisplayName;
         }
 
         public decimal ConstructionProgress
