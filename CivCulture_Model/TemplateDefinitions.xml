@@ -185,6 +185,70 @@
 	</BuildingSlotTemplates>
 	
 	<TechnologyTemplates>
-		
+		<TechnologyTemplate name="PermanentSettlement_I" displayName ="Permanent Settlement (I)" category="Infrastructure">
+			<ResearchCosts>
+				<Resource name="Progress" quantity="5" />
+			</ResearchCosts>
+			<Modifiers>
+				<Modifier type="CultureEnableBuilding" building="Mud Huts" />
+				<Modifier type="SpaceJobs" job="Builder" quantity="1" />
+			</Modifiers>
+			<Children>
+				<Technology name="Agriculture_I" />
+				<Technology name="OrganizedLabor_I" />
+			</Children>
+		</TechnologyTemplate>
+
+		<TechnologyTemplate name="Agriculture_I" displayName="Agriculture (I)" category="Agricultural">
+			<ResearchCosts>
+				<Resource name="Progress" quantity="10" />
+			</ResearchCosts>
+			<Modifiers>
+				<Modifier type="CultureEnableBuilding" building="PrimitiveFarm_Grassland" />
+			</Modifiers>
+		</TechnologyTemplate>
+
+		<TechnologyTemplate name="OrganizedLabor_I" displayName="Organized Labor (I)" category="Infrastructure">
+			<ResearchCosts>
+				<Resource name="Progress" quantity="10" />
+			</ResearchCosts>
+			<Modifiers>
+				<Modifier type="JobOutputs" job="Builder">
+					<Resources>
+						<Resource name="Production" quantity="0.5" />
+					</Resources>
+				</Modifier>
+			</Modifiers>
+		</TechnologyTemplate>
+
+		<TechnologyTemplate name="ElderReverence_I" displayName="Display Name (I)" category="Cultural">
+			<ResearchCosts>
+				<Resource name="Progress" quantity="5" />
+			</ResearchCosts>
+			<Modifiers>
+				<Modifier type="SpaceJobs" job="Elder" quantity="1" />
+			</Modifiers>
+			<Children>
+				<Technology name="ElderReverence_II" />
+			</Children>
+		</TechnologyTemplate>
+
+		<TechnologyTemplate name="ElderReverence_II" displayName="Elder Reverence (II)" category="Cultural">
+			<ResearchCosts>
+				<Resource name="Progress" quantity="10" />
+			</ResearchCosts>
+			<Modifiers>
+				<Modifier type="JobInputs" job="Elder">
+					<Resources>
+						<Resource name="Food" quantity="0.5" />
+					</Resources>
+				</Modifier>
+				<Modifier type="JobOutputs" job="Elder">
+					<Resources>
+						<Resource name="Progress" quantity="0.5" />
+					</Resources>
+				</Modifier>
+			</Modifiers>
+		</TechnologyTemplate>
 	</TechnologyTemplates>
 </Templates>

@@ -61,9 +61,12 @@ namespace CivCulture_Model.Models.Collections
                 {
                     this[key] = new ObservableCollection<TechModifier<decimal>>();
                 }
-                foreach (TechModifier<decimal> mod in collectionToAdd[key])
+                if (collectionToAdd[key] != null)
                 {
-                    this[key].Add(mod);
+                    foreach (TechModifier<decimal> mod in collectionToAdd[key])
+                    {
+                        this[key].Add(mod);
+                    }
                 }
             }
         }
@@ -76,7 +79,7 @@ namespace CivCulture_Model.Models.Collections
             }
             foreach (Tuple<StatModification, ComponentTemplate, Consumeable> key in collectionToRemove.Keys)
             {
-                if (ContainsKey(key))
+                if (ContainsKey(key) && collectionToRemove[key] != null)
                 {
                     foreach (TechModifier<decimal> mod in collectionToRemove[key])
                     {

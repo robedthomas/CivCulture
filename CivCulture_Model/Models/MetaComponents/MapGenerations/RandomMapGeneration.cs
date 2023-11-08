@@ -23,11 +23,11 @@ namespace CivCulture_Model.Models.MetaComponents.MapGenerations
         #endregion
 
         #region Methods
-        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, TemplatesDatabase templatesDb, IEnumerable<TechnologyTemplate> allTechs, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
+        public override GameMap GenerateMap(MapConfiguration config, NamesDatabase namesDb, TemplatesDatabase templatesDb, Random seed, out List<Culture> allCultures, out List<Pop> allPops, out List<Job> allJobs)
         {
             GameMap map = new GameMap(config.Width, config.Height);
             GenerateSpaces(map, templatesDb, config, seed);
-            allCultures = GenerateInitialCultures(map, config, namesDb, allTechs, seed);
+            allCultures = GenerateInitialCultures(map, config, namesDb, templatesDb.TechnologyTemplatesByName.Values, seed);
             Dictionary<MapSpace, Culture> cultureLoci = AssignCultureLoci(map, allCultures, seed);
             allPops = GenerateInitialPops(map, templatesDb, config, cultureLoci, seed);
             allJobs = GenerateInitialJobs(map, templatesDb, config, seed);

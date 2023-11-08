@@ -38,11 +38,11 @@ namespace CivCulture_ViewModel.ViewModels
         public TechTreeViewModel(Culture sourceCulture)
         {
             SourceCulture = sourceCulture;
-            PermanentSettlementIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "Permanent Settlement (I)")]);
-            AgricultureIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "Agriculture (I)")]);
-            OrganizedLaborIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "Organized Labor (I)")]);
-            ElderReverenceIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "Elder Reverence (I)")]);
-            ElderReverenceIIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "Elder Reverence (II)")]);
+            PermanentSettlementIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "PermanentSettlement_I")]);
+            AgricultureIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "Agriculture_I")]);
+            OrganizedLaborIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "OrganizedLabor_I")]);
+            ElderReverenceIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "ElderReverence_I")]);
+            ElderReverenceIIViewModel = new TechnologyBubbleViewModel(SourceCulture.AllPossibleTechs[SourceCulture.AllPossibleTechs.Keys.First(template => template.Name == "ElderReverence_II")]);
         }
         #endregion
 

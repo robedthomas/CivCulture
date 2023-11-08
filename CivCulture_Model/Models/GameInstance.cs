@@ -96,8 +96,6 @@ namespace CivCulture_Model.Models
             }
         }
 
-        public ObservableCollection<TechnologyTemplate> AllTechs { get; protected set; }
-
         public MapGeneration MapGeneration
         {
             get => mapGeneration;
@@ -165,7 +163,6 @@ namespace CivCulture_Model.Models
             RandomSeed = new Random();
             NamesDB = new NamesDatabase(DEFAULT_NAMES_DATABASE_LOCATION);
             TemplatesDB = new TemplatesDatabase(DEFAULT_TEMPLATES_DATABASE_LOCATION);
-            AllTechs = GetStandardTechs(TemplatesDB);
         }
 
         public GameInstance(int seed) : this()
@@ -180,7 +177,7 @@ namespace CivCulture_Model.Models
             List<Culture> cultures;
             List<Pop> pops;
             List<Job> jobs;
-            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, TemplatesDB, AllTechs, RandomSeed, out cultures, out pops, out jobs);
+            Map = MapGeneration.GenerateMap(MapConfig, NamesDB, TemplatesDB, RandomSeed, out cultures, out pops, out jobs);
             AllCultures = new ObservableCollection<Culture>(cultures);
             AllPops = new ObservableCollection<Pop>(pops);
             AllJobs = new ObservableCollection<Job>(jobs);

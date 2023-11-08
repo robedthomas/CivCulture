@@ -19,6 +19,8 @@ namespace CivCulture_Model.Models
         #region Properties
         public string Name { get; protected set; }
 
+        public string DisplayName { get; protected set; }
+
         public TechnologyCategory Category { get; protected set; }
 
         public ConsumeablesCollection Costs { get; protected set; }
@@ -33,9 +35,17 @@ namespace CivCulture_Model.Models
         #endregion
 
         #region Constructors
-        public TechnologyTemplate(string name, TechnologyCategory category, ConsumeablesCollection costs)
+        public TechnologyTemplate(string name, TechnologyCategory category, ConsumeablesCollection costs, string displayName = null)
         {
             Name = name;
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                DisplayName = Name;
+            }
+            else
+            {
+                DisplayName = displayName;
+            }
             Category = category;
             Costs = new ConsumeablesCollection(costs);
             Parents = new HashSet<TechnologyTemplate>();

@@ -1,10 +1,10 @@
 ﻿using CivCulture_Model.Models.Collections;
+using CivCulture_Model.Models.Modifiers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace CivCulture_Model.Models.MetaComponents.UserMutables
@@ -50,6 +50,22 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
         public Dictionary<string, decimal> resourcesUponRemoval;
     }
 
+    struct TechnologyTemplateData
+    {
+        public string name;
+        public string displayName;
+        public string category;
+        public Dictionary<string, decimal> researchCosts;
+        public List<string> enabledBuildings;
+        public Dictionary<string, decimal> spaceJobs;
+        public Dictionary<string, Dictionary<string, decimal>> jobInputs;
+        public Dictionary<string, Dictionary<string, decimal>> jobOutputs;
+        public Dictionary<string, Dictionary<string, decimal>> popNecessities;
+        public Dictionary<string, Dictionary<string, decimal>> popComforts;
+        public Dictionary<string, Dictionary<string, decimal>> popLuxuries;
+        public List<string> children;
+    }
+
     struct ResourceQuantityData
     {
         public string resourceName;
@@ -60,6 +76,11 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
     {
         public string jobTemplateName;
         public decimal quantity;
+    }
+
+    struct TechnologyReferenceData
+    {
+        public string techName;
     }
 
     public class TemplatesDatabase : MetaComponent
@@ -104,8 +125,9 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
             List<JobTemplateData> jobTemplateData;
             List<BuildingTemplateData> buildingTemplateData;
             List<BuildingSlotTemplateData> buildingSlotTemplateData;
+            List<TechnologyTemplateData> technologyTemplateData;
 
-            ReadRawDataFromXML(databaseFileLocation, out popTemplateData, out jobTemplateData, out buildingTemplateData, out buildingSlotTemplateData);
+            ReadRawDataFromXML(databaseFileLocation, out popTemplateData, out jobTemplateData, out buildingTemplateData, out buildingSlotTemplateData, out technologyTemplateData);
 
             if (popTemplateData == null)
             {
@@ -122,6 +144,10 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
             else if (buildingSlotTemplateData == null)
             {
                 throw new InvalidDataException($"Found that no building slot template data was successfully read in from {databaseFileLocation}");
+            }
+            else if (technologyTemplateData == null)
+            {
+                throw new InvalidDataException($"Found that no technology template data was successfully read in from {databaseFileLocation}");
             }
 
             foreach (PopTemplateData pop in popTemplateData)
@@ -244,6 +270,141 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                 BuildingTemplate newBuilding = new BuildingTemplate(building.name, building.displayName, childJobs, requisitBuildingSlots, building.isSpaceUnique, costs, outputs);
                 BuildingTemplatesByName.Add(building.name, newBuilding);
             }
+
+            foreach (TechnologyTemplateData tech in technologyTemplateData)
+            {
+                object? temp;
+                
+                if (!Enum.TryParse(typeof(TechnologyCategory), tech.category, out temp))
+                {
+                    throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized tech category with name {tech.category}");
+                }
+                TechnologyCategory category = (TechnologyCategory)temp;
+                ConsumeablesCollection costs = InterpretResourcesIntoCollection(tech.researchCosts);
+                TechnologyTemplate newTech = new TechnologyTemplate(tech.name, category, costs);
+                
+                foreach (string enabledBuildingName in tech.enabledBuildings)
+                {
+                    if (BuildingTemplatesByName.ContainsKey(enabledBuildingName))
+                    {
+                        newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.CultureEnableBuilding, BuildingTemplatesByName[enabledBuildingName], null), null);
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized building template with name {enabledBuildingName}");
+                    }
+                }
+
+                foreach (string addedJob in tech.spaceJobs.Keys)
+                {
+                    if (JobTemplatesByName.TryGetValue(addedJob, out JobTemplate addedJobTemplate))
+                    {
+                        newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.SpaceJobs, addedJobTemplate, null), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, tech.spaceJobs[addedJob]) });
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized job template with name {addedJob}");
+                    }
+                }
+
+                foreach (string modifiedInputsJob in tech.jobInputs.Keys)
+                {
+                    if (JobTemplatesByName.TryGetValue(modifiedInputsJob, out JobTemplate job))
+                    {
+                        ConsumeablesCollection inputs = InterpretResourcesIntoCollection(tech.jobInputs[modifiedInputsJob]);
+                        foreach (Consumeable input in inputs.Keys)
+                        {
+                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.JobInputs, job, input), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, inputs[input]) });
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized job template with name {modifiedInputsJob}");
+                    }
+                }
+
+                foreach (string modifiedOutputsJob in tech.jobOutputs.Keys)
+                {
+                    if (JobTemplatesByName.TryGetValue(modifiedOutputsJob, out JobTemplate job))
+                    {
+                        ConsumeablesCollection outputs = InterpretResourcesIntoCollection(tech.jobOutputs[modifiedOutputsJob]);
+                        foreach (Consumeable output in outputs.Keys)
+                        {
+                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.JobInputs, job, output), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, outputs[output]) });
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized job template with name {modifiedOutputsJob}");
+                    }
+                }
+
+                foreach (string modifiedNecessitiesPop in tech.popNecessities.Keys)
+                {
+                    if (PopTemplatesByName.TryGetValue(modifiedNecessitiesPop, out PopTemplate pop))
+                    {
+                        ConsumeablesCollection necessities = InterpretResourcesIntoCollection(tech.popNecessities[modifiedNecessitiesPop]);
+                        foreach (Consumeable necessity in necessities.Keys)
+                        {
+                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.PopNecessities, pop, necessity), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, necessities[necessity]) });
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized pop template with name {modifiedNecessitiesPop}");
+                    }
+                }
+
+                foreach (string modifiedComfortsPop in tech.popComforts.Keys)
+                {
+                    if (PopTemplatesByName.TryGetValue(modifiedComfortsPop, out PopTemplate pop))
+                    {
+                        ConsumeablesCollection necessities = InterpretResourcesIntoCollection(tech.popComforts[modifiedComfortsPop]);
+                        foreach (Consumeable necessity in necessities.Keys)
+                        {
+                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.PopComforts, pop, necessity), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, necessities[necessity]) });
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized pop template with name {modifiedComfortsPop}");
+                    }
+                }
+
+                foreach (string modifiedLuxuriesPop in tech.popLuxuries.Keys)
+                {
+                    if (PopTemplatesByName.TryGetValue(modifiedLuxuriesPop, out PopTemplate pop))
+                    {
+                        ConsumeablesCollection necessities = InterpretResourcesIntoCollection(tech.popLuxuries[modifiedLuxuriesPop]);
+                        foreach (Consumeable necessity in necessities.Keys)
+                        {
+                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.PopLuxuries, pop, necessity), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, necessities[necessity]) });
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized pop template with name {modifiedLuxuriesPop}");
+                    }
+                }
+
+                TechnologyTemplatesByName.Add(newTech.Name, newTech);
+            }
+
+            foreach (TechnologyTemplateData tech in technologyTemplateData)
+            {
+                foreach (string childTechName in tech.children)
+                {
+                    if (TechnologyTemplatesByName.ContainsKey(childTechName))
+                    {
+                        TechnologyTemplatesByName[tech.name].Children.Add(TechnologyTemplatesByName[childTechName]);
+                        TechnologyTemplatesByName[childTechName].Parents.Add(TechnologyTemplatesByName[tech.name]);
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"While constructing technology templates, tech template with name {tech.name} references unrecognized child tech with name {childTechName}");
+                    }
+                }
+            }
         }
         #endregion
 
@@ -303,12 +464,13 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
         }
 
         #region XML Reading Methods
-        private void ReadRawDataFromXML(string databaseFileLocation, out List<PopTemplateData> popTemplateData, out List<JobTemplateData> jobTemplateData, out List<BuildingTemplateData> buildingTemplateData, out List<BuildingSlotTemplateData> buildingSlotTemplateData)
+        private void ReadRawDataFromXML(string databaseFileLocation, out List<PopTemplateData> popTemplateData, out List<JobTemplateData> jobTemplateData, out List<BuildingTemplateData> buildingTemplateData, out List<BuildingSlotTemplateData> buildingSlotTemplateData, out List<TechnologyTemplateData> technologyTemplateData)
         {
             popTemplateData = null;
             jobTemplateData = null;
             buildingTemplateData = null;
             buildingSlotTemplateData = null;
+            technologyTemplateData = null;
             bool endReached = false;
             using (XmlReader reader = XmlReader.Create(databaseFileLocation))
             {
@@ -334,7 +496,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                                     buildingSlotTemplateData = ReadBuildingSlotTemplates(reader);
                                     break;
                                 case XML_TECHNOLOGY_TEMPLATES_ELEMENT_NAME:
-                                    // @TODO
+                                    technologyTemplateData = ReadTechnologyTemplates(reader);
                                     break;
                             }
                             break;
@@ -398,6 +560,38 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                                 JobQuantityData newElement = new JobQuantityData();
                                 newElement.jobTemplateName = reader.GetAttribute("name");
                                 newElement.quantity = string.IsNullOrEmpty(reader.GetAttribute("quantity")) ? 1 : decimal.Parse(reader.GetAttribute("quantity"));
+                                output.Add(newElement);
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        endReached = true;
+                        break;
+                    case XmlNodeType.Whitespace:
+                        break;
+                    default:
+                        throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                }
+            }
+            return output;
+        }
+
+        private List<TechnologyReferenceData> ReadTechnologyReferences(XmlReader reader)
+        {
+            List<TechnologyReferenceData> output = new List<TechnologyReferenceData>();
+            bool endReached = false;
+            while (!endReached && reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name)
+                        {
+                            case "Technology":
+                                TechnologyReferenceData newElement = new TechnologyReferenceData();
+                                newElement.techName = reader.GetAttribute("name");
                                 output.Add(newElement);
                                 break;
                             default:
@@ -803,6 +997,295 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                 }
             }
             return output;
+        }
+
+        private List<TechnologyTemplateData> ReadTechnologyTemplates(XmlReader reader)
+        {
+            List<TechnologyTemplateData> templates = new List<TechnologyTemplateData>();
+            bool endReached = false;
+            while (!endReached && reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name)
+                        {
+                            case XML_SINGULAR_TECHNOLOGY_TEMPLATE_ELEMENT_NAME:
+                                templates.Add(ReadSingleTechnologyTemplate(reader));
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        switch (reader.Name)
+                        {
+                            case XML_TECHNOLOGY_TEMPLATES_ELEMENT_NAME:
+                                endReached = true;
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.Whitespace:
+                        break;
+                    default:
+                        throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                }
+            }
+            return templates;
+        }
+
+        private TechnologyTemplateData ReadSingleTechnologyTemplate(XmlReader reader)
+        {
+            bool endReached = false;
+            TechnologyTemplateData output = new TechnologyTemplateData();
+            output.name = reader.GetAttribute("name");
+            output.displayName = string.IsNullOrEmpty(reader.GetAttribute("displayName")) ? null : reader.GetAttribute("displayName");
+            output.category = reader.GetAttribute("category");
+            output.researchCosts = new Dictionary<string, decimal>();
+            output.children = new List<string>();
+            output.enabledBuildings = new List<string>();
+            output.spaceJobs = new Dictionary<string, decimal>();
+            output.jobInputs = new Dictionary<string, Dictionary<string, decimal>>();
+            output.jobOutputs = new Dictionary<string, Dictionary<string, decimal>>();
+            output.popNecessities = new Dictionary<string, Dictionary<string, decimal>>();
+            output.popComforts = new Dictionary<string, Dictionary<string, decimal>>();
+            output.popLuxuries = new Dictionary<string, Dictionary<string, decimal>>();
+            while (!endReached && reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name)
+                        {
+                            case "ResearchCosts":
+                                foreach (ResourceQuantityData resource in ReadResourceQuantities(reader))
+                                {
+                                    output.researchCosts.Add(resource.resourceName, resource.quantity);
+                                }
+                                break;
+                            case "Modifiers":
+                                ReadTechModifiers(reader, ref output);
+                                break;
+                            case "Children":
+                                foreach (TechnologyReferenceData tech in ReadTechnologyReferences(reader))
+                                {
+                                    output.children.Add(tech.techName);
+                                }
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        switch (reader.Name)
+                        {
+                            case XML_SINGULAR_TECHNOLOGY_TEMPLATE_ELEMENT_NAME:
+                                endReached = true;
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.Whitespace:
+                        break;
+                    default:
+                        throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                }
+            }
+            return output;
+        }
+
+        private void ReadTechModifiers(XmlReader reader, ref TechnologyTemplateData tech)
+        {
+            bool endReached = false;
+            while (!endReached && reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name)
+                        {
+                            case "Modifier":
+                                string modifierType = reader.GetAttribute("type");
+                                switch (modifierType)
+                                {
+                                    case "CultureEnableBuilding":
+                                        string enabledBuilding = reader.GetAttribute("building");
+                                        tech.enabledBuildings.Add(enabledBuilding);
+                                        break;
+                                    case "SpaceJobs":
+                                        string jobName = reader.GetAttribute("job");
+                                        string quantityStr = reader.GetAttribute("quantity");
+                                        int quantity = int.Parse(quantityStr);
+                                        if (tech.spaceJobs.ContainsKey(jobName))
+                                        {
+                                            tech.spaceJobs[jobName] += quantity;
+                                        }
+                                        else
+                                        {
+                                            tech.spaceJobs.Add(jobName, quantity);
+                                        }
+                                        break;
+                                    case "JobInputs":
+                                        jobName = reader.GetAttribute("job");
+                                        List<ResourceQuantityData> resources = ReadPopNecessityModifierResources(reader);
+                                        if (!tech.jobInputs.ContainsKey(jobName))
+                                        {
+                                            tech.jobInputs.Add(jobName, new Dictionary<string, decimal>());
+                                        }
+                                        foreach (ResourceQuantityData resource in resources)
+                                        {
+                                            if (!tech.jobInputs[jobName].ContainsKey(resource.resourceName))
+                                            {
+                                                tech.jobInputs[jobName].Add(resource.resourceName, resource.quantity);
+                                            }
+                                            else
+                                            {
+                                                tech.jobInputs[jobName][resource.resourceName] += resource.quantity;
+                                            }
+                                        }
+                                        break;
+                                    case "JobOutputs":
+                                        jobName = reader.GetAttribute("job");
+                                        resources = ReadPopNecessityModifierResources(reader);
+                                        if (!tech.jobOutputs.ContainsKey(jobName))
+                                        {
+                                            tech.jobOutputs.Add(jobName, new Dictionary<string, decimal>());
+                                        }
+                                        foreach (ResourceQuantityData resource in resources)
+                                        {
+                                            if (!tech.jobOutputs[jobName].ContainsKey(resource.resourceName))
+                                            {
+                                                tech.jobOutputs[jobName].Add(resource.resourceName, resource.quantity);
+                                            }
+                                            else
+                                            {
+                                                tech.jobOutputs[jobName][resource.resourceName] += resource.quantity;
+                                            }
+                                        }
+                                        break;
+                                    case "PopNecessities":
+                                        string popTemplateName = reader.GetAttribute("pop");
+                                        resources = ReadPopNecessityModifierResources(reader);
+                                        if (!tech.popNecessities.ContainsKey(popTemplateName))
+                                        {
+                                            tech.popNecessities.Add(popTemplateName, new Dictionary<string, decimal>());
+                                        }
+                                        foreach (ResourceQuantityData resource in resources)
+                                        {
+                                            if (!tech.popNecessities[popTemplateName].ContainsKey(resource.resourceName))
+                                            {
+                                                tech.popNecessities[popTemplateName].Add(resource.resourceName, resource.quantity);
+                                            }
+                                            else
+                                            {
+                                                tech.popNecessities[popTemplateName][resource.resourceName] += resource.quantity;
+                                            }
+                                        }
+                                        break;
+                                    case "PopComforts":
+                                        popTemplateName = reader.GetAttribute("pop");
+                                        resources = ReadPopNecessityModifierResources(reader);
+                                        if (!tech.popComforts.ContainsKey(popTemplateName))
+                                        {
+                                            tech.popComforts.Add(popTemplateName, new Dictionary<string, decimal>());
+                                        }
+                                        foreach (ResourceQuantityData resource in resources)
+                                        {
+                                            if (!tech.popComforts[popTemplateName].ContainsKey(resource.resourceName))
+                                            {
+                                                tech.popComforts[popTemplateName].Add(resource.resourceName, resource.quantity);
+                                            }
+                                            else
+                                            {
+                                                tech.popComforts[popTemplateName][resource.resourceName] += resource.quantity;
+                                            }
+                                        }
+                                        break;
+                                    case "PopLuxuries":
+                                        popTemplateName = reader.GetAttribute("pop");
+                                        resources = ReadPopNecessityModifierResources(reader);
+                                        if (!tech.popLuxuries.ContainsKey(popTemplateName))
+                                        {
+                                            tech.popLuxuries.Add(popTemplateName, new Dictionary<string, decimal>());
+                                        }
+                                        foreach (ResourceQuantityData resource in resources)
+                                        {
+                                            if (!tech.popLuxuries[popTemplateName].ContainsKey(resource.resourceName))
+                                            {
+                                                tech.popLuxuries[popTemplateName].Add(resource.resourceName, resource.quantity);
+                                            }
+                                            else
+                                            {
+                                                tech.popLuxuries[popTemplateName][resource.resourceName] += resource.quantity;
+                                            }
+                                        }
+                                        break;
+                                }
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        switch (reader.Name)
+                        {
+                            case "Modifier":
+                                break;
+                            case "Modifiers":
+                                endReached = true;
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.Whitespace:
+                        break;
+                    default:
+                        throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                }
+            }
+        }
+
+        private List<ResourceQuantityData> ReadPopNecessityModifierResources(XmlReader reader)
+        {
+            List<ResourceQuantityData> resources = new List<ResourceQuantityData>();
+            bool endReached = false;
+            while (!endReached && reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name)
+                        {
+                            case "Resources":
+                                resources = ReadResourceQuantities(reader);
+                                endReached = true;
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        switch (reader.Name)
+                        {
+                            case "Resources":
+                                endReached = true;
+                                break;
+                            default:
+                                throw new InvalidDataException($"Got invalid XML end element with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                        }
+                        break;
+                    case XmlNodeType.Whitespace:
+                        break;
+                    default:
+                        throw new InvalidDataException($"Got invalid XML node type {reader.NodeType} with name \"{reader.Name}\" while parsing TemplatesDatabase");
+                }
+            }
+
+            return resources;
         }
         #endregion
 
