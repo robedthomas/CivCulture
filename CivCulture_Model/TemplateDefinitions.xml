@@ -194,10 +194,6 @@
 				<Modifier type="CultureEnableBuilding" building="Mud Huts" />
 				<Modifier type="SpaceJobs" job="Builder" quantity="1" />
 			</Modifiers>
-			<Children>
-				<Technology name="Agriculture_I" />
-				<Technology name="OrganizedLabor_I" />
-			</Children>
 		</TechnologyTemplate>
 
 		<TechnologyTemplate name="Agriculture_I" displayName="Agriculture (I)" category="Agricultural">
@@ -207,6 +203,10 @@
 			<Modifiers>
 				<Modifier type="CultureEnableBuilding" building="PrimitiveFarm_Grassland" />
 			</Modifiers>
+			<Children>
+				<Technology name="PermanentSettlement_I" />
+				<Technology name="OrganizedLabor_I" />
+			</Children>
 		</TechnologyTemplate>
 
 		<TechnologyTemplate name="OrganizedLabor_I" displayName="Organized Labor (I)" category="Infrastructure">
