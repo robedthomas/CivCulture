@@ -287,7 +287,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                 {
                     if (BuildingTemplatesByName.ContainsKey(enabledBuildingName))
                     {
-                        newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.CultureEnableBuilding, BuildingTemplatesByName[enabledBuildingName], null), null);
+                        newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.CultureEnableBuilding, BuildingTemplatesByName[enabledBuildingName], null), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, 0) });
                     }
                     else
                     {
@@ -330,7 +330,7 @@ namespace CivCulture_Model.Models.MetaComponents.UserMutables
                         ConsumeablesCollection outputs = InterpretResourcesIntoCollection(tech.jobOutputs[modifiedOutputsJob]);
                         foreach (Consumeable output in outputs.Keys)
                         {
-                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.JobInputs, job, output), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, outputs[output]) });
+                            newTech.Modifiers.Add(new Tuple<StatModification, ComponentTemplate, Consumeable>(StatModification.JobOutputs, job, output), new ObservableCollection<TechModifier<decimal>>() { new TechModifier<decimal>(newTech, outputs[output]) });
                         }
                     }
                     else

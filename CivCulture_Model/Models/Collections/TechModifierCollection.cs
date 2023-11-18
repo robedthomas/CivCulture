@@ -61,12 +61,9 @@ namespace CivCulture_Model.Models.Collections
                 {
                     this[key] = new ObservableCollection<TechModifier<decimal>>();
                 }
-                if (collectionToAdd[key] != null)
+                foreach (TechModifier<decimal> mod in collectionToAdd[key])
                 {
-                    foreach (TechModifier<decimal> mod in collectionToAdd[key])
-                    {
-                        this[key].Add(mod);
-                    }
+                    this[key].Add(mod);
                 }
             }
         }
